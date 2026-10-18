@@ -1,0 +1,10 @@
+# Account facts must be verified before live calls. Never put keys here.
+provider: gemini
+model: gemini-3.5-flash-lite
+billing: free
+account_verified: true  # User confirmed Gemini free tier on 2026-10-18.
+pricing_verified: false
+budget_usd: '3'
+pinecone_starter_verified: true  # User confirmed Starter on 2026-10-18.
+index_name: runbook-iq
+namespace: runbook-iq-v1

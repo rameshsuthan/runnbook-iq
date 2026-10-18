@@ -1,0 +1,278 @@
+[
+  {
+    "id": "q01",
+    "split": "dev",
+    "question": "What does DB_POOL_ACQUIRE_TIMEOUT mean, and what should I inspect?",
+    "filters": {},
+    "expected_status": "answered",
+    "expected_sources": [
+      {
+        "document_id": "rb-db-pool",
+        "section": "Distinguishing checks"
+      }
+    ],
+    "expected_points": [
+      "500 ms pool slot wait",
+      "pool usage versus 20, waiters and acquisition latency"
+    ],
+    "expected_clarification": []
+  },
+  {
+    "id": "q02",
+    "split": "dev",
+    "question": "What deadline does DEPENDENCY_REQUEST_TIMEOUT refer to?",
+    "filters": {},
+    "expected_status": "answered",
+    "expected_sources": [
+      {
+        "document_id": "ref-errors",
+        "section": "Error meanings"
+      }
+    ],
+    "expected_points": [
+      "1500 ms inventory request deadline",
+      "does not establish cause"
+    ],
+    "expected_clarification": []
+  },
+  {
+    "id": "q03",
+    "split": "dev",
+    "question": "What documented checks distinguish database pool exhaustion from an inventory dependency timeout in order-api?",
+    "filters": {},
+    "expected_status": "answered",
+    "expected_sources": [
+      {
+        "document_id": "rb-db-pool",
+        "section": "Distinguishing checks"
+      },
+      {
+        "document_id": "rb-dependency-timeouts",
+        "section": "Distinguishing checks"
+      }
+    ],
+    "expected_points": [
+      "500 ms pool acquisition versus 1500 ms dependency deadline",
+      "different metrics and spans"
+    ],
+    "expected_clarification": []
+  },
+  {
+    "id": "q04",
+    "split": "dev",
+    "question": "Orders return 503. Is PostgreSQL down?",
+    "filters": {},
+    "expected_status": "answered",
+    "expected_sources": [
+      {
+        "document_id": "guide-triage",
+        "section": "Clarifying a 503"
+      }
+    ],
+    "expected_points": [
+      "503 insufficient to choose cause",
+      "request error identifier, interval and request_id"
+    ],
+    "expected_clarification": [
+      "request_id",
+      "interval",
+      "error identifier"
+    ]
+  },
+  {
+    "id": "q05",
+    "split": "dev",
+    "question": "Can I automatically retry a timed-out stock reservation?",
+    "filters": {},
+    "expected_status": "answered",
+    "expected_sources": [
+      {
+        "document_id": "rb-dependency-timeouts",
+        "section": "Retry boundary"
+      }
+    ],
+    "expected_points": [
+      "no automatic retry",
+      "may have reserved stock",
+      "confirm outcome and idempotency contract"
+    ],
+    "expected_clarification": []
+  },
+  {
+    "id": "q06",
+    "split": "dev",
+    "question": "What caused the September 4 pool incident and what corrected it?",
+    "filters": {},
+    "expected_status": "answered",
+    "expected_sources": [
+      {
+        "document_id": "incident-db-pool",
+        "section": "Findings and scope"
+      },
+      {
+        "document_id": "incident-db-pool",
+        "section": "Timeline"
+      }
+    ],
+    "expected_points": [
+      "connections held across inventory requests",
+      "rollback and move acquisition after inventory",
+      "historical event only"
+    ],
+    "expected_clarification": []
+  },
+  {
+    "id": "q07",
+    "split": "dev",
+    "question": "Was the pool limit of 12 in the old incident the current setting?",
+    "filters": {},
+    "expected_status": "answered",
+    "expected_sources": [
+      {
+        "document_id": "ref-config",
+        "section": "Historical comparison"
+      },
+      {
+        "document_id": "ref-config",
+        "section": "Current limits"
+      }
+    ],
+    "expected_points": [
+      "historical 12 versus current 20 per process",
+      "separate capacity review"
+    ],
+    "expected_clarification": []
+  },
+  {
+    "id": "q08",
+    "split": "dev",
+    "question": "Which fields correlate pool waits with inventory requests?",
+    "filters": {},
+    "expected_status": "answered",
+    "expected_sources": [
+      {
+        "document_id": "guide-telemetry",
+        "section": "Correlation and pool fields"
+      },
+      {
+        "document_id": "guide-telemetry",
+        "section": "Dependency fields"
+      }
+    ],
+    "expected_points": [
+      "request_id, trace_id and same interval/process",
+      "acquisition time versus inventory elapsed time"
+    ],
+    "expected_clarification": []
+  },
+  {
+    "id": "q09",
+    "split": "dev",
+    "question": "What is the production PostgreSQL password?",
+    "filters": {},
+    "expected_status": "insufficient_evidence",
+    "expected_sources": [],
+    "expected_points": [],
+    "expected_clarification": []
+  },
+  {
+    "id": "q10",
+    "split": "dev",
+    "question": "What is the confirmed root cause of our live incident right now?",
+    "filters": {},
+    "expected_status": "insufficient_evidence",
+    "expected_sources": [],
+    "expected_points": [],
+    "expected_clarification": [
+      "current observations are unavailable"
+    ]
+  },
+  {
+    "id": "q11",
+    "split": "heldout",
+    "question": "Requests queue up while database connections stay checked out. What evidence distinguishes a leak from slow work?",
+    "filters": {},
+    "expected_status": "answered",
+    "expected_sources": [
+      {
+        "document_id": "rb-db-pool",
+        "section": "Follow-up evidence"
+      }
+    ],
+    "expected_points": [
+      "checkout and transaction durations",
+      "concurrency and request traces",
+      "cannot infer exact cause"
+    ],
+    "expected_clarification": []
+  },
+  {
+    "id": "q12",
+    "split": "heldout",
+    "question": "Give the current per-process pool size and both timeout values.",
+    "filters": {},
+    "expected_status": "answered",
+    "expected_sources": [
+      {
+        "document_id": "ref-config",
+        "section": "Current limits"
+      }
+    ],
+    "expected_points": [
+      "20 connections",
+      "500 ms acquisition",
+      "1500 ms inventory"
+    ],
+    "expected_clarification": []
+  },
+  {
+    "id": "q13",
+    "split": "heldout",
+    "question": "In the October 2 historical incident, when was the route reverted and when did latency recover?",
+    "filters": {},
+    "expected_status": "answered",
+    "expected_sources": [
+      {
+        "document_id": "incident-dependency-timeouts",
+        "section": "Timeline"
+      }
+    ],
+    "expected_points": [
+      "14:12 UTC reverted",
+      "14:20 UTC recovered"
+    ],
+    "expected_clarification": []
+  },
+  {
+    "id": "q14",
+    "split": "heldout",
+    "question": "No upstream_status was logged for a timed-out reservation. Does that prove no stock was reserved?",
+    "filters": {},
+    "expected_status": "answered",
+    "expected_sources": [
+      {
+        "document_id": "ref-errors",
+        "section": "Missing upstream status"
+      },
+      {
+        "document_id": "rb-dependency-timeouts",
+        "section": "Retry boundary"
+      }
+    ],
+    "expected_points": [
+      "no proof of operation failure",
+      "confirm outcome before retry"
+    ],
+    "expected_clarification": []
+  },
+  {
+    "id": "q15",
+    "split": "heldout",
+    "question": "What Kafka consumer offset reset command fixes this service?",
+    "filters": {},
+    "expected_status": "insufficient_evidence",
+    "expected_sources": [],
+    "expected_points": [],
+    "expected_clarification": []
+  }
+]

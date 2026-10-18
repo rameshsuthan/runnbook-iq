@@ -1,0 +1,26 @@
+{
+  "status": "provider_error",
+  "answer": null,
+  "sources": [],
+  "provider": "gemini",
+  "model": "gemini-2.5-flash-lite",
+  "usage": {
+    "input_tokens": null,
+    "output_tokens": null,
+    "reasoning_tokens": null,
+    "estimated_usd": null,
+    "calls": 1
+  },
+  "timings": {
+    "prepare_request": 3.4999975468963385e-6,
+    "prepare_queries": 8.330098353326321e-7,
+    "retrieve": 0.5498573330114596,
+    "select_evidence": 0.000015708006685599685,
+    "generate": 0.35658999998122454
+  },
+  "errors": [
+    "Generation failed; check model/access/quota. No automatic retry."
+  ],
+  "cache_hit": false,
+  "corpus_version": "d30253eea9c2323fa9dcd4bc6a4a051eb5a926a8d98c720c4541c3d6f6fae4c7"
+}

@@ -1,0 +1,13 @@
+.env*
+!.env.example
+.venv/
+.uv-cache/
+.runbook_iq/
+.superpowers/
+.worktrees/
+data/processed/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.DS_Store

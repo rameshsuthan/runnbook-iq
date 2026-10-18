@@ -1,0 +1,34 @@
+{
+  "status": "insufficient_evidence",
+  "answer": {
+    "status": "insufficient_evidence",
+    "documented_evidence": "",
+    "recommended_checks": "",
+    "missing_information": [
+      "No matching source passages were found. Provide a documented service/question or additional source material."
+    ],
+    "citations": []
+  },
+  "sources": [],
+  "retrieved_candidates": [],
+  "selected_evidence": [],
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": null,
+    "output_tokens": null,
+    "reasoning_tokens": null,
+    "estimated_usd": null,
+    "calls": 0
+  },
+  "timings": {
+    "prepare_request": 3.583001671358943e-6,
+    "prepare_queries": 7.909839041531086e-7,
+    "retrieve": 0.36866179198841564,
+    "select_evidence": 5.917012458667159e-6,
+    "fallback": 0.00013162498362362385
+  },
+  "errors": [],
+  "cache_hit": false,
+  "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0"
+}

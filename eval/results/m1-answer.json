@@ -1,0 +1,61 @@
+{
+  "status": "answered",
+  "answer": {
+    "status": "answered",
+    "documented_evidence": "Database pool exhaustion is distinguished by DB_POOL_ACQUIRE_TIMEOUT (meaning order-api waited 500 ms for a pool slot) [c-8b07e11e14a4069f84d9dc0f]. By contrast, an inventory dependency timeout is indicated by DEPENDENCY_REQUEST_TIMEOUT, which means the order-api inventory client exceeded its 1500 ms request deadline [c-8eb6f00c104ca799f19afdbf].",
+    "recommended_checks": "Inspect db_pool_in_use against the per-process limit of 20, check db_pool_waiters, and db_pool_acquire_ms for database pool exhaustion [c-8b07e11e14a4069f84d9dc0f]. For inventory dependency timeouts, inspect dependency_name, upstream_status, inventory_request_ms, and trace spans for the same request_id and time window [c-8eb6f00c104ca799f19afdbf].",
+    "missing_information": [],
+    "citations": [
+      "c-8eb6f00c104ca799f19afdbf",
+      "c-8b07e11e14a4069f84d9dc0f"
+    ]
+  },
+  "sources": [
+    {
+      "chunk_id": "c-8eb6f00c104ca799f19afdbf",
+      "document_id": "rb-dependency-timeouts",
+      "title": "Inventory dependency timeout runbook (synthetic)",
+      "section": "Distinguishing checks",
+      "text": "Inventory dependency timeout runbook (synthetic) | Distinguishing checks\nDEPENDENCY_REQUEST_TIMEOUT means the order-api inventory client exceeded its 1500 ms request deadline. Inspect dependency_name, upstream_status, inventory_request_ms and trace spans for the same request_id and time window. A missing upstream_status can mean no response was received before the deadline; it does not establish whether inventory-api completed the operation. Compare database pool metrics separately: DB_POOL_ACQUIRE_TIMEOUT indicates waiting for a database slot, not an inventory response.",
+      "service": "order-api",
+      "document_type": "runbook",
+      "revision": "2026-10-18",
+      "corpus_version": "d30253eea9c2323fa9dcd4bc6a4a051eb5a926a8d98c720c4541c3d6f6fae4c7",
+      "content_hash": "2c09561c0a7cfd997d279bebbde059d592ea0e1ed29bd3b3360d221650df23b8",
+      "environment": null
+    },
+    {
+      "chunk_id": "c-8b07e11e14a4069f84d9dc0f",
+      "document_id": "rb-db-pool",
+      "title": "Database connection-pool exhaustion runbook (synthetic)",
+      "section": "Distinguishing checks",
+      "text": "Database connection-pool exhaustion runbook (synthetic) | Distinguishing checks\nDB_POOL_ACQUIRE_TIMEOUT means order-api waited 500 ms for a pool slot. Compare db_pool_in_use with the per-process limit of 20, db_pool_waiters, and db_pool_acquire_ms for the same process and time window. A full pool with waiting requests supports investigating pool contention; it does not prove that PostgreSQL itself is unavailable. The error differs from DEPENDENCY_REQUEST_TIMEOUT, which describes waiting for inventory-api rather than acquiring a database connection.",
+      "service": "order-api",
+      "document_type": "runbook",
+      "revision": "2026-10-18",
+      "corpus_version": "d30253eea9c2323fa9dcd4bc6a4a051eb5a926a8d98c720c4541c3d6f6fae4c7",
+      "content_hash": "114792d0295c37503a63d7ac2b38fab7ce3509dbdcbba9659bb9db02eb593aeb",
+      "environment": null
+    }
+  ],
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 992,
+    "output_tokens": 340,
+    "reasoning_tokens": null,
+    "estimated_usd": "0",
+    "calls": 1
+  },
+  "timings": {
+    "prepare_request": 5.291018169373274e-6,
+    "prepare_queries": 1.0409858077764511e-6,
+    "retrieve": 0.4207247080048546,
+    "select_evidence": 6.124988431110978e-6,
+    "generate": 1.586644790979335,
+    "validate": 0.0014965420123189688
+  },
+  "errors": [],
+  "cache_hit": false,
+  "corpus_version": "d30253eea9c2323fa9dcd4bc6a4a051eb5a926a8d98c720c4541c3d6f6fae4c7"
+}

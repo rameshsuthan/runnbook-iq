@@ -1,0 +1,31 @@
+[project]
+name = "runbook-iq"
+version = "0.1.0"
+description = "Evidence-based incident troubleshooting with LangGraph"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "langgraph>=1,<2",
+  "langchain-google-genai>=4,<5",
+  "pinecone>=7,<9",
+  "pydantic>=2,<3",
+  "PyYAML>=6,<7",
+  "python-dotenv>=1,<2",
+  "tokenizers>=0.21,<1",
+  "huggingface-hub>=0.30,<2",
+  "filelock>=3,<4",
+  "streamlit>=1.40,<2",
+]
+
+[dependency-groups]
+dev = ["pytest>=8,<10"]
+
+[project.scripts]
+runbook-iq = "runbook_iq.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "."]

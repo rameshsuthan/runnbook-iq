@@ -1,0 +1,42 @@
+# RunbookIQ project context
+
+Updated: 2026-10-18 (America/Chicago).
+
+## Authority and accepted direction
+
+`RunbookIQ-Codex-Handoff.md` is the consolidated brief. The two-phase direction, LangGraph learning requirement, Pinecone integrated embeddings, fictional incident domain and advanced Phase 2 scope are agreed. Do not restart broad brainstorming or copy the reference solution's implementation, prompts, corpus or answers.
+
+Build a local evidence-based troubleshooting assistant for database pool exhaustion and dependency timeouts. It recommends documented checks and identifies missing information; it cannot diagnose a live system or execute remediation.
+
+## Decisions
+
+- User selected **Gemini** as the Phase 1 chat provider on 2026-10-18. Nebius is deferred to Phase 2. Verified route: Gemini Developer API `gemini-3.5-flash-lite`, user-confirmed free tier; live generation succeeded. The listed 2.5 Flash-Lite model returned 404 and is not used.
+- Keep Python, LangGraph, Pinecone integrated `llama-text-embed-v2`, and minimal Streamlit. Python 3.12.15; dependencies resolved and locked with uv.
+- Canonical local chunk records drive Pinecone now and BM25 later. Preserve IDs, citation metadata, corpus versions and separate retrieval scores.
+- Phase 1: original query only, dense retrieval, deduplicated top five, one generation call, citation/schema validation, explicit fallback and errors. No response repair or automatic model retries.
+- Phase 2 interfaces remain, but BM25/RRF, reranking, query expansion, second-provider implementation and bounded repair are not built now. Unsupported switches fail clearly.
+- First checkpoint: three original synthetic documents → real Pinecone retrieval → one real cited Gemini answer through LangGraph, available through a CLI.
+- Then nine documents, 15 fixed evaluation cases, Streamlit, baseline report and reproducible README/demo outline.
+- Budget from brief: USD 1–2 target; USD 3 estimated paid-usage guard across both phases. The persistent SQLite guard is implemented and tested; paid provider calls fail closed until rates and token bounds are verified. Paid fallback remains disabled. Never silently treat missing usage/pricing as zero.
+- Credentials remain local and private. Keys are configured locally in ignored `.env`; only presence checks are logged. Tracing is disabled.
+
+## Review artifacts and continuation
+
+Design: [Phase 1 spec](docs/superpowers/specs/2026-10-18-phase-1-design.md), explicitly approved by the user on 2026-10-18. The user selected native execution of the [implementation plan](docs/superpowers/plans/2026-10-18-phase-1.md). Design and plan review are complete; continue implementation without asking again.
+
+The user confirmed Pinecone Starter and Gemini free tier on 2026-10-18. Pinecone integrated embedding metadata, indexing/retrieval and Gemini generation have been live-verified. Account tier flags are user assertions, not billing API verification. Use only the synthetic corpus. Python 3.12 dependencies are locked and installed. Git is initialized on `phase-1`; origin is `git@github.com:rameshsuthan/runnbook-iq.git`. The user authorized local author `rameshsuthan`; verified GitHub ID 8152097 gives `8152097+rameshsuthan@users.noreply.github.com`. No remote push is implied.
+
+The workspace began with three Markdown planning/reference documents. Phase 1 now includes the CLI, graph, nine-document corpus, evaluation runner and Streamlit. The first three-document live milestone is retained in `eval/results/m1-*.json`. See PROGRESS.md and the baseline report for actual verification and remaining limitations.
+
+Read this file, `PROGRESS.md`, the handoff and current implementation before continuing. Keep decisions here; record actual commands, outcomes, blockers and the next action in `PROGRESS.md`.
+
+## Implementation decisions
+
+- Gemini 3.5 uses minimal thinking and provider-default sampling; no temperature override. Responses are not deterministic. Maximum output is 1500 tokens; SDK retries and paid fallback are disabled.
+- Citation validation accepts `[id]` and `[id1, id2]`, checks each against selected evidence, and requires the inline/listed sets to match. It does not verify entailment. No response-repair feature has been added.
+- Nine documents produce 21 chunks. Fifteen cases were frozen before retrieval evaluation (10 development, 5 held out); all have now been observed. Do not describe future comparisons against them as unseen testing.
+- The local UI never ingests on startup or question submission. Form submissions invoke the graph; ordinary reruns retain the previous result.
+- No real production documents, live infrastructure, automatic remediation or advanced Phase 2 retrieval are in scope. The demo outline is written; no video has been recorded.
+
+- Final review fixed fenced Markdown preservation (splitter sections-v2), destination-bound ingestion and single-search answer evaluation. Existing live corpus/results retain their original version; rebuilding changes the version and requires explicit ingestion.
+- Current baseline quality is limited: 7/15 validation failures, one incomplete answer and one incorrect abstention status. Preserve these observations; the next quality work is targeted diagnosis, not Phase 2 implementation.
