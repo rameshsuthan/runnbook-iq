@@ -135,3 +135,9 @@ Next action: run the local UI and walk through the M1 example and documented
 failure cases using `docs/demo-outline.md`. For further implementation, investigate
 remaining validation failures and answer completeness on development cases before
 starting Phase 2. No credential, design-approval or Git-identity blocker remains.
+
+Local baseline committed as `82de23b` on `phase-1` using the authorized author.
+Before commit: all 64 staged files checked against configured credential values
+without printing them; no matches, private-key marker, .env or runtime artifacts.
+`git diff --cached --check` passed. Original reference solution and assignment
+handout remain untracked and untouched. No remote publication occurred.

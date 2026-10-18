@@ -31,11 +31,11 @@ Final: Ruling: paid model requests stay disabled — approved fail-closed route 
 Ruling: preserve the actual pre-provenance-fix answer baseline with its two-search limitation, not another full generation run — quota conservation and honest history — retrieval-only metrics and cited-source manual review remain separately interpretable.
 Ruling: consolidate deferred task commits into one reviewed Phase 1 baseline commit after the user supplied author identity — no author was invented and no work is lost — history has fewer runnable intermediate commits than planned.
 Ruling: retain the local phase-1 branch without publication — new root repository has no base branch and the plan excludes implied GitHub publishing — user decides when to publish.
-Task 1: complete; actual evidence in PROGRESS.md and phase1-review.md; consolidated baseline commit pending.
-Task 2: complete; actual evidence in PROGRESS.md and phase1-review.md; consolidated baseline commit pending.
-Task 3: complete; actual evidence in PROGRESS.md and phase1-review.md; consolidated baseline commit pending.
-Task 4: complete; actual evidence in PROGRESS.md and phase1-review.md; consolidated baseline commit pending.
-Task 5: complete; actual evidence in PROGRESS.md and phase1-review.md; consolidated baseline commit pending.
-Task 6: complete; actual evidence in PROGRESS.md and phase1-review.md; consolidated baseline commit pending.
-Task 7: complete; actual evidence in PROGRESS.md and phase1-review.md; consolidated baseline commit pending.
-Task 8: complete; actual evidence in PROGRESS.md and phase1-review.md; consolidated baseline commit pending.
+Task 1: complete; actual evidence in PROGRESS.md and phase1-review.md; consolidated baseline commit 82de23b.
+Task 2: complete; actual evidence in PROGRESS.md and phase1-review.md; consolidated baseline commit 82de23b.
+Task 3: complete; actual evidence in PROGRESS.md and phase1-review.md; consolidated baseline commit 82de23b.
+Task 4: complete; actual evidence in PROGRESS.md and phase1-review.md; consolidated baseline commit 82de23b.
+Task 5: complete; actual evidence in PROGRESS.md and phase1-review.md; consolidated baseline commit 82de23b.
+Task 6: complete; actual evidence in PROGRESS.md and phase1-review.md; consolidated baseline commit 82de23b.
+Task 7: complete; actual evidence in PROGRESS.md and phase1-review.md; consolidated baseline commit 82de23b.
+Task 8: complete; actual evidence in PROGRESS.md and phase1-review.md; consolidated baseline commit 82de23b.
