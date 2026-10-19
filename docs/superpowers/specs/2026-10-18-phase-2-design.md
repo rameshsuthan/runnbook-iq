@@ -1,5 +1,11 @@
 # RunbookIQ Phase 2 design
 
+**User scope amendment after implementation:** Nebius live acceptance is removed
+from Phase 2 and deferred to optional Phase 3. All other Phase 2 engineering tasks
+are complete. Original provider requirements below are retained as the future
+acceptance contract, not a current blocker. Known quality and UI/demo follow-ups
+are tracked in PROJECT_CONTEXT.md and PROGRESS.md.
+
 Date: 2026-10-18. Status: written specification approved by the user.
 Baseline: `e15502e` on published `phase-1`; design branch: `phase-2`.
 Authority: `RunbookIQ-Codex-Handoff.md`, especially sections 4, 6–8.

@@ -540,3 +540,23 @@ answer acceptance calls through the existing shared USD3 ledger. Until then Gemi
 profiles remain runnable and full Phase2 acceptance remains incomplete. q08's
 incorrect denial of documented fields is a known quality limitation for a separate
 targeted follow-up; do not rerun/tune frozen comparisons merely to improve scores.
+
+## User scope update: Phase 2 complete; Nebius optional Phase 3
+
+The user explicitly removed Nebius from Phase 2 and may revisit it in Phase 3.
+This supersedes the earlier Nebius acceptance blocker and next-action entries.
+All remaining Phase 2 implementation/evaluation/review tasks are complete and
+published. Existing offline Nebius code remains inactive; no live verification is
+claimed. Last code verification remains 135 passing tests; this update is docs-only,
+with no test rerun, model calls, credential access or new charges.
+
+Outstanding follow-ups, distinguished from implementation completion:
+- Answer quality: q08 incorrectly denies available correlation fields; q02 omits
+  the expected no-cause caveat. q04/q11 retain conservative status disagreements.
+  Preserve the frozen baseline and report any future targeted work separately.
+- Visual UI walkthrough: AppTest passes, but native visual inspection is undone.
+- Assignment delivery: <=5-minute demo outline is ready; video recording and
+  submission have not been performed. No deployment/auth work is in current scope.
+
+Recommended next action is targeted q08 diagnosis, followed by UI/demo preparation.
+Nebius requires a separate future decision and verified model/rate/bound setup.

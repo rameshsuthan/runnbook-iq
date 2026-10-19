@@ -13,24 +13,18 @@ is approved; Gemini milestones are implemented and independently reviewed.
 Native execution remains selected; do not request the execution method again.
 Earlier no-push statements and Phase 1 exclusions below describe prior checkpoints.
 
-First implementation milestone: local BM25 on the active canonical snapshot, RRF with
-separate per-query/method provenance, then one cited graph answer. No re-embedding
-is needed. Subsequent milestones add Starter-compatible BGE reranking, query
-expansion, Nebius, bounded repair and comparative inspection/evaluation. Public
-reranker terms were checked; actual access and Nebius model/rates remain live-use
-prerequisites. Preserve the existing USD 3 ledger and all frozen evaluation history.
+User scope update: **Nebius is removed from Phase 2 and deferred to optional
+Phase 3, only if needed.** Do not ask for Nebius readiness or treat its live
+verification as a Phase 2 blocker. The existing offline-tested adapter remains
+inactive; no additional provider work or paid calls are authorized by this update.
 
-User confirmed Nebius is **not ready** and instructed continuing with Gemini.
-Use Gemini for upcoming answer, expansion and repair milestones. Defer Nebius
-live verification until readiness changes; preserve its provider interface and
-record second-provider acceptance as incomplete. The readiness reply was separate
-from the subsequent explicit written-design approval.
-
-The implementation plan has nine tasks. Tasks 1–2 deliver the first hybrid answer;
-usage accounting precedes additional model calls, and Gemini repair work precedes
-Nebius live acceptance. Task 7 may deliver an offline-tested adapter, but no Nebius
-call is allowed until account/model/rate/bound prerequisites are verified. Finish
-with one independent whole-branch review under the selected Native workflow.
+Under the revised scope, Phase 2 implementation, evaluation, independent review
+and publication are complete. The last verified suite has 135 passing tests.
+Known answer-quality limitations remain: q08 falsely denies documented fields,
+q02 omits a caveat, and q04/q11 have conservative status disagreements. These are
+recorded follow-up issues, not hidden passing results. Native visual UI inspection
+and recording/submitting the <=5-minute assignment demo remain undone; the demo
+outline and project documentation are ready. Deployment is outside current scope.
 
 ## Phase 2 implementation checkpoints
 
@@ -62,9 +56,10 @@ with one independent whole-branch review under the selected Native workflow.
   Final code was not rerun live; original evaluated code hashes remain recorded.
 - Reviewed implementation4cab6fc is published on origin/phase-2; origin/phase-1
   remains e15502e. Execution/review records are archived under docs/.
-- Next action is Nebius live acceptance only after the user reports readiness and
-  model/rates/enforced token bounds are verified. Until then Gemini stays active.
-  Full Phase2 acceptance is incomplete; q08 remains a separate quality limitation.
+- Revised Phase 2 implementation is complete; Gemini remains active. Nebius is
+  optional Phase 3, not a pending Phase 2 acceptance gate.
+- Recommended follow-up: investigate q08 and q02 without overwriting frozen results,
+  visually walk through the UI, then record/submit the assignment demo if desired.
 
 ## Authority and accepted direction
 

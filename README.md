@@ -160,10 +160,10 @@ First relevant rank, structural citation validity, manual claim support and
 abstention are separate measurements.
 
 Phase 2 implements BM25/RRF, dedicated BGE reranking, bounded query expansion and
-one optional repair. Gemini milestones are live-verified; Nebius is tested offline
-and blocked from live use until account/model/rates/billable bounds are verified.
+one optional repair. Gemini milestones are live-verified. Nebius is optional Phase 3;
+its offline-tested adapter stays inactive until account/model/rates/bounds are verified.
 No semantic entailment verifier is implemented. See the current Phase 2 report and
-PROGRESS.md for measured outcomes and pending acceptance.
+PROGRESS.md for measured outcomes and remaining quality/demo follow-ups.
 
 ## Repository and continuation
 
@@ -269,4 +269,6 @@ no gain is demonstrated. Final completed answers match 12/15 frozen statuses;
 q02 omits a caveat, q04/q11 abstain conservatively, and q08 incorrectly denies
 retrieved telemetry fields. The first q06 search failure is preserved separately.
 One real q15 response used the bounded repair edge. Final evaluation:16 free-tier
-chat calls, estimated USD0. Nebius live acceptance is pending.
+chat calls, estimated USD0. Per the revised scope, Phase 2 implementation is complete;
+Nebius live acceptance is deferred to optional Phase 3. Quality limitations above,
+a visual UI walkthrough, and video recording/submission remain follow-ups.
