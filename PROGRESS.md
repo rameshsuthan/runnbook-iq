@@ -2,7 +2,7 @@
 
 ## Current status — 2026-10-18
 
-M1 live checkpoint is complete. Phase 1 code, full synthetic corpus, UI and retrieval baseline are implemented. Full answer evaluation and final review fixes are complete and recorded below; remaining quality limitations are explicit. Earlier sections are chronological history, not current blockers.
+M1 and the Phase 1 baseline are complete. Latest checkpoint: prompt/schema v3, 63 passing tests, a full 15-case live report and a separate offline validation audit. Telemetry coverage is corrected; remaining quality/status limitations and next actions are recorded at the end. Earlier sections are chronological history, not current blockers.
 
 ## Initial planning checkpoint — 2026-10-18
 
@@ -183,3 +183,68 @@ Next action: inspect q08's selected telemetry passages and compare them with its
 incomplete answer before considering another bounded development experiment.
 All original Phase 2 exclusions remain. No broad brainstorming or new design
 approval is needed for these Phase 1 contract fixes.
+
+## Telemetry coverage milestone — 2026-10-18
+
+Confirmed q08 selected both telemetry sections, including the required identifiers
+and timing fields. Compared against the incomplete v2 answer. Two single-call
+experiments used identical recorded evidence, unchanged model/settings and v2
+system instructions: moving the question last still omitted request_id/trace_id;
+clarifying the answer-field schema description included all requested fields.
+Both observations are saved in `eval/results/q08-coverage-experiments.json`.
+The unsuccessful layout change was not adopted. These are stochastic observations,
+not a causal guarantee.
+
+Adopted only the schema-description clarification plus prompt/schema cache-version
+bumps (v3). A check against the saved v2 answer first failed for all four expected
+names: request_id, trace_id, db_pool_acquire_ms, inventory_request_ms. The actual
+v3 graph answer passed that check; assistant source review also checked meanings,
+same-window/process scope and citations. The production prompt contains no literal
+evaluation answer/field names. Existing interfaces, retrieval and one-call bound
+are unchanged.
+
+`.venv/bin/pytest -q` → 60 passed. No source-text/constant-only test was added for a
+schema prose change. Actual targeted graph run q01/q08/q10 → answered / answered /
+insufficient_evidence, all supported and substantively complete on review. Three
+new calls, 3,301 input / 952 output tokens, estimated USD 0. Results retained in
+`eval/results/phase1-followup-v3.json`.
+
+Started one final fixed v3 baseline over all 15 cases, reusing the three current
+cached answers, with at most twelve new free-tier calls and 15-second spacing.
+No automatic repair/retry. Every outcome is saved incrementally; provider/quota
+errors stop the run. Original reports are not overwritten.
+
+### Full v3 outcome and final guard
+
+Full v3 baseline completed all 15 fixed cases: 10 answered / 5 insufficient_evidence,
+3 cache hits and 12 new calls; no format failure under the then-current validator.
+Retrieval hit/recall stayed 1.0 for 12 answerable cases. Manual source review is saved
+per case in `eval/results/phase1-baseline-v3.json`. Exact status agreement: 13/15.
+q04/q11 conservatively abstained versus expected answered, q02 omitted a cause
+caveat, and q09 included an unsupported/uncited vault recommendation. q08 now
+includes the expected correlation and measurement fields with accurate meanings.
+
+q09 revealed a real validation gap: citation presence in one section did not
+require citation presence in the other. Tightened validation so each nonempty
+evidence/checks section needs an inline citation. Old cached outputs are also
+revalidated and rejected with a categorized failure and zero generation calls;
+no automatic retry or cache regeneration. Three new tests observed RED→GREEN.
+`.venv/bin/pytest -q` → **63 passed**.
+
+Offline replay of all 15 saved answers under the strengthened validator → 14
+accepted; q09 rejected as missing_inline_citations. The audit records the source
+JSON hash in `eval/results/phase1-baseline-v3-validation-audit.json`. This is an
+offline audit, not a second live run. No further model calls made after the full
+baseline. Field-level citations still do not prove every claim or requested point.
+
+Full run: 12,977 input / 4,309 output known tokens; median uncached summed node time
+1.815 s (composition and pauses excluded). This continuation: 17 new calls total,
+18,505 input / 6,267 output tokens, USD 0 estimated paid usage. Final ledger snapshot:
+56 attempts, 54 known usage records, 2 earlier unknown outcomes; includes user
+activity between checks. No Phase 2 features or paid fallback enabled.
+
+Next action: use the v3 report and offline audit for the Phase 1 walkthrough.
+Before comparative Phase 2 evaluation, clarify the answer-versus-abstention rubric
+for q04/q11 prospectively, preserving these original expectations and outcomes.
+Known limitations remain q02's caveat coverage, q09's rejected output, and the
+absence of a semantic entailment verifier; no additional prompt-tuning loop is running.

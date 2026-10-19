@@ -48,3 +48,14 @@ def test_validation_categories_do_not_echo_response(kind,expected):
         validate_answer(response,[Candidate(chunk=snapshot().chunks[0],rank=1)])
     assert getattr(caught.value,'code',None)==expected
     assert 'private-sentinel' not in str(caught.value)
+
+@pytest.mark.parametrize('uncited_section',['documented_evidence','recommended_checks'])
+def test_each_nonempty_answer_section_requires_its_own_inline_citation(uncited_section):
+    from runbook_iq.generation import validate_answer,AnswerValidationError
+    body={'status':'insufficient_evidence','documented_evidence':'Documented fact [c-v1]',
+          'recommended_checks':'Documented check [c-v1]',
+          'missing_information':['Current observations'], 'citations':['c-v1']}
+    body[uncited_section]='An unsupported assertion or check'
+    with pytest.raises(AnswerValidationError) as error:
+        validate_answer(ProviderResponse(text=json.dumps(body)),[Candidate(chunk=snapshot().chunks[0],rank=1)])
+    assert error.value.code=='missing_inline_citations'

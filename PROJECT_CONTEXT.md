@@ -54,3 +54,29 @@ Read this file, `PROGRESS.md`, the handoff and current implementation before con
 - Three-case development follow-up: q06 citation/cause answer and q10 abstention
   improved; q08 remains incomplete despite relevant selected evidence. This is
   not a replacement full baseline. Next quality issue: use of retrieved fields.
+
+## Telemetry coverage correction — 2026-10-18
+
+- q08 had both required telemetry passages at ranks 1 and 5. Its failure was
+  incomplete generation from available evidence. A question-last presentation
+  experiment improved measurement coverage but still omitted correlation IDs;
+  that change was rejected and the original message layout remains.
+- The adopted change only clarifies the `documented_evidence` schema description:
+  enumerate requested exact field names/meanings and use all relevant selected
+  passages. No expected field names or evaluation answers are inserted into the
+  production prompt. Prompt/schema identities are now incident-evidence-v3 /
+  answer-v3, with the existing response fields and graph interfaces preserved.
+- A real three-case graph follow-up covered q08 correctly and preserved q01's
+  supported answer and q10's abstention. Full v3 baseline is recorded separately;
+  prior baselines and failed experiments remain available. No Phase 2 features.
+
+- Full v3 baseline: 10 answers / 5 abstentions; 13/15 match frozen status expectations.
+  q02 omits an expected caveat; q04/q11 have conservative status disagreements;
+  q09 adds an unsupported uncited check. Current validator additionally requires
+  citations in each nonempty evidence/checks section and rejects that q09 output,
+  including from cache, without regeneration. Offline saved-response audit: 14/15
+  accepted, one rejected. These numbers are not a new live run after the guard.
+- Status-rubric clarification is prospective work before Phase 2 comparisons; do
+  not rewrite frozen baseline expectations to erase disagreements. Citation checks
+  remain structural, not semantic entailment. The full corpus and graph contracts
+  stay available for later advanced retrieval work.

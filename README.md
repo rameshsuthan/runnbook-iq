@@ -146,7 +146,7 @@ answerable cases hit expected evidence at five; mean section-level recall@5 was 
 The three unanswerable cases are excluded from these denominators. This tiny,
 consistent synthetic corpus is not evidence of production readiness.
 
-The answer baseline returned 6 answers, 2 abstentions and 7 validation failures.
+The original answer baseline returned 6 answers, 2 abstentions and 7 validation failures.
 One answer was incomplete and one used the wrong status for an unknown live cause.
 These failures are retained rather than hidden behind automatic retries.
 
@@ -192,3 +192,21 @@ The flag does not retry or repair an answer.
 The v2 prompt passed citation/status checks on a three-case development follow-up;
 the telemetry answer remained incomplete. See the addendum in
 `eval/results/phase1-review.md`. The original 15-case baseline is unchanged.
+
+## Latest Phase 1 verification
+
+Prompt/schema v3 clarifies direct field-name answers without changing retrieval or
+adding a model call. The telemetry case now includes the requested correlation
+identifiers and timing fields. All **63 offline tests pass**.
+
+`eval/results/phase1-baseline-v3.json` records the full 15-case run: 10 answers and
+5 abstentions, with 3 cache hits and 12 new calls. Manual review retains a missing
+caveat, two status disagreements, and an unsupported uncited recommendation.
+Each nonempty evidence/checks section now requires its own inline citation;
+replaying the saved answers under this stronger rule accepts 14 and rejects that
+recommendation. See `phase1-baseline-v3-validation-audit.json` for the offline audit
+and `phase1-review.md` for the distinction from the original live run.
+
+Cached answers are revalidated too. A rejected cached answer returns an explicit
+validation failure with zero new model calls; it is not automatically regenerated.
+Citation presence still does not prove claim support or answer completeness.

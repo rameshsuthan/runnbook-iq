@@ -40,7 +40,7 @@ class Usage(Record):
 
 class GeneratedAnswer(Record):
     status: Literal['answered', 'insufficient_evidence'] = Field(description='Use insufficient_evidence if the requested fact or live cause cannot be established from these passages.')
-    documented_evidence: str = Field(description='Address the requested facts directly. Every factual sentence must include inline [chunk_id] references using exact evidence IDs.')
+    documented_evidence: str = Field(description='Direct answer to the original question, using all relevant selected passages. When asked which fields, enumerate the exact field names and their meanings, including correlation identifiers and measurement fields where documented. For other questions, supply the requested facts directly. Every factual sentence must include inline [chunk_id] references using exact evidence IDs.')
     recommended_checks: str = Field(description='Documented checks with inline [chunk_id] references in this text. Nonempty for answered responses.')
     missing_information: list[str] = Field(description='Specific unavailable facts or observations; required when status is insufficient_evidence.')
     citations: list[str] = Field(description='Unique exact chunk IDs used inline in documented_evidence, recommended_checks or missing_information. This array does not replace inline references.')

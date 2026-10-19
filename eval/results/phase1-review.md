@@ -158,3 +158,73 @@ unchanged one-call graph termination. CLI help exposes the diagnostic flag.
 The next quality issue is q08's incomplete use of already-retrieved evidence;
 additional prompt changes or Phase 2 retrieval must not be claimed as fixes until
 measured. No full answer rerun or Phase 2 implementation was performed.
+
+## Telemetry correction and full v3 baseline — 2026-10-18
+
+q08's relevant telemetry passages were already selected at ranks 1 and 5. Two
+single-call experiments reused that exact evidence. Moving the question to the
+end improved measurement-field coverage but still omitted correlation IDs; that
+layout change was rejected. A clearer `documented_evidence` schema description
+explicitly requesting exact field names and meanings covered all expected fields.
+No literal expected answer or field name was added to the production prompt.
+Both experiments are retained in `q08-coverage-experiments.json`.
+
+The adopted production change is the schema description, with prompt/schema cache
+versions advanced to v3; system text, message layout, model, retrieval and call
+bounds are unchanged. The actual graph follow-up q01/q08/q10 met all three
+substantive expectations (`phase1-followup-v3.json`). The original q08 name-coverage
+check failed for request_id, trace_id, db_pool_acquire_ms and inventory_request_ms;
+the graph's new answer passed, and source review verified their meanings and the
+same-window/process constraint. These observations are not a guarantee of future
+model behavior.
+
+A final full run used the frozen 15 cases once, with three v3 cache hits and twelve
+new calls (`phase1-baseline-v3.json`). It recorded **10 answered / 5 insufficient_evidence**
+and no generation-format failures under the validator at run time. Retrieval
+hit@5 and macro section recall@5 remain **1.0 across 12 answerable cases**. Exact
+status agreement was **13/15**. Full per-case assistant source review is attached
+to the JSON rows; remaining discrepancies are deliberately preserved:
+
+| Case | Finding |
+|---|---|
+| q02 | Correct deadline and checks; omits the frozen expected caveat that the error alone does not establish cause. |
+| q04 | Correctly explains 503 ambiguity and asks for observations, but abstains rather than returning the frozen expected answered status. |
+| q09 | Correctly withholds the unavailable password, but recommends a vault/environment secret manager absent from the sources and without a citation. |
+| q11 | Gives documented duration/concurrency/traces checks while noting missing definitive criteria; abstains rather than returning the frozen expected answered status. |
+
+q04 and q11 reveal a status-rubric distinction between providing documented checks
+and claiming a live diagnosis. The original expectations are unchanged; clarify
+that distinction prospectively before interpreting later comparative scores.
+q08 now covers the expected fields. No false live diagnosis was found in source
+review. q09's unsupported recommendation is a real grounding failure despite its
+otherwise appropriate abstention.
+
+### Section-level citation hardening after the run
+
+The q09 output exposed a validation gap: a cited evidence section allowed an
+entirely uncited checks section. Every nonempty evidence/checks section now needs
+its own inline citation. Three regression tests failed first and then passed,
+including rejection of an old cached answer without another model call. The
+full offline suite now has **63 passing tests**.
+
+An offline replay of the 15 saved answer bodies against their exact selected
+evidence accepted **14** and rejected **q09** as `missing_inline_citations`; no
+service calls or regenerated answers were involved. See
+`phase1-baseline-v3-validation-audit.json`, which records the source report hash.
+The full live run predates this additional validation, so do not describe the
+14/15 replay result as a newly generated baseline. Real IDs and a citation in each
+section still do not establish sentence-by-sentence entailment or completeness.
+
+### Usage and verification
+
+The full v3 run used **12 new calls**, 3 cache hits, **12,977 input / 4,309 output**
+known tokens. Median uncached summed node time was **1.815 seconds**, excluding
+composition and pauses. This continuation used **17 new generation calls total**:
+two experiments, three targeted graph checks and twelve full-baseline calls.
+Combined known usage for those calls: **18,505 input / 6,267 output** tokens.
+Estimated paid usage remains USD 0 on the user-confirmed free route.
+
+Local ledger snapshot: 56 attempts, 54 known usage records, two earlier unknown
+outcomes; 54,102 input / 15,636 output known tokens, USD 0 estimated paid usage.
+The ledger also includes user activity; it is not a provider invoice audit.
+No paid fallback, repair loop, Phase 2 feature, or model upgrade was added.

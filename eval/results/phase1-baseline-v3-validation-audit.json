@@ -1,0 +1,84 @@
+{
+  "source_file": "phase1-baseline-v3.json",
+  "source_sha256": "6061178aabe088f3bab92d9a4824eac1070b99baa705b62d344ad8395419294d",
+  "mode": "offline replay of saved answer JSON against recorded selected evidence; no service calls",
+  "validation_rule": "Every nonempty documented_evidence and recommended_checks section needs its own inline citation; existence only, not entailment.",
+  "cases": [
+    {
+      "case_id": "q01",
+      "original_status": "answered",
+      "validation": "accepted"
+    },
+    {
+      "case_id": "q02",
+      "original_status": "answered",
+      "validation": "accepted"
+    },
+    {
+      "case_id": "q03",
+      "original_status": "answered",
+      "validation": "accepted"
+    },
+    {
+      "case_id": "q04",
+      "original_status": "insufficient_evidence",
+      "validation": "accepted"
+    },
+    {
+      "case_id": "q05",
+      "original_status": "answered",
+      "validation": "accepted"
+    },
+    {
+      "case_id": "q06",
+      "original_status": "answered",
+      "validation": "accepted"
+    },
+    {
+      "case_id": "q07",
+      "original_status": "answered",
+      "validation": "accepted"
+    },
+    {
+      "case_id": "q08",
+      "original_status": "answered",
+      "validation": "accepted"
+    },
+    {
+      "case_id": "q09",
+      "original_status": "insufficient_evidence",
+      "validation": "rejected",
+      "validation_error": "missing_inline_citations"
+    },
+    {
+      "case_id": "q10",
+      "original_status": "insufficient_evidence",
+      "validation": "accepted"
+    },
+    {
+      "case_id": "q11",
+      "original_status": "insufficient_evidence",
+      "validation": "accepted"
+    },
+    {
+      "case_id": "q12",
+      "original_status": "answered",
+      "validation": "accepted"
+    },
+    {
+      "case_id": "q13",
+      "original_status": "answered",
+      "validation": "accepted"
+    },
+    {
+      "case_id": "q14",
+      "original_status": "answered",
+      "validation": "accepted"
+    },
+    {
+      "case_id": "q15",
+      "original_status": "insufficient_evidence",
+      "validation": "accepted"
+    }
+  ]
+}

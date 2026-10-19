@@ -1,0 +1,78 @@
+{
+  "case_id": "q08",
+  "source_run": "phase1-followup-v2.json",
+  "scope": "Two single-call development experiments on identical recorded evidence. Stochastic observations, not a causal guarantee or replacement baseline.",
+  "experiments": [
+    {
+      "experiment": "question-after-evidence; same v2 system/schema/model/settings and recorded q08 evidence",
+      "question": "Which fields correlate pool waits with inventory requests?",
+      "answer": {
+        "status": "answered",
+        "documented_evidence": "Correlating slow inventory calls with long checkouts to test whether a code path holds a connection while waiting on a dependency is supported by inspecting active and long-running transaction durations, connection checkout duration, and recent request concurrency [c-b558d4a54b99f92199c0a0f0]. The field inventory_request_ms measures elapsed client time for an inventory request [c-0f45ebfa20d4d867d43eff2a]. Meanwhile, db_pool_waiters counts pending acquisitions and db_pool_acquire_ms measures time spent waiting for a pool slot [c-86a311dbd0dd4b58d0c0fe02].",
+        "recommended_checks": "Correlate slow inventory calls with long checkouts to test whether a code path holds a connection while waiting on a dependency [c-b558d4a54b99f92199c0a0f0]. Inspect active and long-running transaction durations, connection checkout duration, and recent request concurrency [c-b558d4a54b99f92199c0a0f0].",
+        "missing_information": [],
+        "citations": [
+          "c-0f45ebfa20d4d867d43eff2a",
+          "c-86a311dbd0dd4b58d0c0fe02",
+          "c-b558d4a54b99f92199c0a0f0"
+        ]
+      },
+      "validation_error": null,
+      "usage": {
+        "input_tokens": 1112,
+        "output_tokens": 388,
+        "reasoning_tokens": null,
+        "estimated_usd": "0",
+        "calls": 1
+      },
+      "finish_reason": "STOP",
+      "selected_ids": [
+        "c-86a311dbd0dd4b58d0c0fe02",
+        "c-8b07e11e14a4069f84d9dc0f",
+        "c-8eb6f00c104ca799f19afdbf",
+        "c-b558d4a54b99f92199c0a0f0",
+        "c-0f45ebfa20d4d867d43eff2a"
+      ],
+      "missing_requested_field_names": [
+        "request_id",
+        "trace_id"
+      ],
+      "adopted": false
+    },
+    {
+      "experiment": "direct-answer schema description only; original v2 system/message layout/model/settings and recorded q08 evidence",
+      "question": "Which fields correlate pool waits with inventory requests?",
+      "answer": {
+        "status": "answered",
+        "documented_evidence": "The available documents do not name a single combined field that directly correlates pool waits with inventory requests, but slow inventory calls can be correlated with long checkouts to test whether a code path holds a connection while waiting on a dependency [c-b558d4a54b99f92199c0a0f0]. The telemetry fields involved in database pool waits include db_pool_in_use (the number of checked-out connections in one process), db_pool_waiters (counts pending acquisitions), and db_pool_acquire_ms (measures time spent waiting for a slot) [c-86a311dbd0dd4b58d0c0fe02]. The fields associated with inventory requests include inventory_request_ms (measures elapsed client time for an inventory request), dependency_name (identifies the upstream), and upstream_status (the received HTTP status when available) [c-0f45ebfa20d4d867d43eff2a]. Additionally, request_id and trace_id serve as correlation identifiers to connect signals in the same time window and process [c-86a311dbd0dd4b58d0c0fe02, c-8eb6f00c104ca799f19afdbf].",
+        "recommended_checks": "Correlate slow inventory calls with long checkouts to test whether a code path holds a connection while waiting on a dependency [c-b558d4a54b99f92199c0a0f0]. Inspect dependency_name, upstream_status, inventory_request_ms and trace spans for the same request_id and time window [c-8eb6f00c104ca799f19afdbf]. Compare db_pool_in_use with the per-process limit of 20, db_pool_waiters, and db_pool_acquire_ms for the same process and time window [c-8b07e11e14a4069f84d9dc0f].",
+        "missing_information": [],
+        "citations": [
+          "c-86a311dbd0dd4b58d0c0fe02",
+          "c-8b07e11e14a4069f84d9dc0f",
+          "c-8eb6f00c104ca799f19afdbf",
+          "c-b558d4a54b99f92199c0a0f0",
+          "c-0f45ebfa20d4d867d43eff2a"
+        ]
+      },
+      "validation_error": null,
+      "usage": {
+        "input_tokens": 1115,
+        "output_tokens": 618,
+        "reasoning_tokens": null,
+        "estimated_usd": "0",
+        "calls": 1
+      },
+      "finish_reason": "STOP",
+      "selected_ids": [
+        "c-86a311dbd0dd4b58d0c0fe02",
+        "c-8b07e11e14a4069f84d9dc0f",
+        "c-8eb6f00c104ca799f19afdbf",
+        "c-b558d4a54b99f92199c0a0f0",
+        "c-0f45ebfa20d4d867d43eff2a"
+      ],
+      "missing_requested_field_names": [],
+      "adopted": true
+    }
+  ]
+}

@@ -75,7 +75,13 @@ def build_graph(retriever,provider,cache,settings,corpus_version):
         try:
             cached=cache.get(key)
             if cached:
-                validate_answer(ProviderResponse(text=cached.answer.model_dump_json()),state['selected_evidence'])
+                try:
+                    validate_answer(ProviderResponse(text=cached.answer.model_dump_json()),state['selected_evidence'])
+                except AnswerValidationError as error:
+                    result=terminal('invalid_output',f'Cached answer failed validation: {error.code}. No regeneration attempted.',
+                                    Usage(calls=0,input_tokens=0,output_tokens=0,estimated_usd=0))
+                    result.validation_error=error.code
+                    return {'result':result}
                 cached.cache_hit=True; cached.usage=Usage(calls=0,input_tokens=0,output_tokens=0,estimated_usd=0)
                 return {'result':cached,'citations':cached.answer.citations}
             return {'response':provider.generate(state['question'],state['selected_evidence']),'cache_key':key}

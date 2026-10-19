@@ -76,3 +76,22 @@ def test_missing_inline_citations_are_reported_without_response_body(tmp_path):
     assert getattr(result,'validation_error',None)=='missing_inline_citations'
     assert 'private-sentinel' not in result.model_dump_json()
     assert state['path'][-1]=='validate'
+
+
+def test_old_cached_answer_with_uncited_checks_is_rejected_without_generation(tmp_path):
+    from runbook_iq.graph import build_graph
+    from runbook_iq.cache import AnswerCache,answer_cache_key
+    from runbook_iq.schemas import GeneratedAnswer,RunResult
+    settings=Settings(model='test');cache=AnswerCache(tmp_path/'cache.db')
+    old=RunResult(status='insufficient_evidence',answer=GeneratedAnswer(status='insufficient_evidence',
+        documented_evidence='No password is in this document [c-v1]',
+        recommended_checks='Look in an undocumented vault',missing_information=['Password'],citations=['c-v1']))
+    cache.put(answer_cache_key(settings,'q',{},'v1',evidence()),old)
+    provider=Provider();graph=build_graph(Retriever(evidence()),provider,cache,settings,'v1')
+    state=graph.invoke({'question':'q','filters':{}})
+    result=state['result']
+    assert result.status=='invalid_output'
+    assert result.validation_error=='missing_inline_citations'
+    assert result.answer is None and provider.calls==0 and result.usage.calls==0
+    assert 'undocumented vault' not in result.model_dump_json()
+    assert state['path'][-1]=='generate'

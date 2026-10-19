@@ -28,6 +28,9 @@ def validate_answer(response,evidence):
         raise AnswerValidationError('missing_inline_citations')
     if inline!=cited:
         raise AnswerValidationError('citation_mismatch')
+    for section in (answer.documented_evidence,answer.recommended_checks):
+        if section.strip() and not re.search(r'\[([^\[\]\n]+)\]',section):
+            raise AnswerValidationError('missing_inline_citations')
     if answer.status=='answered' and (not cited or not answer.documented_evidence.strip() or not answer.recommended_checks.strip()):
         raise AnswerValidationError('missing_answer_sections')
     if answer.status=='insufficient_evidence' and not answer.missing_information:
