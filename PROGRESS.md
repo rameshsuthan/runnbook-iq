@@ -2,7 +2,7 @@
 
 ## Current status — 2026-10-18
 
-M1 and the Phase 1 baseline are complete. Latest checkpoint: prompt/schema v3, 63 passing tests, a full 15-case live report and a separate offline validation audit. Telemetry coverage is corrected; remaining quality/status limitations and next actions are recorded at the end. Earlier sections are chronological history, not current blockers.
+M1 and the Phase 1 baseline are complete and published on `origin/phase-1` through `e15502e`. Phase 2 has a written design on branch `phase-2`, awaiting spec review before implementation planning. Latest application checkpoint remains prompt/schema v3, 63 passing tests at the prior verification, a full 15-case live report and a separate offline validation audit. Earlier sections are chronological history, not current blockers.
 
 ## Initial planning checkpoint — 2026-10-18
 
@@ -248,3 +248,45 @@ Before comparative Phase 2 evaluation, clarify the answer-versus-abstention rubr
 for q04/q11 prospectively, preserving these original expectations and outcomes.
 Known limitations remain q02's caveat coverage, q09's rejected output, and the
 absence of a semantic entailment verifier; no additional prompt-tuning loop is running.
+
+## GitHub publication and Phase 2 design — 2026-10-18
+
+User explicitly requested push and next steps. `git ls-remote origin` returned no
+refs. `git push -u origin phase-1` succeeded and configured tracking.
+`git ls-remote --heads origin phase-1` confirmed
+`e15502eda4dac8217b067cebde41da09c2b6ca1c`. Created `phase-2` from that baseline.
+User-owned untracked reference documents and `eval/results/my-answer.json` remain
+untouched and unpublished.
+
+Read the complete handoff and current graph, schemas, configuration, retrieval,
+budget, cache and evaluation contracts. Wrote the Phase 2 design with six runnable
+milestones, starting with BM25/RRF over the existing active chunks. Identified
+per-query provenance, cumulative multi-call usage, and separate retrieval/selection
+metrics as necessary interface extensions. Proposed prospective status rubric keeps
+all frozen expectations and original failures intact.
+
+Official public documentation checked: Pinecone Starter includes BGE reranking
+(500 requests/month); BGE accepts at most 100 documents and 1024 tokens per
+query/document pair, with `truncate=NONE` available. Design limits input to 15
+documents, selects five and fails visibly on oversize/access/quota errors.
+Nebius documents its compatible endpoint and model-dependent JSON-schema support;
+no model/rates/account credit availability has been asserted or enabled. Readiness
+question sent to the user; this does not block the BM25 milestone's design.
+
+No product code/dependencies/configuration changed. No Pinecone/Gemini/Nebius API
+calls or new application usage incurred. Existing offline test result remains
+63 passed; tests were not rerun for this documentation-only checkpoint. Spec
+self-review covers bounds, error exits, backwards-readable records, cache identity,
+shared budget and evaluation limitations.
+
+Documentation verification: `git diff --check` passed; Python assertions confirmed
+six milestone IDs, balanced fenced blocks, no unresolved placeholder markers and
+resolving local Markdown links. Only the spec and the two project tracking files
+are included in this checkpoint's commit.
+
+Next action: obtain review of the written Phase 2 spec, then write its detailed
+implementation plan using the already-selected Native execution method. The
+installed brainstorming workflow requires written-spec review before that plan;
+Phase 1 approvals remain complete. After plan review, implement P2.1 in small
+runnable steps. Later live prerequisites are reranker access and verified Nebius
+credentials/model/rates/billable bounds; no plan upgrade or paid fallback is allowed.

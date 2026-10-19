@@ -2,6 +2,23 @@
 
 Updated: 2026-10-18 (America/Chicago).
 
+## Current continuation
+
+The user explicitly authorized pushing history and starting next steps. Phase 1
+through `e15502e` is published on `origin/phase-1`; remote SHA was verified.
+`phase-2` branches from that baseline. Phase 2 design preparation is underway;
+product implementation has not started. The written spec is
+[Phase 2 design](docs/superpowers/specs/2026-10-18-phase-2-design.md), awaiting user
+review before detailed implementation planning. Native execution remains selected.
+Earlier no-push statements and Phase 1 exclusions below describe prior checkpoints.
+
+Proposed first milestone: local BM25 on the active canonical snapshot, RRF with
+separate per-query/method provenance, then one cited graph answer. No re-embedding
+is needed. Subsequent milestones add Starter-compatible BGE reranking, query
+expansion, Nebius, bounded repair and comparative inspection/evaluation. Public
+reranker terms were checked; actual access and Nebius model/rates remain live-use
+prerequisites. Preserve the existing USD 3 ledger and all frozen evaluation history.
+
 ## Authority and accepted direction
 
 `RunbookIQ-Codex-Handoff.md` is the consolidated brief. The two-phase direction, LangGraph learning requirement, Pinecone integrated embeddings, fictional incident domain and advanced Phase 2 scope are agreed. Do not restart broad brainstorming or copy the reference solution's implementation, prompts, corpus or answers.
