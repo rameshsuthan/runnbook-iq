@@ -74,3 +74,38 @@ def test_budget_failure_retains_original(tmp_path):
     result=preparer(tmp_path,Provider(error=BudgetExceeded('cap'))).prepare('pool',{})
     assert result.queries==['pool'] and result.warnings==['expansion_budget_blocked']
     assert result.operations==[]
+
+
+@pytest.mark.parametrize('original,changed',[
+    ('Explain DB_POOL_TIMEOUT','Explain DB_POOL_TIMEOUT.extra'),
+    ('Check order-api','Check order-api-prod'),
+    ('Explain 500 ms','Explain 500.7 ms'),
+])
+def test_expansion_rejects_extended_identifiers_and_numbers(original,changed):
+    from runbook_iq.queries import validate_alternatives
+    assert validate_alternatives(original,[changed],{'order-api'})==[original]
+    # Sentence punctuation must not be confused with an identifier extension.
+    safe=original+'; show documented checks.'
+    assert validate_alternatives(original,[safe],{'order-api'})==[original,safe]
+
+
+@pytest.mark.parametrize('required',[False,True])
+def test_cached_expansion_rechecks_current_embedding_limit(tmp_path,required):
+    from runbook_iq.queries import QueryPreparer,ExpansionCacheMiss
+    from runbook_iq.cache import ExpansionCache
+    class Counter:
+        def count(self,text):return len(text.split())
+    provider=Provider(json.dumps({'alternatives':['pool '+'detail '*450]}))
+    settings=Settings(model='m',embedding_max_tokens=2048)
+    cache=ExpansionCache(tmp_path/'cache')
+    first=QueryPreparer(settings,provider,cache,'v1',set(),counter=Counter()).prepare('pool',{})
+    assert len(first.queries)==2
+    smaller=settings.model_copy(update={'embedding_max_tokens':400})
+    preparer=QueryPreparer(smaller,provider,cache,'v1',set(),require_cache=required,counter=Counter())
+    if required:
+        with pytest.raises(ExpansionCacheMiss,match='token'):preparer.prepare('pool',{})
+    else:
+        result=preparer.prepare('pool',{})
+        assert result.queries==['pool'] and result.warnings
+        assert len(result.operations)==1 and not result.operations[0].attempted
+    assert provider.calls==1

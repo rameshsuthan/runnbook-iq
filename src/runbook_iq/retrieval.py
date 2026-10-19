@@ -27,13 +27,18 @@ class PineconeRetriever:
                 hits=self.client.search(query,filters,self.settings.top_k)
                 operation=OperationRecord(stage='dense_search',provider='pinecone',attempted=True)
             result=[]
-            for rank,hit in enumerate(hits,1):
-                chunk=records.get(hit['id'])
-                if chunk is None or hit.get('text')!=chunk.text:continue
-                if any(getattr(chunk,k)!=v for k,v in filters.items()):continue
-                if hit.get('corpus_version',active.version)!=active.version:continue
-                if hit.get('content_hash',chunk.content_hash)!=chunk.content_hash:continue
-                result.append(Candidate(chunk=chunk,rank=rank,scores={'dense':hit['score']}))
+            try:
+                for rank,hit in enumerate(hits,1):
+                    chunk=records.get(hit['id'])
+                    if chunk is None or hit.get('text')!=chunk.text:continue
+                    if any(getattr(chunk,k)!=v for k,v in filters.items()):continue
+                    if hit.get('corpus_version',active.version)!=active.version:continue
+                    if hit.get('content_hash',chunk.content_hash)!=chunk.content_hash:continue
+                    result.append(Candidate(chunk=chunk,rank=rank,scores={'dense':hit['score']}))
+            except Exception:
+                from .usage import CallFailure
+                raise CallFailure('Dense result normalization failed; no automatic retry',
+                    operation.model_copy(update={'status':'error'})) from None
             return result,operation
 
 

@@ -93,3 +93,12 @@ and one cited graph answer remain required. Phase 2 is not fully accepted yet.
 Streamlit AppTest verifies inspection and reruns without new submissions. Native
 visual inspection was not performed; no enabled structured browser was exposed.
 The [4:30 demo outline](../../docs/demo-outline.md) is written; no video was recorded.
+
+## Final engineering review
+
+[Independent review](../../docs/phase2-code-review.md) found protected-token,
+cached token-limit and malformed-hit accounting defects. All were fixed with six
+RED→GREEN regression cases; the full suite passes135 tests. The
+[post-review offline audit](phase2-post-review-audit.json) confirms all15 exact query
+sets remain valid under the stricter guards. The live answers above were produced
+before these fixes and retain their original source hashes. No live rerun was made.

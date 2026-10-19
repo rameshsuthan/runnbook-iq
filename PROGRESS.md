@@ -505,3 +505,23 @@ shared ledger now has90 reservations:88 known and2 unknown historic chat outcome
 estimated/reserved USD0. Local Pinecone counts:48 rerank units,95 known read units,
 3,485 embedding tokens including one unknown2,048-token reservation. These counters
 do not establish account-wide consumption. Next: independent branch review.
+
+## Independent review and final fixes — 2026-10-18
+
+One fresh reviewer independently ran129 passing tests and found two Important
+expansion defects plus one Minor accounting defect. Regraded accounting loss as
+Important because completed usage must not disappear. Six regression cases observed
+RED (extensions3, cache limit modes2, malformed hit1) then GREEN. Whole suite135
+passed in1.49s; CLI help, offline doctor and git diff --check passed.
+
+Whole identifier/number tokens now reject punctuation extensions. Cache hits recheck
+current embedding limits: required-cache stops early, ordinary mode returns the
+original query with warning. Malformed canonical hits retain completed search units.
+No additional live calls. Offline pinned-tokenizer replay preserves all15 recorded
+query sets; all15 final saved answers pass structural validation. Exact configured
+secret values were absent from109 tracked/candidate files and Git history. User
+untracked handout and my-answer.json remain untouched. Review record is in
+`docs/phase2-code-review.md`; live evaluation artifacts keep their pre-fix hashes.
+Next: publish authorized phase-2 commits and verify the remote SHA. Nebius live
+acceptance remains blocked by user readiness. q08 semantic quality remains a
+recorded limitation, not an unreported passing result.

@@ -13,8 +13,9 @@ class ExpansionCacheMiss(RuntimeError):pass
 
 def validate_alternatives(original,alternatives,services):
     base=original.casefold()
-    protected=set(re.findall(r'\b\w+(?:[_\-.]\w+)+\b|\b\d+(?:\.\d+)?\b',base))
-    protected.update(s.casefold() for s in services if s.casefold() in base)
+    protected_tokens=set(re.findall(r'\b\w+(?:[_\-.]\w+)+\b|\b\d+(?:\.\d+)?\b',base))
+    protected_tokens.update(s.casefold() for s in services if s.casefold() in base)
+    protected=set()
     protected.update(re.findall(r'\b(?:not|no|never|without|cannot|can\x27t|don\x27t|isn\x27t|doesn\x27t)\b',base))
     protected.update(re.findall(r'["\x27]([^"\x27]+)["\x27]',base))
     negation_pattern=r"\b(?:not|no|never|without|cannot|can't|don't|isn't|doesn't)\b"
@@ -24,6 +25,9 @@ def validate_alternatives(original,alternatives,services):
     for alt in alternatives[:2]:
         if not isinstance(alt,str) or not alt.strip() or len(alt)>8000:continue
         alt=' '.join(alt.split());lower=alt.casefold()
+        # Internal dots/hyphens belong to the token; trailing punctuation does not.
+        tokens=set(re.findall(r'\w+(?:[.-]\w+)*',lower))
+        if not protected_tokens<=tokens:continue
         if set(re.findall(negation_pattern,lower))!=original_negations:continue
         if lower in seen or any(not re.search(r'(?<!\w)'+re.escape(t)+r'(?!\w)',lower) for t in protected):continue
         if any(t in lower and t not in base for t in diagnoses):continue
@@ -43,7 +47,11 @@ class QueryPreparer:
             if not isinstance(cached,list) or not cached or cached[0]!=question or len(cached)>3:raise ExpansionCacheMiss('Invalid expansion cache')
             checked=validate_alternatives(question,cached[1:],self.services)
             if checked!=cached:raise ExpansionCacheMiss('Invalid expansion cache')
-            return QueryPlan(queries=cached,operations=[OperationRecord(stage='expand',provider=route.provider,model=route.model,status='cache_hit')])
+            operation=OperationRecord(stage='expand',provider=route.provider,model=route.model,status='cache_hit')
+            if self.counter and any(self.counter.count(q)>self.settings.embedding_max_tokens for q in cached[1:]):
+                if self.require_cache:raise ExpansionCacheMiss('Cached expansion exceeds current token limit')
+                return QueryPlan(queries=[question],warnings=['expansion_cache_token_limit'],operations=[operation])
+            return QueryPlan(queries=cached,operations=[operation])
         if self.require_cache:raise ExpansionCacheMiss('Required expansion cache entry missing')
         operations=[]
         try:

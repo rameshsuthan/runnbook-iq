@@ -1,0 +1,13 @@
+{
+  "manifest": {
+    "source_commit": "f408c08314e93785b8fb5f960b610b881fb3605e",
+    "source_dirty": true,
+    "source_tree_hash": "c4cc8fd5a010c7f78c34d5a65ef2c1fcc52b16d4f3f4f362cc71a79e482aafda",
+    "rubric_hash": "87675306b776260aa0efe4113b6fdeddb7bac791cfc120e63921ba425ede79ea",
+    "schema_version": "answer-v3",
+    "latency_scope": "request_seconds covers graph invocation; composition is separate; evaluation pauses excluded"
+  },
+  "cached_query_sets_unchanged": 15,
+  "api_calls": 0,
+  "method": "Required-cache replay with actual pinned local embedding tokenizer; invocation raises if attempted. Live answer results remain from the pre-review code hash."
+}
