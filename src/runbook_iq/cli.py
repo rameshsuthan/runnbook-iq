@@ -8,7 +8,7 @@ from .corpus import build_corpus, read_snapshot, write_snapshot
 from .tokenization import load_embedding_tokenizer, setup_tokenizer
 
 
-def compose(settings,*,mode='answers'):
+def compose(settings,*,mode='answers',query_cache='allow'):
     from .ingestion import load_active_snapshot
     from .pinecone_store import PineconeStore
     from .retrieval import PineconeRetriever,RetrievalPipeline
@@ -29,7 +29,15 @@ def compose(settings,*,mode='answers'):
         def generate(self,question,evidence):
             ledger=BudgetLedger(settings.runtime_dir/'usage.db',settings.budget_usd)
             return create_provider(settings,ledger).generate(question,evidence)
-    graph=build_graph(retriever,LazyProvider() if mode=='answers' else None,AnswerCache(settings.runtime_dir/'answers.db') if mode=='answers' else None,settings,snapshot.version,mode=mode)
+    expander=None
+    if settings.multi_query:
+        from .queries import QueryPreparer
+        from .cache import ExpansionCache
+        class LazyExpansion:
+            def invoke_structured(self,*args):
+                return create_provider(settings,BudgetLedger(settings.runtime_dir/'usage.db',settings.budget_usd),task='expand').invoke_structured(*args)
+        expander=QueryPreparer(settings,LazyExpansion(),ExpansionCache(settings.runtime_dir/'expansions.db'),snapshot.version,{c.service for c in snapshot.chunks},require_cache=query_cache=='require',counter=dense.counter)
+    graph=build_graph(retriever,LazyProvider() if mode=='answers' else None,AnswerCache(settings.runtime_dir/'answers.db') if mode=='answers' else None,settings,snapshot.version,mode=mode,expander=expander)
     return retriever,graph
 
 
@@ -76,7 +84,7 @@ def main(argv=None):
     for cmd in ('retrieve','ask'):
         p=sub.add_parser(cmd);p.add_argument('--question',required=True);p.add_argument('--service');p.add_argument('--environment');p.add_argument('--output',type=Path)
         if cmd=='ask':p.add_argument('--save-invalid-response',action='store_true',help='Opt in to private local raw-response/evidence files for validation failures')
-    evaluation=sub.add_parser('evaluate');evaluation.add_argument('--mode',choices=['retrieval','answers'],required=True);evaluation.add_argument('--split',choices=['dev','heldout','all'],default='all');evaluation.add_argument('--output',type=Path,required=True);evaluation.add_argument('--pause-seconds',type=float,default=15)
+    evaluation=sub.add_parser('evaluate');evaluation.add_argument('--query-cache',choices=['require','allow'],default='allow');evaluation.add_argument('--mode',choices=['retrieval','answers'],required=True);evaluation.add_argument('--split',choices=['dev','heldout','all'],default='all');evaluation.add_argument('--output',type=Path,required=True);evaluation.add_argument('--pause-seconds',type=float,default=15)
     args=parser.parse_args(argv)
     try:
         settings=load_settings(args.config)
@@ -117,7 +125,7 @@ def main(argv=None):
             output(sync_corpus(snapshot,settings,PineconeStore(settings,create=True)));return 0
         if args.command=='evaluate':
             from .evaluation import load_cases,validate_cases,evaluate
-            retriever,graph=compose(settings,mode=args.mode)
+            retriever,graph=compose(settings,mode=args.mode,query_cache=args.query_cache)
             cases=load_cases(Path('eval/questions.json'))
             validate_cases(cases,retriever.snapshot)
             cases=[c for c in cases if args.split=='all' or c.split==args.split]

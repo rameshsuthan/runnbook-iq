@@ -57,6 +57,8 @@ def evaluate(cases,retrieve,answer,settings,*,output_path=None,pause_seconds=0,r
         row={'case':case.model_dump(),'retrieval':[c.model_dump(mode='json') for c in candidates],
              'selected_evidence':[c.model_dump(mode='json') for c in result.selected_evidence] if result else None,
              'retrieval_seconds':seconds,'retrieval_error':error,
+             'operations':[o.model_dump(mode='json') for o in result.operations] if result else [],
+             'warnings':result.warnings if result else [],
              'query_variants':result.query_variants if result else [case.question],
              'retrieval_configuration':result.retrieval_configuration if result else {},
              'selected_hit_at_5':bool(selected_hits) if answerable else None,
@@ -82,7 +84,10 @@ def evaluate(cases,retrieve,answer,settings,*,output_path=None,pause_seconds=0,r
         if result and result.status in ('budget_exceeded','provider_error'):
             report['stopped_reason']=result.status
             break
-        if answer and position+1<len(cases) and pause_seconds:time.sleep(pause_seconds)
+        if result and any(w in result.warnings for w in ('expansion_provider_error','expansion_budget_blocked')):
+            report['stopped_reason']='expansion_service_or_budget_failure'
+            break
+        if result and result.usage.calls and position+1<len(cases) and pause_seconds:time.sleep(pause_seconds)
     if output_path:
         from .corpus import atomic_write
         atomic_write(Path(output_path),json.dumps(report,indent=2))

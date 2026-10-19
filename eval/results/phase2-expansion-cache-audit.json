@@ -1,0 +1,9 @@
+{
+  "checked_cases": 15,
+  "audit_model_calls": 0,
+  "exact_query_sets_reused": true,
+  "original_comparison_expansion_calls": 14,
+  "known_input_tokens": 1145,
+  "known_output_tokens": 507,
+  "token_usage_complete": true
+}

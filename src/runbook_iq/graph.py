@@ -27,6 +27,7 @@ class GraphState(TypedDict,total=False):
     path: list[str]
     cache_key: str
     batch: RetrievalBatch
+    warnings: list[str]
     operations: list[OperationRecord]
 
 
@@ -52,6 +53,8 @@ def build_graph(retriever,provider,cache,settings,corpus_version,*,mode='answers
                 update['result'].timings=update['timings']
                 operations=update.get('operations',state.get('operations',[]))
                 update['result'].operations=operations
+                update['result'].warnings=state.get('warnings',[])
+                update['result'].retrieval_configuration['effective_query_count']=len(state.get('query_variants',[]))
                 for key,value in summarize_operations(operations).items():setattr(update['result'],key,value)
                 update['status']=update['result'].status
                 update['errors']=update['result'].errors
@@ -61,12 +64,20 @@ def build_graph(retriever,provider,cache,settings,corpus_version,*,mode='answers
     def prepare(state):
         q=state.get('question',''); filters=state.get('filters',{})
         update={'candidates':[],'selected_evidence':[],'citations':[],'errors':[],
-                'retrieval_retries':0,'generation_retries':0,'repair_retries':0,'operations':[]}
+                'retrieval_retries':0,'generation_retries':0,'repair_retries':0,'operations':[],'warnings':[]}
         if not isinstance(q,str) or not q.strip() or len(q)>8000 or not isinstance(filters,dict) or not set(filters)<={'service','environment'} or not all(isinstance(v,str) and v.strip() for v in filters.values()):
             update['result']=terminal('invalid_request','Provide a nonempty question and explicit service/environment filters only')
         else:update.update(question=q.strip(),filters=filters)
         return update
-    def queries(state):return {'query_variants':[state['question']]}
+    def queries(state):
+        if not settings.multi_query:return {'query_variants':[state['question']]}
+        try:
+            if expander is None:raise ValueError('Expansion provider missing')
+            plan=expander.prepare(state['question'],state['filters'])
+            return {'query_variants':plan.queries,'warnings':plan.warnings,'operations':[*state.get('operations',[]),*plan.operations]}
+        except Exception:
+            return {'result':terminal('provider_error','Expansion setup/cache requirement failed before retrieval')}
+
     def retrieve(state):
         try:
             batch= retriever.retrieve(state['query_variants'],state['filters']) if hasattr(retriever,'retrieve') else RetrievalBatch(query_variants=state['query_variants'],candidates=retriever.search(state['question'],state['filters']))
@@ -133,7 +144,7 @@ def build_graph(retriever,provider,cache,settings,corpus_version,*,mode='answers
     for name,fn in nodes.items():graph.add_node(name,measured(name,fn))
     graph.add_edge(START,'prepare_request')
     graph.add_conditional_edges('prepare_request',lambda s:END if s.get('result') else 'prepare_queries')
-    graph.add_edge('prepare_queries','retrieve')
+    graph.add_conditional_edges('prepare_queries',lambda s:END if s.get('result') else 'retrieve')
     graph.add_conditional_edges('retrieve',lambda s:END if s.get('result') else 'select_evidence')
     graph.add_conditional_edges('select_evidence',lambda s:END if s.get('result') else ('generate' if s['selected_evidence'] else 'fallback'))
     graph.add_conditional_edges('generate',lambda s:END if s.get('result') else 'validate')

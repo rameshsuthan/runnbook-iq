@@ -7,8 +7,24 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
+class ModelRoute(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    provider: Literal['gemini','nebius'] = 'gemini'
+    model: str = ''
+    billing: Literal['unknown','free','paid'] = 'unknown'
+    account_verified: bool = False
+    pricing_verified: bool = False
+    input_usd_per_million: Decimal | None = None
+    output_usd_per_million: Decimal | None = None
+    max_input_tokens: int = Field(default=10000,gt=0)
+    max_output_tokens: int = Field(default=1500,gt=0,le=4096)
+    thinking_budget: int = 0
+    billable_bounds_verified: bool = False
+
+
 class Settings(BaseModel):
     model_config = ConfigDict(extra='forbid')
+    expansion: ModelRoute | None = None
     provider: Literal['gemini'] = 'gemini'
     model: str = ''
     billing: Literal['unknown', 'free', 'paid'] = 'unknown'
@@ -45,7 +61,7 @@ class Settings(BaseModel):
 
     @model_validator(mode='after')
     def baseline(self):
-        if any((self.multi_query, self.repair)):
+        if self.repair:
             raise ValueError('Phase 2 features are not implemented')
         if not self.namespace.startswith('runbook-iq-') or not self.index_name.startswith('runbook-iq'):
             raise ValueError('Use a dedicated RunbookIQ index and namespace')
@@ -71,3 +87,11 @@ def credentials(provider: str) -> str:
     if not key or not key.strip():
         raise ValueError(f'Missing {name}; configure it in your local .env')
     return key
+
+
+def resolve_route(settings,task='generate'):
+    if task not in ('generate','expand','repair'):raise ValueError('Unsupported model task')
+    if task=='expand' and settings.expansion is not None:route=settings.expansion.model_copy()
+    else:route=ModelRoute(**{k:getattr(settings,k) for k in ModelRoute.model_fields if hasattr(settings,k)})
+    if task=='expand':route.max_output_tokens=min(route.max_output_tokens,512)
+    return route

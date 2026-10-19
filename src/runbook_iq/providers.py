@@ -31,6 +31,7 @@ class ChatProvider(Protocol):
 class GeminiProvider:
     def __init__(self, settings, ledger, client=None):
         self.settings, self.ledger = settings, ledger
+        self.model_client=None
         if not settings.account_verified or settings.billing == 'unknown' or not settings.model:
             raise ProviderError('Verify Gemini account tier and configure an accessible model first')
         # Free-tier access is the selected Phase 1 route. Never silently enable paid access.
@@ -42,21 +43,23 @@ class GeminiProvider:
             model = ChatGoogleGenerativeAI(model=settings.model, api_key=credentials('gemini'),
                 vertexai=False, max_tokens=settings.max_output_tokens,
                 max_retries=0, timeout=45, **thinking)
+            self.model_client=model
             client = model.with_structured_output(GeneratedAnswer, method='json_schema', include_raw=True)
         self.client = client
     def generate(self, question, evidence):
+        return self.invoke_structured(SYSTEM_PROMPT,answer_payload(question,evidence),GeneratedAnswer,'generate')
+    def invoke_structured(self,system,payload,schema,stage):
         from langsmith import tracing_context
-        payload = json.dumps({'question':question,'evidence':[
-            {'chunk_id':c.chunk.chunk_id,'document_type':c.chunk.document_type,
-             'revision':c.chunk.revision,'text':c.chunk.text} for c in evidence]},ensure_ascii=False)
+        payload=json.dumps(payload,ensure_ascii=False)
+        client=self.client if schema is GeneratedAnswer or self.model_client is None else self.model_client.with_structured_output(schema,method='json_schema',include_raw=True)
         # A conservative local request-size cap; no character-based truncation.
-        if len((SYSTEM_PROMPT + payload).encode()) > self.settings.max_input_tokens * 3:
+        if len((system + payload).encode()) > self.settings.max_input_tokens * 3:
             raise ProviderError('Request exceeds local input bound; reduce evidence or question')
         reservation = self.ledger.reserve(str(uuid.uuid4()), Decimal(0))
         started=time.perf_counter()
         try:
             with tracing_context(enabled=False):
-                result = self.client.invoke([('system',SYSTEM_PROMPT),('human',payload)])
+                result = client.invoke([('system',system),('human',payload)])
             raw = result['raw']
             meta = raw.usage_metadata or {}
             usage = Usage(input_tokens=meta.get('input_tokens'), output_tokens=meta.get('output_tokens'),
@@ -64,10 +67,17 @@ class GeminiProvider:
             self.ledger.settle(reservation,usage,Decimal(0))
             content=raw.content
             if isinstance(content,list): content=''.join(p.get('text','') for p in content if isinstance(p,dict) and p.get('type')=='text')
-            return ProviderResponse(text=content,usage=usage,finish_reason=str(raw.response_metadata.get('finish_reason','UNKNOWN')),operation=OperationRecord(stage='generate',provider='gemini',model=self.settings.model,attempted=True,usage=usage,reservation_usd=0,elapsed_seconds=time.perf_counter()-started))
+            return ProviderResponse(text=content,usage=usage,finish_reason=str(raw.response_metadata.get('finish_reason','UNKNOWN')),operation=OperationRecord(stage=stage,provider='gemini',model=self.settings.model,attempted=True,usage=usage,reservation_usd=0,elapsed_seconds=time.perf_counter()-started))
         except Exception:
             # Free-tier dollars are known; usage/outcome can remain unknown after timeouts.
-            raise ProviderError('Gemini request failed; check access/quota/network. No retry was made.',OperationRecord(stage='generate',provider='gemini',model=self.settings.model,status='error',attempted=True,usage=Usage(calls=1,estimated_usd=0),reservation_usd=0,elapsed_seconds=time.perf_counter()-started)) from None
+            raise ProviderError('Gemini request failed; check access/quota/network. No retry was made.',OperationRecord(stage=stage,provider='gemini',model=self.settings.model,status='error',attempted=True,usage=Usage(calls=1,estimated_usd=0),reservation_usd=0,elapsed_seconds=time.perf_counter()-started)) from None
 
-def create_provider(settings, ledger):
-    return GeminiProvider(settings, ledger)
+def answer_payload(question,evidence):
+    return {'question':question,'evidence':[{'chunk_id':c.chunk.chunk_id,'document_type':c.chunk.document_type,
+        'revision':c.chunk.revision,'text':c.chunk.text} for c in evidence]}
+
+def create_provider(settings,ledger,*,task='generate'):
+    from .config import resolve_route
+    route=resolve_route(settings,task)
+    if route.provider!='gemini':raise ProviderError('Provider route is not implemented')
+    return GeminiProvider(route,ledger)

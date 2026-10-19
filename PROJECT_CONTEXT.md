@@ -32,6 +32,24 @@ Nebius live acceptance. Task 7 may deliver an offline-tested adapter, but no Neb
 call is allowed until account/model/rate/bound prerequisites are verified. Finish
 with one independent whole-branch review under the selected Native workflow.
 
+## Phase 2 implementation checkpoints
+
+- Tasks 1–4 implemented and committed. BM25/RRF and dedicated BGE reranking run
+  through the shared graph prefix and existing canonical snapshot. No reingestion.
+- Dense, hybrid and reranked retrieval each retain full expected-section recall on
+  the 12 answerable cases. Do not claim an improvement from these equal scores.
+- Per-operation usage preserves unknown values and reports a known subtotal;
+  cache hits retain the work performed during the current request. Pinecone units
+  remain separate from chat tokens/dollars. Local quotas are not account balances.
+- Pinecone SDK 8 defaults to transport retries. Its pinned configuration is set
+  before transport creation to enforce zero retries; actual transport tests protect
+  the private SDK access. Recheck this behavior on dependency upgrades.
+- Query expansion is being verified with Gemini; original query remains first,
+  identifiers/numbers/negation are guarded, and validated expansions are cached.
+  Near-duplicate rewrites may survive whitespace-only deduplication and must be
+  reported when interpreting the comparison. No answer prompt tuning is bundled.
+- Nebius remains unavailable. No Nebius calls or paid fallback are enabled.
+
 ## Authority and accepted direction
 
 `RunbookIQ-Codex-Handoff.md` is the consolidated brief. The two-phase direction, LangGraph learning requirement, Pinecone integrated embeddings, fictional incident domain and advanced Phase 2 scope are agreed. Do not restart broad brainstorming or copy the reference solution's implementation, prompts, corpus or answers.

@@ -9,7 +9,8 @@ def test_settings_enforce_budget_and_baseline():
     assert not s.paid_fallback and s.retries == 0
     assert Settings(hybrid=True).hybrid
     assert Settings(reranking=True).reranking
-    for feature in ('multi_query', 'repair'):
+    assert Settings(multi_query=True).multi_query
+    for feature in ('repair',):
         with pytest.raises(ValueError, match='Phase 2'):
             Settings(**{feature: True})
 

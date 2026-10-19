@@ -69,6 +69,16 @@ class SelectionResult(Record):
     operations: list[OperationRecord] = Field(default_factory=list)
 
 
+class QueryAlternatives(Record):
+    alternatives: list[str] = Field(max_length=2)
+
+
+class QueryPlan(Record):
+    queries: list[str]
+    warnings: list[str] = Field(default_factory=list)
+    operations: list[OperationRecord] = Field(default_factory=list)
+
+
 class GeneratedAnswer(Record):
     status: Literal['answered', 'insufficient_evidence'] = Field(description='Use insufficient_evidence if the requested fact or live cause cannot be established from these passages.')
     documented_evidence: str = Field(description='Direct answer to the original question, using all relevant selected passages. When asked which fields, enumerate the exact field names and their meanings, including correlation identifiers and measurement fields where documented. For other questions, supply the requested facts directly. Every factual sentence must include inline [chunk_id] references using exact evidence IDs.')
@@ -98,6 +108,7 @@ class RunResult(Record):
     timings: dict[str, float] = Field(default_factory=dict)
     errors: list[str] = Field(default_factory=list)
     validation_error: Literal['incomplete_response','invalid_schema','duplicate_citations','unknown_citation','missing_inline_citations','citation_mismatch','missing_answer_sections','missing_information'] | None = None
+    warnings: list[str] = Field(default_factory=list)
     operations: list[OperationRecord] = Field(default_factory=list)
     known_usage_subtotal: Usage = Field(default_factory=Usage)
     usage_complete: bool = False

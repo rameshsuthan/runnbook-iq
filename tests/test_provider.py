@@ -79,3 +79,12 @@ def test_untrusted_evidence_stays_in_human_payload_and_can_abstain(tmp_path):
     provider=GeminiProvider(Settings(model='test',billing='free',account_verified=True),BudgetLedger(tmp_path/'l.db',Decimal('3')),client=Client())
     candidates=[Candidate(chunk=chunk,rank=1)]
     assert validate_answer(provider.generate('What caused the incident?',candidates),candidates).status=='insufficient_evidence'
+
+
+def test_expansion_route_is_independent_and_output_bounded():
+    from runbook_iq.config import ModelRoute,resolve_route
+    settings=Settings(model='answer',expansion=ModelRoute(model='expand',max_output_tokens=2000))
+    assert resolve_route(settings,'expand').model=='expand'
+    assert resolve_route(settings,'expand').max_output_tokens==512
+    assert resolve_route(settings,'generate').model=='answer'
+    assert resolve_route(settings,'repair').model=='answer'

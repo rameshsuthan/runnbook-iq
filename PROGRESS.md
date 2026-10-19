@@ -399,3 +399,25 @@ estimated USD0. Selected passages support deadline distinctions, pool/dependency
 checks and the 503 caveat; no live cause claimed. These are small synthetic results,
 not proof of improved answer quality. This milestone used 17 rerank requests total.
 Next: one bounded Gemini expansion call, original-only fallback and expansion cache.
+
+## P2.3 bounded query expansion — 2026-10-18
+
+One structured Gemini expansion call returns up to two alternatives; original first.
+Lexical guards preserve identifiers, numbers, quoted literals and negation, reject
+new domain diagnoses and both dropped/added negation. They do not prove semantic
+equivalence; one live alternative differed mostly by punctuation. Validated
+expansions are cached independently; required-cache evaluation fails before search
+on missing entries. Expansion errors fall back with warnings and recorded usage.
+
+Initial ten tests failed before implementation; added-negation regression also
+observed RED→GREEN. Full suite 107 passed. Live targeted graph returned answered
+with two chat calls, 1,225 input/545 output combined tokens, estimated USD0;
+source checks support the listed deadlines and recommended checks. Full 15-case
+multi-query retrieval comparison completed with 14 new expansions and one cache
+hit, 15-second spacing, no service errors, selected recall1.0 for all 12 answerable
+cases. No retrieval gain claimed. Offline required-cache audit reused all 15 exact
+query sets with a provider that raises if invoked: zero new calls. The audit script
+first failed by summing a cache-hit null token field; corrected to count attempted
+operations and report token completeness explicitly. No product result was altered.
+
+Next: one bounded response-repair edge using Gemini. Nebius remains deferred.
