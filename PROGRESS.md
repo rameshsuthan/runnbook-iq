@@ -2,7 +2,7 @@
 
 ## Current status — 2026-10-18
 
-M1 and the Phase 1 baseline are complete and published on `origin/phase-1` through `e15502e`. Phase 2 design is approved; its nine-task implementation plan is prepared on `phase-2` and awaiting plan review. Gemini remains active; Nebius live verification is deferred. Latest application checkpoint remains prompt/schema v3, 63 passing tests at the prior verification, a full 15-case live report and a separate offline validation audit. Earlier sections are chronological history, not current blockers.
+M1 and the Phase 1 baseline are complete and published on `origin/phase-1` through `e15502e`. Phase 2 design is approved; its nine-task implementation plan is approved and Native execution is underway on `phase-2`. Gemini remains active; Nebius live verification is deferred. Latest application checkpoint remains prompt/schema v3, 63 passing tests at the prior verification, a full 15-case live report and a separate offline validation audit. Earlier sections are chronological history, not current blockers.
 
 ## Initial planning checkpoint — 2026-10-18
 
@@ -327,3 +327,17 @@ cited hybrid graph answer). The writing-plans skill explicitly requires plan rev
 before implementation even when an execution method was selected earlier. Design
 approval is complete and must not be requested again. Nebius readiness only blocks
 its own later live acceptance, not the independent Gemini milestones.
+
+## Phase 2 Native execution: Task 1 — 2026-10-18
+
+User approved the plan and Native execution. Fresh baseline: `.venv/bin/pytest -q`
+→ 63 passed. Existing dedicated phase-2 checkout retains the active canonical
+snapshot and shared usage ledger; no secret copies or budget reset.
+
+Implemented canonical BM25 with identifier-preserving tokenization, explicit
+filters before top five, positive IDF and deterministic ties. Added additive
+per-query/method provenance and RRF with raw-score separation and canonical-record
+conflict rejection. New tests first failed 7/7 for absent behavior; then
+`.venv/bin/pytest -q tests/test_keyword.py tests/test_fusion.py tests/test_retrieval.py`
+→ 8 passed. No live calls or dependencies added. Next: wire the shared pipeline,
+graph and evaluation to deliver the first hybrid cited answer.

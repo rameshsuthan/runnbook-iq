@@ -9,11 +9,11 @@ through `e15502e` is published on `origin/phase-1`; remote SHA was verified.
 `phase-2` branches from that baseline. The user approved the written
 [Phase 2 design](docs/superpowers/specs/2026-10-18-phase-2-design.md) and requested
 proceeding. The [implementation plan](docs/superpowers/plans/2026-10-18-phase-2.md)
-is prepared and awaiting plan review. Product implementation has not started.
+is approved; Native implementation is underway.
 Native execution remains selected; do not request the execution method again.
 Earlier no-push statements and Phase 1 exclusions below describe prior checkpoints.
 
-Proposed first milestone: local BM25 on the active canonical snapshot, RRF with
+First implementation milestone: local BM25 on the active canonical snapshot, RRF with
 separate per-query/method provenance, then one cited graph answer. No re-embedding
 is needed. Subsequent milestones add Starter-compatible BGE reranking, query
 expansion, Nebius, bounded repair and comparative inspection/evaluation. Public

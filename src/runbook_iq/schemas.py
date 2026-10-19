@@ -23,11 +23,19 @@ class Chunk(Record):
     environment: str | None = None
 
 
+class RetrievalOrigin(Record):
+    query_id: str
+    method: Literal['dense', 'keyword']
+    rank: int = Field(ge=1)
+    score: float = Field(allow_inf_nan=False)
+
+
 class Candidate(Record):
     chunk: Chunk
     method: str = 'dense'
     rank: int = Field(ge=1)
     scores: dict[str, float] = Field(default_factory=dict)
+    provenance: list[RetrievalOrigin] = Field(default_factory=list)
 
 
 class Usage(Record):
