@@ -6,10 +6,11 @@ Updated: 2026-10-18 (America/Chicago).
 
 The user explicitly authorized pushing history and starting next steps. Phase 1
 through `e15502e` is published on `origin/phase-1`; remote SHA was verified.
-`phase-2` branches from that baseline. Phase 2 design preparation is underway;
-product implementation has not started. The written spec is
-[Phase 2 design](docs/superpowers/specs/2026-10-18-phase-2-design.md), awaiting user
-review before detailed implementation planning. Native execution remains selected.
+`phase-2` branches from that baseline. The user approved the written
+[Phase 2 design](docs/superpowers/specs/2026-10-18-phase-2-design.md) and requested
+proceeding. The [implementation plan](docs/superpowers/plans/2026-10-18-phase-2.md)
+is prepared and awaiting plan review. Product implementation has not started.
+Native execution remains selected; do not request the execution method again.
 Earlier no-push statements and Phase 1 exclusions below describe prior checkpoints.
 
 Proposed first milestone: local BM25 on the active canonical snapshot, RRF with
@@ -18,6 +19,18 @@ is needed. Subsequent milestones add Starter-compatible BGE reranking, query
 expansion, Nebius, bounded repair and comparative inspection/evaluation. Public
 reranker terms were checked; actual access and Nebius model/rates remain live-use
 prerequisites. Preserve the existing USD 3 ledger and all frozen evaluation history.
+
+User confirmed Nebius is **not ready** and instructed continuing with Gemini.
+Use Gemini for upcoming answer, expansion and repair milestones. Defer Nebius
+live verification until readiness changes; preserve its provider interface and
+record second-provider acceptance as incomplete. The readiness reply was separate
+from the subsequent explicit written-design approval.
+
+The implementation plan has nine tasks. Tasks 1–2 deliver the first hybrid answer;
+usage accounting precedes additional model calls, and Gemini repair work precedes
+Nebius live acceptance. Task 7 may deliver an offline-tested adapter, but no Nebius
+call is allowed until account/model/rate/bound prerequisites are verified. Finish
+with one independent whole-branch review under the selected Native workflow.
 
 ## Authority and accepted direction
 

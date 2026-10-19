@@ -1,10 +1,12 @@
 # RunbookIQ Phase 2 design
 
-Date: 2026-10-18. Status: written specification awaiting user review.
+Date: 2026-10-18. Status: written specification approved by the user.
 Baseline: `e15502e` on published `phase-1`; design branch: `phase-2`.
 Authority: `RunbookIQ-Codex-Handoff.md`, especially sections 4, 6–8.
 Execution preference remains Native. This is the agreed second phase, not a new
-product direction. Detailed implementation planning follows written-spec approval.
+product direction. User approved this written design and requested proceeding.
+Nebius is not ready: use Gemini for upcoming work and defer second-provider live
+verification. Implementation-plan review is the next required gate.
 
 ## Outcome and current architecture
 

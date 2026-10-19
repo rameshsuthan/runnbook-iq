@@ -2,7 +2,7 @@
 
 ## Current status — 2026-10-18
 
-M1 and the Phase 1 baseline are complete and published on `origin/phase-1` through `e15502e`. Phase 2 has a written design on branch `phase-2`, awaiting spec review before implementation planning. Latest application checkpoint remains prompt/schema v3, 63 passing tests at the prior verification, a full 15-case live report and a separate offline validation audit. Earlier sections are chronological history, not current blockers.
+M1 and the Phase 1 baseline are complete and published on `origin/phase-1` through `e15502e`. Phase 2 design is approved; its nine-task implementation plan is prepared on `phase-2` and awaiting plan review. Gemini remains active; Nebius live verification is deferred. Latest application checkpoint remains prompt/schema v3, 63 passing tests at the prior verification, a full 15-case live report and a separate offline validation audit. Earlier sections are chronological history, not current blockers.
 
 ## Initial planning checkpoint — 2026-10-18
 
@@ -290,3 +290,40 @@ installed brainstorming workflow requires written-spec review before that plan;
 Phase 1 approvals remain complete. After plan review, implement P2.1 in small
 runnable steps. Later live prerequisites are reranker access and verified Nebius
 credentials/model/rates/billable bounds; no plan upgrade or paid fallback is allowed.
+
+## Provider readiness update — 2026-10-18
+
+User replied: Nebius is not ready; continue with Gemini. Recorded Gemini as the
+route for upcoming answer, expansion and repair work. Nebius live acceptance is
+deferred, without blocking independent milestones or removing the second-provider
+interface from scope. No credentials requested, configuration changes, or service
+calls. Phase 2 spec approval remains pending; next action is unchanged.
+
+## Phase 2 implementation-plan checkpoint — 2026-10-18
+
+User approved the written design and requested proceeding. Marked the spec approved
+and prepared `docs/superpowers/plans/2026-10-18-phase-2.md`: nine tasks, 53 checkable
+steps, six runnable milestones. Native execution is preserved. No further project
+clarification is needed to start the first milestone after plan review.
+
+Inspected current CLI composition, graph/provider/retrieval/evaluation contracts,
+Pinecone usage logging, schemas/config/cache/budget and offline/UI tests. The plan
+defines exact module boundaries, new signatures, behavioral tests and acceptance
+checks. Self-review added direct usage-return interfaces to avoid duplicate searches,
+kept current-run usage on answer cache hits, and scheduled Gemini repair independently
+of unavailable Nebius access. Shared runtime paths must preserve the existing budget
+ledger when execution isolation is selected.
+
+Actual documentation verification: Python checks passed for nine sequential task
+numbers, nine Files/Interfaces blocks, 53 checkbox steps, balanced fences, no
+unresolved placeholder markers and resolving local plan links. `git diff --check`
+passed. Tests were not rerun because no product code, dependencies or runtime
+configuration changed; the prior 63-test result is historical, not a new test run.
+No application API calls or new estimated application cost incurred.
+
+Next action: review the concrete implementation plan, then use Native execution
+to establish a fresh offline baseline and implement Tasks 1–2 (BM25/RRF and one
+cited hybrid graph answer). The writing-plans skill explicitly requires plan review
+before implementation even when an execution method was selected earlier. Design
+approval is complete and must not be requested again. Nebius readiness only blocks
+its own later live acceptance, not the independent Gemini milestones.
