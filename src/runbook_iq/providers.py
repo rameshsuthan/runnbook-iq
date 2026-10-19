@@ -87,5 +87,7 @@ def answer_payload(question,evidence):
 def create_provider(settings,ledger,*,task='generate'):
     from .config import resolve_route
     route=resolve_route(settings,task)
-    if route.provider!='gemini':raise ProviderError('Provider route is not implemented')
+    if route.provider=='nebius':
+        from .nebius import NebiusProvider
+        return NebiusProvider(route,ledger)
     return GeminiProvider(route,ledger)

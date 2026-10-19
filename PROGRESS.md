@@ -437,3 +437,19 @@ injected responses and make no network calls. No natural invalid fresh answer ha
 needed repair in the Phase 2 live samples, so live repair is not yet verified.
 No extra live calls were made for this milestone. Next: offline Nebius adapter,
 with its live acceptance deferred, then inspection and final comparison/review.
+
+## P2.4 Nebius offline adapter — 2026-10-18
+
+Implemented explicit compatible-API adapter with zero SDK retries, structured
+responses, finish/refusal normalization, independent route selection and usage.
+Paid preflight requires verified rates, account/model and provider-enforced context
+plus total output bounds; reservation uses the full verified context ceiling, not
+the local byte-size heuristic. Unknown usage retains the reservation. Promotional
+credits are not treated as free. Current configuration remains Gemini.
+
+Ten initial mocked tests observed RED→GREEN; additional SDK-configuration/refusal
+check passes. Full offline suite124 passed. Added/locked openai2.54.0 and jiter0.17.0
+only; original packages retained. Official Nebius quickstart/JSON docs rechecked.
+No actual model ID or prices configured, no credentials requested, no Nebius calls.
+P2.4 live acceptance remains incomplete because the user is not ready. Continue
+independent inspection/evaluation tasks; do not declare all of Phase 2 complete.

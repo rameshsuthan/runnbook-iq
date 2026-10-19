@@ -20,12 +20,15 @@ class ModelRoute(BaseModel):
     max_output_tokens: int = Field(default=1500,gt=0,le=4096)
     thinking_budget: int = 0
     billable_bounds_verified: bool = False
+    context_window_tokens: int | None = Field(default=None, gt=0)
 
 
 class Settings(BaseModel):
     model_config = ConfigDict(extra='forbid')
     expansion: ModelRoute | None = None
-    provider: Literal['gemini'] = 'gemini'
+    provider: Literal['gemini','nebius'] = 'gemini'
+    billable_bounds_verified: bool = False
+    context_window_tokens: int | None = Field(default=None, gt=0)
     model: str = ''
     billing: Literal['unknown', 'free', 'paid'] = 'unknown'
     account_verified: bool = False
@@ -80,8 +83,11 @@ def credentials(provider: str) -> str:
             raise ValueError('Set only one of GEMINI_API_KEY or GOOGLE_API_KEY')
         key = first or second
         name = 'GEMINI_API_KEY'
-    else:
-        key, name = os.getenv('PINECONE_API_KEY'), 'PINECONE_API_KEY'
+    elif provider=='nebius':
+        key,name=os.getenv('NEBIUS_API_KEY'),'NEBIUS_API_KEY'
+    elif provider=='pinecone':
+        key,name=os.getenv('PINECONE_API_KEY'),'PINECONE_API_KEY'
+    else:raise ValueError('Unknown credential provider')
     if not key or not key.strip():
         raise ValueError(f'Missing {name}; configure it in your local .env')
     return key
