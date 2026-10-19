@@ -525,3 +525,18 @@ untracked handout and my-answer.json remain untouched. Review record is in
 Next: publish authorized phase-2 commits and verify the remote SHA. Nebius live
 acceptance remains blocked by user readiness. q08 semantic quality remains a
 recorded limitation, not an unreported passing result.
+
+## Published Gemini milestones — 2026-10-18
+
+Normal push succeeded; `git ls-remote` verified reviewed implementation4cab6fc on
+origin/phase-2 and unchanged e15502e on origin/phase-1. Final Task9 completion gate:
+135 passed in1.44s. All owned changes are committed; the untracked user handout and
+my-answer.json are preserved. `docs/phase2-execution-record.md` archives decisions,
+verification and the independent review dispositions before scratch cleanup.
+
+Next action: when the user says Nebius is ready, verify accessible model/rates and
+provider-enforced token bounds, then make the bounded structured-response and cited
+answer acceptance calls through the existing shared USD3 ledger. Until then Gemini
+profiles remain runnable and full Phase2 acceptance remains incomplete. q08's
+incorrect denial of documented fields is a known quality limitation for a separate
+targeted follow-up; do not rerun/tune frozen comparisons merely to improve scores.

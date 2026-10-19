@@ -30,5 +30,5 @@ Reviewer declined to judge, and executor retained with explicit limits:
 - Deployment/authentication/scaling: outside local synthetic project scope.
 
 Deferred minors: none. All identified code findings were fixed in one test-first
-pass; there was no second independent review. See the execution record for rulings
+pass; there was no second independent review. See [the execution record](phase2-execution-record.md) for rulings
 and their consequences, and the evaluation source review for remaining quality gaps.

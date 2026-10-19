@@ -60,8 +60,11 @@ with one independent whole-branch review under the selected Native workflow.
 - Independent review found three edge defects; all fixed with six RED→GREEN
   regressions. Full suite135 passes. Offline replay preserves all15 cached queries.
   Final code was not rerun live; original evaluated code hashes remain recorded.
-- Authorized branch publication is the next action. Full Phase 2 acceptance remains
-  incomplete until Nebius is verified; q08 semantic error remains a quality limit.
+- Reviewed implementation4cab6fc is published on origin/phase-2; origin/phase-1
+  remains e15502e. Execution/review records are archived under docs/.
+- Next action is Nebius live acceptance only after the user reports readiness and
+  model/rates/enforced token bounds are verified. Until then Gemini stays active.
+  Full Phase2 acceptance is incomplete; q08 remains a separate quality limitation.
 
 ## Authority and accepted direction
 
