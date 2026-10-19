@@ -38,21 +38,35 @@ class Candidate(Record):
     provenance: list[RetrievalOrigin] = Field(default_factory=list)
 
 
+class Usage(Record):
+    input_tokens: int | None = None
+    output_tokens: int | None = None
+    reasoning_tokens: int | None = None
+    estimated_usd: Decimal | None = None
+    calls: int = 0
+
+
+class OperationRecord(Record):
+    stage: Literal['expand','generate','repair','dense_search','rerank']
+    provider: str = ''
+    model: str = ''
+    status: Literal['ok','error','blocked','cache_hit'] = 'ok'
+    attempted: bool = False
+    usage: Usage = Field(default_factory=Usage)
+    reservation_usd: Decimal | None = None
+    units: dict[str, float | None] = Field(default_factory=dict)
+    elapsed_seconds: float = 0
+
+
 class RetrievalBatch(Record):
     query_variants: list[str]
     candidates: list[Candidate]
+    operations: list[OperationRecord] = Field(default_factory=list)
 
 
 class SelectionResult(Record):
     evidence: list[Candidate]
-
-
-class Usage(Record):
-    input_tokens: int | None = None
-    output_tokens: int | None = None  # Includes reasoning when returned by LangChain.
-    reasoning_tokens: int | None = None
-    estimated_usd: Decimal | None = None
-    calls: int = 0
+    operations: list[OperationRecord] = Field(default_factory=list)
 
 
 class GeneratedAnswer(Record):
@@ -67,6 +81,7 @@ class ProviderResponse(Record):
     text: str
     usage: Usage = Field(default_factory=Usage)
     finish_reason: str = 'STOP'
+    operation: OperationRecord | None = None
 
 
 class RunResult(Record):
@@ -83,5 +98,8 @@ class RunResult(Record):
     timings: dict[str, float] = Field(default_factory=dict)
     errors: list[str] = Field(default_factory=list)
     validation_error: Literal['incomplete_response','invalid_schema','duplicate_citations','unknown_citation','missing_inline_citations','citation_mismatch','missing_answer_sections','missing_information'] | None = None
+    operations: list[OperationRecord] = Field(default_factory=list)
+    known_usage_subtotal: Usage = Field(default_factory=Usage)
+    usage_complete: bool = False
     cache_hit: bool = False
     corpus_version: str = ''

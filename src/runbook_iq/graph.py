@@ -3,9 +3,10 @@ import time
 from typing import TypedDict
 from langgraph.graph import StateGraph, START, END
 from .budget import BudgetExceeded
+from .usage import CallFailure,summarize_operations
 from .cache import answer_cache_key
 from .generation import AnswerValidationError, validate_answer
-from .schemas import Candidate, GeneratedAnswer, ProviderResponse, RunResult, Usage, RetrievalBatch
+from .schemas import Candidate, GeneratedAnswer, ProviderResponse, RunResult, Usage, RetrievalBatch, OperationRecord
 
 class GraphState(TypedDict,total=False):
     question: str
@@ -26,6 +27,7 @@ class GraphState(TypedDict,total=False):
     path: list[str]
     cache_key: str
     batch: RetrievalBatch
+    operations: list[OperationRecord]
 
 
 def build_graph(retriever,provider,cache,settings,corpus_version,*,mode='answers',expander=None):
@@ -48,6 +50,9 @@ def build_graph(retriever,provider,cache,settings,corpus_version,*,mode='answers
                 update['result'].query_variants=state.get('query_variants',[])
                 update['result'].retrieval_configuration=retrieval_configuration(settings)
                 update['result'].timings=update['timings']
+                operations=update.get('operations',state.get('operations',[]))
+                update['result'].operations=operations
+                for key,value in summarize_operations(operations).items():setattr(update['result'],key,value)
                 update['status']=update['result'].status
                 update['errors']=update['result'].errors
                 update['usage']=update['result'].usage
@@ -56,7 +61,7 @@ def build_graph(retriever,provider,cache,settings,corpus_version,*,mode='answers
     def prepare(state):
         q=state.get('question',''); filters=state.get('filters',{})
         update={'candidates':[],'selected_evidence':[],'citations':[],'errors':[],
-                'retrieval_retries':0,'generation_retries':0,'repair_retries':0}
+                'retrieval_retries':0,'generation_retries':0,'repair_retries':0,'operations':[]}
         if not isinstance(q,str) or not q.strip() or len(q)>8000 or not isinstance(filters,dict) or not set(filters)<={'service','environment'} or not all(isinstance(v,str) and v.strip() for v in filters.values()):
             update['result']=terminal('invalid_request','Provide a nonempty question and explicit service/environment filters only')
         else:update.update(question=q.strip(),filters=filters)
@@ -65,21 +70,24 @@ def build_graph(retriever,provider,cache,settings,corpus_version,*,mode='answers
     def retrieve(state):
         try:
             batch= retriever.retrieve(state['query_variants'],state['filters']) if hasattr(retriever,'retrieve') else RetrievalBatch(query_variants=state['query_variants'],candidates=retriever.search(state['question'],state['filters']))
-            return {'candidates':batch.candidates,'batch':batch}
+            return {'candidates':batch.candidates,'batch':batch,'operations':[*state.get('operations',[]),*batch.operations]}
+        except CallFailure as error:return {'result':terminal('retrieval_error',error.code),'operations':[*state.get('operations',[]),*error.operations]}
         except Exception:return {'result':terminal('retrieval_error','Retrieval failed; verify active corpus, input limits and Pinecone access')}
     def select(state):
         try:
             if hasattr(retriever,'select'):
-                selected=retriever.select(state['question'],state['batch']).evidence
+                selection=retriever.select(state['question'],state['batch'])
+                selected=selection.evidence
             else:
                 seen=set();selected=[]
                 for candidate in state['candidates']:
                     if candidate.chunk.chunk_id not in seen:
                         selected.append(candidate);seen.add(candidate.chunk.chunk_id)
                 selected=selected[:settings.top_k]
-            update={'selected_evidence':selected}
+            update={'selected_evidence':selected,'operations':[*state.get('operations',[]),*(selection.operations if hasattr(retriever,'select') else [])]}
             if mode=='retrieval':update['result']=terminal('retrieved')
             return update
+        except CallFailure as error:return {'result':terminal('retrieval_error',error.code),'operations':[*state.get('operations',[]),*error.operations]}
         except Exception:return {'result':terminal('retrieval_error','Evidence selection failed; no fallback was made')}
     def fallback(state):
         result=terminal('insufficient_evidence')
@@ -99,10 +107,13 @@ def build_graph(retriever,provider,cache,settings,corpus_version,*,mode='answers
                     result.validation_error=error.code
                     return {'result':result}
                 cached.cache_hit=True; cached.usage=Usage(calls=0,input_tokens=0,output_tokens=0,estimated_usd=0)
-                return {'result':cached,'citations':cached.answer.citations}
-            return {'response':provider.generate(state['question'],state['selected_evidence']),'cache_key':key}
+                return {'result':cached,'citations':cached.answer.citations,'operations':[*state.get('operations',[]),OperationRecord(stage='generate',provider=settings.provider,model=settings.model,status='cache_hit')]}
+            response=provider.generate(state['question'],state['selected_evidence'])
+            operation=response.operation or OperationRecord(stage='generate',provider=settings.provider,model=settings.model,attempted=True,usage=response.usage)
+            return {'response':response,'cache_key':key,'operations':[*state.get('operations',[]),operation]}
         except BudgetExceeded:return {'result':terminal('budget_exceeded','Paid-usage budget guard blocked the request')}
-        except Exception:return {'result':terminal('provider_error','Generation failed; check model/access/quota. No automatic retry.',Usage(calls=1))}
+        except CallFailure as error:return {'result':terminal('provider_error',error.code),'operations':[*state.get('operations',[]),*error.operations]}
+        except Exception:return {'result':terminal('provider_error','Generation setup failed; no recorded model invocation. No automatic retry.')}
     def validate(state):
         response=state['response']
         try:

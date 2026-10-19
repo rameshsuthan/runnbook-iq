@@ -26,6 +26,9 @@ class Settings(BaseModel):
     reranking: bool = False
     multi_query: bool = False
     repair: bool = False
+    rerank_monthly_limit: int = Field(default=100, ge=1, le=500)
+    embedding_monthly_limit: int = Field(default=5000000, ge=1, le=5000000)
+    read_monthly_limit: int = Field(default=1000000, ge=1, le=1000000)
     top_k: int = Field(default=5, ge=1, le=5)
     index_name: str = 'runbook-iq'
     namespace: str = 'runbook-iq-v1'

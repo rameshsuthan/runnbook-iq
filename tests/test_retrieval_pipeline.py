@@ -35,7 +35,8 @@ def test_corpus_change_discards_entire_batch():
         calls.append(1)
         if len(calls)>1:raise ValueError('Corpus changed')
     p,d,s=pipeline(verify=verify)
-    with pytest.raises(ValueError,match='changed'):p.retrieve(['evidence'],{})
+    from runbook_iq.usage import CallFailure
+    with pytest.raises(CallFailure,match='snapshot'):p.retrieve(['evidence'],{})
     assert len(d.calls)==1
 
 

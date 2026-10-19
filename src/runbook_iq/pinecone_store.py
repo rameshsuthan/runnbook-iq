@@ -54,11 +54,32 @@ class PineconeStore:
             for key,record in raw.get('vectors',{}).items():result[key]=plain(record).get('metadata',{})
         return result
     def search(self,query,filters,top_k):
+        return self.search_with_usage(query,filters,top_k)[0]
+    def search_with_usage(self,query,filters,top_k):
+        from .schemas import OperationRecord
+        from .usage import CallFailure
+        from .quota import QuotaLedger,month
+        quota=QuotaLedger(self.settings.runtime_dir/'quotas.db')
+        embed=quota.reserve('embedding',self.settings.embedding_max_tokens,self.settings.embedding_monthly_limit,month())
+        # Read units are monitored from responses, not guessed as a hard cost bound.
+        read=quota.reserve('read',0,self.settings.read_monthly_limit,month())
         payload={'inputs':{'text':query},'top_k':top_k}
         if filters:payload['filter']={k:{'$eq':v} for k,v in filters.items()}
-        raw=plain(self.index.search(namespace=self.settings.namespace,query=payload,fields=['text','corpus_version','content_hash']))
-        self.record('search',raw)
-        return [{'id':hit['_id'],'score':hit['_score'],**hit.get('fields',{})} for hit in raw['result']['hits']]
+        started=time.perf_counter()
+        operation=OperationRecord(stage='dense_search',provider='pinecone',model=self.settings.embedding_model,attempted=True)
+        try:
+            raw=plain(self.index.search(namespace=self.settings.namespace,query=payload,fields=['text','corpus_version','content_hash']))
+            self.record('search',raw)
+            units=raw.get('usage',{})
+            operation.units={k:units.get(k) for k in ('read_units','embed_total_tokens')}
+            quota.settle(embed,units.get('embed_total_tokens'));quota.settle(read,units.get('read_units'))
+            hits=[{'id':hit['_id'],'score':hit['_score'],**hit.get('fields',{})} for hit in raw['result']['hits']]
+            operation.elapsed_seconds=time.perf_counter()-started
+            return hits,operation
+        except Exception:
+            operation.status='error';operation.elapsed_seconds=time.perf_counter()-started
+            operation.units={'read_units':None,'embed_total_tokens':None}
+            raise CallFailure('Dense search failed; no automatic retry',operation) from None
 
 def describe_embedding_model(client, name):
     return plain(client.inference.get_model(model_name=name))

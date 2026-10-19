@@ -364,3 +364,19 @@ in a separate artifact; no prompt tuning or semantic-verifier claim.
 Prospective rubric and supplemental mapping of retained Phase 1 source reviews
 added without modifying frozen expectations or results. Next: operation accounting
 and dedicated reranker. No reingestion, new dependencies, paid calls or Nebius calls.
+
+## Task 3 operation accounting — 2026-10-18
+
+Added per-operation attempts, nullable usage, known subtotals and completion flags.
+Setup/cache failures no longer imply model invocation. Cache hits retain current
+retrieval operations; partial multi-query failures retain earlier calls. Gemini
+timeouts retain the unresolved reservation and safe failure metadata. Pinecone
+returns hit data and usage together, avoiding a second search. Added persistent
+monthly quota reservations; read units are monitored from responses, not claimed
+as a guaranteed request-cost bound or remaining account balance.
+
+Six initial usage/quota tests failed before implementation, then passed; two
+additional usage-return/partial-failure tests also observed RED→GREEN. Full suite:
+85 passed. One legacy exception-type assertion was updated to the deliberate
+safe CallFailure contract; snapshot-change rejection remains tested. No live calls.
+Next: dedicated Starter BGE reranking, then Gemini query expansion.

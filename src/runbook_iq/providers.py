@@ -1,10 +1,11 @@
 """One Gemini adapter. No retries or implicit paid/provider fallback."""
 import json
 import uuid
+import time
 from decimal import Decimal
 from typing import Protocol
 from .config import credentials
-from .schemas import GeneratedAnswer, ProviderResponse, Usage
+from .schemas import GeneratedAnswer, ProviderResponse, Usage, OperationRecord
 
 PROMPT_VERSION = 'incident-evidence-v3'
 SYSTEM_PROMPT = '''You are RunbookIQ, an evidence-based assistant for a fictional service.
@@ -20,7 +21,9 @@ The citations array must contain exactly the unique IDs used inline. A citations
 Before returning JSON, check that you answered the requested parts, chose the appropriate status, and placed inline references in the text as well as the citations array.
 Never invent sources. Return only JSON matching the supplied schema.'''
 
-class ProviderError(RuntimeError): pass
+from .usage import CallFailure
+
+class ProviderError(CallFailure): pass
 
 class ChatProvider(Protocol):
     def generate(self, question, evidence) -> ProviderResponse: ...
@@ -50,6 +53,7 @@ class GeminiProvider:
         if len((SYSTEM_PROMPT + payload).encode()) > self.settings.max_input_tokens * 3:
             raise ProviderError('Request exceeds local input bound; reduce evidence or question')
         reservation = self.ledger.reserve(str(uuid.uuid4()), Decimal(0))
+        started=time.perf_counter()
         try:
             with tracing_context(enabled=False):
                 result = self.client.invoke([('system',SYSTEM_PROMPT),('human',payload)])
@@ -60,10 +64,10 @@ class GeminiProvider:
             self.ledger.settle(reservation,usage,Decimal(0))
             content=raw.content
             if isinstance(content,list): content=''.join(p.get('text','') for p in content if isinstance(p,dict) and p.get('type')=='text')
-            return ProviderResponse(text=content,usage=usage,finish_reason=str(raw.response_metadata.get('finish_reason','UNKNOWN')))
+            return ProviderResponse(text=content,usage=usage,finish_reason=str(raw.response_metadata.get('finish_reason','UNKNOWN')),operation=OperationRecord(stage='generate',provider='gemini',model=self.settings.model,attempted=True,usage=usage,reservation_usd=0,elapsed_seconds=time.perf_counter()-started))
         except Exception:
             # Free-tier dollars are known; usage/outcome can remain unknown after timeouts.
-            raise ProviderError('Gemini request failed; check access/quota/network. No retry was made.') from None
+            raise ProviderError('Gemini request failed; check access/quota/network. No retry was made.',OperationRecord(stage='generate',provider='gemini',model=self.settings.model,status='error',attempted=True,usage=Usage(calls=1,estimated_usd=0),reservation_usd=0,elapsed_seconds=time.perf_counter()-started)) from None
 
 def create_provider(settings, ledger):
     return GeminiProvider(settings, ledger)
