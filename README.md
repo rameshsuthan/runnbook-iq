@@ -1,7 +1,7 @@
 # RunbookIQ
 
 Evidence-based troubleshooting for a **fictional** order-processing service.
-Python + LangGraph + Pinecone integrated embeddings + Gemini + local Streamlit.
+Python + LangGraph + Pinecone integrated embeddings + local BM25/RRF + Gemini + Streamlit.
 
 RunbookIQ finds documented checks and historical lessons, displays cited passages,
 and states when evidence is insufficient. It cannot inspect a live system,
@@ -14,7 +14,7 @@ Python 3.12 and [uv](https://docs.astral.sh/uv/) are required. Run commands from
 ```sh
 export UV_CACHE_DIR="$PWD/.uv-cache"
 uv sync --locked
-cp .env.example .env
+test -e .env || cp .env.example .env
 # Edit .env locally: PINECONE_API_KEY and GEMINI_API_KEY.
 uv run runbook-iq doctor --offline
 uv run runbook-iq tokenizer-setup
@@ -59,7 +59,7 @@ uv run runbook-iq evaluate --mode answers --split all --pause-seconds 15 --outpu
 Ordinary tests prohibit outbound network connections and use temporary data.
 Integration commands above access real services. Answer evaluation spaces requests
 and stops on provider/budget failure; each completed case is saved incrementally.
-No automatic generation retry, repair or paid fallback occurs. Do not repeat full
+SDK retries and paid fallback are disabled. Optional repair allows one explicit graph call. Do not repeat full
 answer runs just to obtain better numbers. Service quota exhaustion is a recorded
 failure, not permission to upgrade billing.
 
@@ -86,11 +86,13 @@ A **state** is the request's data: question, filters, candidates, evidence and r
 A **node** is a Python function returning a partial state update. **Edges** determine
 the next function; conditional edges implement fallback/error paths. `compile()`
 builds the runnable graph. `invoke()` executes one request. We use sequential
-replacement updates, fresh request state, no conversation checkpointer and no loops.
+replacement updates, fresh request state and no conversation checkpointer. Optional
+repair adds one bounded loop: validate → repair once → validate → terminal result.
 Clients/secrets are injected outside state. `END` means execution ended, not that
 claims were proven true.
 
-`prepare_queries` returns only the original question. A nonempty candidate list
+By default `prepare_queries` returns only the original question; the multi-query
+switch adds up to two validated alternatives in one Gemini call. A nonempty candidate list
 is not sufficient proof: Gemini may still return `insufficient_evidence`. Citation
 validation checks the JSON structure and that inline/listed IDs belong to selected
 passages. **It cannot establish semantic support.** The evaluation includes manual
@@ -128,7 +130,8 @@ bodies or credentials. Tracing is disabled during graph/model invocation.
 
 The answer cache includes provider/model, actual generation settings, prompt/schema
 version, question, explicit filters, corpus version, retrieval settings and ordered
-evidence identity. Cached answers report zero **new** chat calls; their latency must
+evidence identity. A cached answer skips generation; any expansion performed in the current request
+is still counted. Cached and uncached generation latency must
 not be mixed with uncached generation timing. Switching chat models does not require
 reindexing. Switching embedding models does.
 
@@ -156,9 +159,11 @@ Expected-source units are (document ID, section), mapped to canonical chunk IDs.
 First relevant rank, structural citation validity, manual claim support and
 abstention are separate measurements.
 
-Phase 2 will add BM25/RRF, reranking, multi-query, Nebius and bounded repair behind
-existing contracts. All those feature switches fail clearly in Phase 1. No
-advanced retrieval or semantic verifier is implemented now.
+Phase 2 implements BM25/RRF, dedicated BGE reranking, bounded query expansion and
+one optional repair. Gemini milestones are live-verified; Nebius is tested offline
+and blocked from live use until account/model/rates/billable bounds are verified.
+No semantic entailment verifier is implemented. See the current Phase 2 report and
+PROGRESS.md for measured outcomes and pending acceptance.
 
 ## Repository and continuation
 
@@ -197,7 +202,7 @@ the telemetry answer remained incomplete. See the addendum in
 
 Prompt/schema v3 clarifies direct field-name answers without changing retrieval or
 adding a model call. The telemetry case now includes the requested correlation
-identifiers and timing fields. All **63 offline tests pass**.
+identifiers and timing fields. At that Phase 1 checkpoint, **63 offline tests passed**; current counts are in PROGRESS.md.
 
 `eval/results/phase1-baseline-v3.json` records the full 15-case run: 10 answers and
 5 abstentions, with 3 cache hits and 12 new calls. Manual review retains a missing
@@ -210,3 +215,47 @@ and `phase1-review.md` for the distinction from the original live run.
 Cached answers are revalidated too. A rejected cached answer returns an explicit
 validation failure with zero new model calls; it is not automatically regenerated.
 Citation presence still does not prove claim support or answer completeness.
+
+## Phase 2 profiles and inspection
+
+All switches remain off in `config.yaml`. Select a nonsecret profile explicitly:
+
+| Profile | Enabled stages |
+|---|---|
+| `config.phase2-hybrid.yaml` | Dense + local BM25, fused with RRF |
+| `config.phase2-rerank.yaml` | Hybrid + dedicated BGE reranker |
+| `config.phase2-multiquery.yaml` | Above + one Gemini expansion call |
+| `config.phase2-repair.yaml` | Above + at most one response repair |
+
+```sh
+uv run runbook-iq --config config.phase2-hybrid.yaml ask --question 'What does DB_POOL_ACQUIRE_TIMEOUT mean?'
+RUNBOOK_IQ_CONFIG=config.phase2-multiquery.yaml uv run streamlit run app.py --server.address 127.0.0.1 --browser.gatherUsageStats false
+uv run runbook-iq --config config.phase2-multiquery.yaml evaluate --mode retrieval --split all --query-cache require --output eval/results/my-cached-query-comparison.json
+```
+
+`retrieve` now returns a result object with `retrieved_candidates`, `selected_evidence`,
+queries and operation metadata, rather than the Phase 1 bare list. `retrieved` is a
+successful retrieval-only status; no answer model ran. With multi-query enabled,
+retrieval-only evaluation can still make one expansion call per uncached question.
+`--query-cache require` blocks before search when an expansion entry is missing.
+
+In the UI, **Retrieval inspection** shows the requested settings, effective query
+count, every method/query rank, separate scores and final selection. Opening it or
+rerunning the page makes no calls. RRF adds reciprocal ranks using constant60; it
+never adds BM25 and dense scores. Reranking compares up to15 fused passages with the
+original question and selects five. Its relevance score does not prove grounding.
+BGE uses `truncate=NONE`; oversized query/passage pairs fail visibly.
+
+Every profile shares `.runbook_iq/usage.db`, the cross-phase USD3 guard, and the same
+active `data/processed` snapshot. When moving to another worktree, configure shared
+absolute runtime/processed paths; never reset the ledger to evade the cap. Ordinary
+queries never rebuild the corpus. Independent expansion routes can be configured
+under `expansion`, while existing top-level provider/model fields choose the answer
+and repair route. Gemini remains the live route; Nebius has no guessed model or rates.
+
+Operation records distinguish model attempts, blocked calls, cache hits, unknown
+usage and known subtotals. Reported output tokens already include reasoning when
+provided; missing reasoning detail remains unknown. Pinecone units have separate
+local monthly counters (default rerank experiment cap100). These cannot establish
+other projects' usage or enforce an account-wide invoice ceiling. SDK8 transport
+retry suppression is tested against its pinned internal configuration.

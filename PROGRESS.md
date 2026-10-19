@@ -453,3 +453,21 @@ only; original packages retained. Official Nebius quickstart/JSON docs rechecked
 No actual model ID or prices configured, no credentials requested, no Nebius calls.
 P2.4 live acceptance remains incomplete because the user is not ready. Continue
 independent inspection/evaluation tasks; do not declare all of Phase 2 complete.
+
+## Inspection milestone — 2026-10-18
+
+Streamlit inspection displays query variants, requested/effective settings, per-query
+provenance, stage scores, selected IDs, repair count and operation usage. Cache-hit
+caption reports all chat calls in the current request, including expansion. Profile
+selection uses RUNBOOK_IQ_CONFIG; default config remains dense-only. README now
+documents profiles, shared ledger paths, retrieval-only expansion costs and the
+changed retrieve CLI result object. Added optional repair profile; offline doctor
+validates it without loading keys or making service calls.
+
+Two new AppTest cases failed before implementation and passed afterward; all three
+UI tests pass, proving reruns do not resubmit and current expansion usage is shown.
+Structured browser inventory exposes no enabled browsers; native visual inspection
+was not performed. UI behavior is AppTest-verified, not visually verified.
+Next: final comparison manifests/partial-failure tests, fixed answer evaluation,
+manual source review and one independent whole-branch review. Nebius live remains
+deferred. No new application API calls in this milestone.

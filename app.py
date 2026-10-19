@@ -1,5 +1,6 @@
 """Run with: uv run streamlit run app.py. No model/index calls at startup."""
 import streamlit as st
+import os
 from pathlib import Path
 from runbook_iq.schemas import RunResult
 
@@ -8,9 +9,10 @@ def ask_live(question,filters):
     from dotenv import load_dotenv
     from runbook_iq.config import load_settings
     from runbook_iq.cli import compose,invoke_question
-    load_dotenv('.env',override=False)
+    config_path=Path(os.getenv('RUNBOOK_IQ_CONFIG','config.yaml'))
+    load_dotenv(config_path.parent/'.env',override=False)
     try:
-        _,graph=compose(load_settings())
+        _,graph=compose(load_settings(config_path))
         return invoke_question(graph,question,filters)
     except Exception:
         return RunResult(status='provider_error',errors=['Setup or service access failed. Check local configuration and run the CLI doctor.'])
@@ -40,6 +42,7 @@ def render_app(answer_fn=ask_live):
     st.caption(st.session_state.get('submitted_question',''))
     st.write(f"Status: **{result.status.replace('_',' ')}**")
     if result.errors:st.error(' '.join(result.errors))
+    if result.warnings:st.warning(' '.join(result.warnings))
     if result.answer:
         for title,body in [('Documented evidence',result.answer.documented_evidence),('Recommended checks',result.answer.recommended_checks)]:
             st.subheader(title);st.markdown(body or 'No supported content available.')
@@ -52,12 +55,21 @@ def render_app(answer_fn=ask_live):
                 st.code(source.chunk_id,language=None)
                 st.caption(f'{source.document_type} · revision {source.revision}')
                 st.text(source.text)
-    status='Cached answer; no new generation call.' if result.cache_hit else f'Chat calls: {result.usage.calls}'
+    status=f'Chat calls this request: {result.usage.calls}'
+    if result.cache_hit:status+=' · Answer cache hit; generation skipped.'
     st.caption(status)
     if result.model:st.caption(f'{result.provider} / {result.model}')
+    with st.expander('Retrieval inspection'):
+        st.caption('Ranking scores indicate relevance, not confidence or proof of grounding.')
+        st.json({'queries':result.query_variants,'configuration':result.retrieval_configuration,
+                 'candidates':[{'chunk_id':c.chunk.chunk_id,'stage':c.method,'rank':c.rank,'scores':c.scores,'provenance':[p.model_dump() for p in c.provenance]} for c in result.retrieved_candidates],
+                 'selected':[{'chunk_id':c.chunk.chunk_id,'rank':c.rank,'scores':c.scores} for c in result.selected_evidence],
+                 'repair_attempts':result.repair_attempts})
     with st.expander('Usage and timing'):
         st.json({'input_tokens':result.usage.input_tokens,'output_tokens':result.usage.output_tokens,
                  'reasoning_tokens':result.usage.reasoning_tokens,'estimated_usd':str(result.usage.estimated_usd) if result.usage.estimated_usd is not None else 'unknown',
+                 'usage_complete':result.usage_complete,'known_subtotal':result.known_usage_subtotal.model_dump(mode='json'),
+                 'operations':[o.model_dump(mode='json') for o in result.operations],
                  'node_seconds':result.timings})
 
 if __name__=='__main__':render_app()
