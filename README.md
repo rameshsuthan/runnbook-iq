@@ -259,3 +259,14 @@ provided; missing reasoning detail remains unknown. Pinecone units have separate
 local monthly counters (default rerank experiment cap100). These cannot establish
 other projects' usage or enforce an account-wide invoice ceiling. SDK8 transport
 retry suppression is tested against its pinned internal configuration.
+
+## Phase 2 measured outcome
+
+See [the source review](eval/results/phase2-review.md) and
+[resumed experiment summary](eval/results/phase2-final-summary.json).
+All four retrieval arms have expected-section recall1.0 on 12 answerable cases;
+no gain is demonstrated. Final completed answers match 12/15 frozen statuses;
+q02 omits a caveat, q04/q11 abstain conservatively, and q08 incorrectly denies
+retrieved telemetry fields. The first q06 search failure is preserved separately.
+One real q15 response used the bounded repair edge. Final evaluation:16 free-tier
+chat calls, estimated USD0. Nebius live acceptance is pending.

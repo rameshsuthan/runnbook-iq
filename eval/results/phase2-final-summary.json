@@ -1,0 +1,233 @@
+{
+  "method": "Resumed experiment: q01-q05 from first run, q06-q15 from one explicit continuation. Preserve q06 first-attempt failure separately; no clean-run claim.",
+  "artifacts": [
+    {
+      "path": "eval/results/phase2-final-answers.json",
+      "sha256": "41eb0418f18aa856c08ff9d2a1684040c733c97fd84e7109bd6bdaefe5de3b4e"
+    },
+    {
+      "path": "eval/results/phase2-final-answers-continuation.json",
+      "sha256": "f002cca7ea392b0c4307cd7c2dc898736595f5de7624e3c35c0a60c363edd0e4"
+    }
+  ],
+  "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+  "full_questions_hash": "711bcb50c00eb882ef99d7f7b0b8d5b8fdeaca684cc53b97808a4b0c8e3b9171",
+  "source_tree_hash": "3a01f3e22aece060c1a2d5f8029a4d9c4543a037bd591a64acd585ab6210c5e5",
+  "completed_case_count": 15,
+  "request_attempt_count": 16,
+  "completed_statuses": {
+    "answered": 9,
+    "insufficient_evidence": 6
+  },
+  "completed_status_matches": 12,
+  "first_attempt_statuses": {
+    "answered": 8,
+    "insufficient_evidence": 6,
+    "retrieval_error": 1
+  },
+  "first_attempt_status_matches": 11,
+  "completed_selected_recall_at_5": 1.0,
+  "first_attempt_selected_recall_at_5": 0.9166666666666666,
+  "chat_calls": 16,
+  "chat_input_tokens": 17064,
+  "chat_output_tokens": 5843,
+  "estimated_chat_usd": "0",
+  "chat_usage_complete": true,
+  "operation_counts": [
+    {
+      "stage": "expand",
+      "status": "cache_hit",
+      "count": 16
+    },
+    {
+      "stage": "dense_search",
+      "status": "ok",
+      "count": 38
+    },
+    {
+      "stage": "rerank",
+      "status": "ok",
+      "count": 15
+    },
+    {
+      "stage": "generate",
+      "status": "ok",
+      "count": 15
+    },
+    {
+      "stage": "dense_search",
+      "status": "error",
+      "count": 1
+    },
+    {
+      "stage": "repair",
+      "status": "ok",
+      "count": 1
+    }
+  ],
+  "pinecone_units_complete": false,
+  "unknown_search_attempts": 1,
+  "latency": {
+    "scope": "Completed graph requests, expansion cache warm, answer cache cold; excludes composition and intentional pauses",
+    "min_seconds": 1.6175377079925966,
+    "median_seconds": 2.2322446670150384,
+    "max_seconds": 4.446611833991483,
+    "composition_seconds": [
+      0.5297648749838118,
+      0.7158035410102457
+    ]
+  },
+  "manual_review": "phase2-review.md; assistant source review, no independent human rating",
+  "cases": [
+    {
+      "id": "q01",
+      "artifact": "eval/results/phase2-final-answers.json",
+      "status_matches_frozen": true,
+      "coverage": "complete_or_appropriate_abstention",
+      "support": "supported_with_qualifications_in_review",
+      "citations": "supported_in_assistant_source_review",
+      "clarification": "appropriate_or_not_required",
+      "repair_attempts": 0
+    },
+    {
+      "id": "q02",
+      "artifact": "eval/results/phase2-final-answers.json",
+      "status_matches_frozen": true,
+      "coverage": "partial",
+      "support": "supported_with_qualifications_in_review",
+      "citations": "supported_in_assistant_source_review",
+      "clarification": "appropriate_or_not_required",
+      "repair_attempts": 0
+    },
+    {
+      "id": "q03",
+      "artifact": "eval/results/phase2-final-answers.json",
+      "status_matches_frozen": true,
+      "coverage": "complete_or_appropriate_abstention",
+      "support": "supported_with_qualifications_in_review",
+      "citations": "supported_in_assistant_source_review",
+      "clarification": "appropriate_or_not_required",
+      "repair_attempts": 0
+    },
+    {
+      "id": "q04",
+      "artifact": "eval/results/phase2-final-answers.json",
+      "status_matches_frozen": false,
+      "coverage": "complete_or_appropriate_abstention",
+      "support": "supported_with_qualifications_in_review",
+      "citations": "supported_in_assistant_source_review",
+      "clarification": "appropriate_or_not_required",
+      "repair_attempts": 0
+    },
+    {
+      "id": "q05",
+      "artifact": "eval/results/phase2-final-answers.json",
+      "status_matches_frozen": true,
+      "coverage": "complete_or_appropriate_abstention",
+      "support": "supported_with_qualifications_in_review",
+      "citations": "supported_in_assistant_source_review",
+      "clarification": "appropriate_or_not_required",
+      "repair_attempts": 0
+    },
+    {
+      "id": "q06",
+      "artifact": "eval/results/phase2-final-answers-continuation.json",
+      "status_matches_frozen": true,
+      "coverage": "complete_or_appropriate_abstention",
+      "support": "supported_with_qualifications_in_review",
+      "citations": "supported_in_assistant_source_review",
+      "clarification": "appropriate_or_not_required",
+      "repair_attempts": 0
+    },
+    {
+      "id": "q07",
+      "artifact": "eval/results/phase2-final-answers-continuation.json",
+      "status_matches_frozen": true,
+      "coverage": "complete_or_appropriate_abstention",
+      "support": "supported_with_qualifications_in_review",
+      "citations": "supported_in_assistant_source_review",
+      "clarification": "appropriate_or_not_required",
+      "repair_attempts": 0
+    },
+    {
+      "id": "q08",
+      "artifact": "eval/results/phase2-final-answers-continuation.json",
+      "status_matches_frozen": false,
+      "coverage": "failed",
+      "support": "failed_documented_fields_denied",
+      "citations": "IDs_valid_but_denial_not_supported",
+      "clarification": "incorrect_missing_information",
+      "repair_attempts": 0
+    },
+    {
+      "id": "q09",
+      "artifact": "eval/results/phase2-final-answers-continuation.json",
+      "status_matches_frozen": true,
+      "coverage": "complete_or_appropriate_abstention",
+      "support": "supported_with_qualifications_in_review",
+      "citations": "supported_in_assistant_source_review",
+      "clarification": "appropriate_or_not_required",
+      "repair_attempts": 0
+    },
+    {
+      "id": "q10",
+      "artifact": "eval/results/phase2-final-answers-continuation.json",
+      "status_matches_frozen": true,
+      "coverage": "complete_or_appropriate_abstention",
+      "support": "supported_with_qualifications_in_review",
+      "citations": "supported_in_assistant_source_review",
+      "clarification": "appropriate_or_not_required",
+      "repair_attempts": 0
+    },
+    {
+      "id": "q11",
+      "artifact": "eval/results/phase2-final-answers-continuation.json",
+      "status_matches_frozen": false,
+      "coverage": "complete_or_appropriate_abstention",
+      "support": "supported_with_qualifications_in_review",
+      "citations": "supported_in_assistant_source_review",
+      "clarification": "appropriate_or_not_required",
+      "repair_attempts": 0
+    },
+    {
+      "id": "q12",
+      "artifact": "eval/results/phase2-final-answers-continuation.json",
+      "status_matches_frozen": true,
+      "coverage": "complete_or_appropriate_abstention",
+      "support": "supported_with_qualifications_in_review",
+      "citations": "supported_in_assistant_source_review",
+      "clarification": "appropriate_or_not_required",
+      "repair_attempts": 0
+    },
+    {
+      "id": "q13",
+      "artifact": "eval/results/phase2-final-answers-continuation.json",
+      "status_matches_frozen": true,
+      "coverage": "complete_or_appropriate_abstention",
+      "support": "supported_with_qualifications_in_review",
+      "citations": "supported_in_assistant_source_review",
+      "clarification": "appropriate_or_not_required",
+      "repair_attempts": 0
+    },
+    {
+      "id": "q14",
+      "artifact": "eval/results/phase2-final-answers-continuation.json",
+      "status_matches_frozen": true,
+      "coverage": "complete_or_appropriate_abstention",
+      "support": "supported_with_qualifications_in_review",
+      "citations": "supported_in_assistant_source_review",
+      "clarification": "appropriate_or_not_required",
+      "repair_attempts": 0
+    },
+    {
+      "id": "q15",
+      "artifact": "eval/results/phase2-final-answers-continuation.json",
+      "status_matches_frozen": true,
+      "coverage": "complete_or_appropriate_abstention",
+      "support": "supported_with_qualifications_in_review",
+      "citations": "supported_in_assistant_source_review",
+      "clarification": "appropriate_or_not_required",
+      "repair_attempts": 1
+    }
+  ]
+}

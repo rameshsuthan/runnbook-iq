@@ -61,3 +61,30 @@ def test_fused_and_selected_metrics_are_separate():
     assert report['metrics']['hit_at_5']==1
     assert report['metrics']['selected_hit_at_5']==0
     assert report['metrics']['pool_recall_at_15']==1
+
+
+def test_comparison_manifest_and_partial_failure_are_retained(tmp_path):
+    import json
+    from runbook_iq.evaluation import EvaluationCase,evaluate
+    from runbook_iq.schemas import RunResult
+    case=EvaluationCase(id='one',split='dev',question='q',expected_status='answered',expected_sources=[{'document_id':'doc','section':'Checks'}],expected_points=['fact'])
+    path=tmp_path/'result.json'
+    r=evaluate([case],None,lambda *args:RunResult(status='provider_error'),Settings(),output_path=path)
+    saved=json.loads(path.read_text())
+    assert saved['stopped_reason']=='provider_error' and saved['metrics']['recorded_cases']==1
+    assert saved['manifest']['source_commit'] and saved['manifest']['rubric_hash']
+    assert saved['manifest']['source_tree_hash'] and saved['manifest']['schema_version']=='answer-v3'
+    assert saved['cases'][0]['request_seconds']>=0 and 'known_usage_subtotal' in saved['cases'][0]
+
+
+def test_retrieval_eval_stops_after_expansion_quota_failure():
+    from runbook_iq.evaluation import EvaluationCase,evaluate
+    from runbook_iq.schemas import RunResult
+    case=EvaluationCase(id='one',split='dev',question='q',expected_status='insufficient_evidence',expected_sources=[],expected_points=[])
+    calls=[]
+    def prefix(q,f):
+        calls.append(q)
+        return RunResult(status='retrieved',query_variants=[q],warnings=['expansion_provider_error'])
+    r=evaluate([case,case.model_copy(update={'id':'two'})],None,None,Settings(),retrieval_run=prefix)
+    assert len(calls)==1 and r['stopped_reason']=='expansion_service_or_budget_failure'
+    assert r['cases'][0]['query_variants']==['q'] and r['metrics']['answerable_cases']==0

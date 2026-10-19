@@ -1,6 +1,7 @@
 """Frozen expected evidence, retrieval metrics and honest manual-review slots."""
 import json
 import time
+import subprocess
 from datetime import datetime,timezone
 from pathlib import Path
 from typing import Literal
@@ -28,9 +29,21 @@ def validate_cases(cases,snapshot):
         if not expected<=available:raise ValueError(f'{case.id}: missing expected source section')
         if case.expected_status=='answered' and not expected:raise ValueError('Answerable cases require expected evidence')
 
-def evaluate(cases,retrieve,answer,settings,*,output_path=None,pause_seconds=0,retrieval_run=None):
+def report_manifest():
+    try:
+        commit=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+        dirty=bool(subprocess.check_output(['git','diff','HEAD','--name-only'],text=True).strip())
+    except (OSError,subprocess.CalledProcessError):commit='unavailable';dirty=True
+    files=sorted(Path('src/runbook_iq').glob('*.py'))+[Path('app.py'),Path('uv.lock')]
+    return {'source_commit':commit,'source_dirty':dirty,
+        'source_tree_hash':digest({str(p):p.read_text() for p in files if p.exists()}),
+        'rubric_hash':digest(Path('eval/phase2-rubric.md').read_text()),'schema_version':'answer-v3',
+        'latency_scope':'request_seconds covers graph invocation; composition is separate; evaluation pauses excluded'}
+
+
+def evaluate(cases,retrieve,answer,settings,*,output_path=None,pause_seconds=0,retrieval_run=None,composition_seconds=None):
     rows=[];corpus_version=getattr(getattr(retrieve,'snapshot',None),'version',None)
-    report={'created_at':datetime.now(timezone.utc).isoformat(),'mode':'answers' if answer else 'retrieval',
+    report={'manifest':report_manifest(),'composition_seconds':composition_seconds,'created_at':datetime.now(timezone.utc).isoformat(),'mode':'answers' if answer else 'retrieval',
         'configuration':settings.model_dump(mode='json'),'corpus_version':corpus_version,
         'questions_hash':digest([c.model_dump() for c in cases]),'prompt_version':None,'cases':rows,'metrics':{}}
     from .providers import PROMPT_VERSION
@@ -46,6 +59,7 @@ def evaluate(cases,retrieve,answer,settings,*,output_path=None,pause_seconds=0,r
             try:candidates=retrieve.search(case.question,case.filters)[:5]
             except Exception:candidates=[];error='retrieval_error'
             seconds=time.perf_counter()-started
+        request_seconds=time.perf_counter()-started
         selected=result.selected_evidence if result else candidates
         pool=result.retrieved_candidates[:15] if result else candidates
         expected={(s['document_id'],s['section']) for s in case.expected_sources}
@@ -57,6 +71,10 @@ def evaluate(cases,retrieve,answer,settings,*,output_path=None,pause_seconds=0,r
         row={'case':case.model_dump(),'retrieval':[c.model_dump(mode='json') for c in candidates],
              'selected_evidence':[c.model_dump(mode='json') for c in result.selected_evidence] if result else None,
              'retrieval_seconds':seconds,'retrieval_error':error,
+             'request_seconds':request_seconds,
+             'usage':result.usage.model_dump(mode='json') if result else None,
+             'known_usage_subtotal':result.known_usage_subtotal.model_dump(mode='json') if result else None,
+             'usage_complete':result.usage_complete if result else False,
              'operations':[o.model_dump(mode='json') for o in result.operations] if result else [],
              'warnings':result.warnings if result else [],
              'query_variants':result.query_variants if result else [case.question],
@@ -81,7 +99,7 @@ def evaluate(cases,retrieve,answer,settings,*,output_path=None,pause_seconds=0,r
             from .corpus import atomic_write
             atomic_write(Path(output_path),json.dumps(report,indent=2))
             print(f"Recorded {case.id}: {result.status if result else 'retrieval'}",flush=True)
-        if result and result.status in ('budget_exceeded','provider_error'):
+        if result and result.status in ('budget_exceeded','provider_error','retrieval_error'):
             report['stopped_reason']=result.status
             break
         if result and any(w in result.warnings for w in ('expansion_provider_error','expansion_budget_blocked')):

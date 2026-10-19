@@ -34,21 +34,31 @@ with one independent whole-branch review under the selected Native workflow.
 
 ## Phase 2 implementation checkpoints
 
-- Tasks 1–4 implemented and committed. BM25/RRF and dedicated BGE reranking run
-  through the shared graph prefix and existing canonical snapshot. No reingestion.
-- Dense, hybrid and reranked retrieval each retain full expected-section recall on
-  the 12 answerable cases. Do not claim an improvement from these equal scores.
-- Per-operation usage preserves unknown values and reports a known subtotal;
-  cache hits retain the work performed during the current request. Pinecone units
-  remain separate from chat tokens/dollars. Local quotas are not account balances.
-- Pinecone SDK 8 defaults to transport retries. Its pinned configuration is set
-  before transport creation to enforce zero retries; actual transport tests protect
-  the private SDK access. Recheck this behavior on dependency upgrades.
-- Query expansion is being verified with Gemini; original query remains first,
-  identifiers/numbers/negation are guarded, and validated expansions are cached.
-  Near-duplicate rewrites may survive whitespace-only deduplication and must be
-  reported when interpreting the comparison. No answer prompt tuning is bundled.
-- Nebius remains unavailable. No Nebius calls or paid fallback are enabled.
+- Tasks 1–6 and 8 are implemented and committed: canonical BM25/RRF, dedicated
+  BGE reranking, bounded cached Gemini expansion, per-operation accounting, one
+  repair edge, and Streamlit inspection. Default feature switches remain off.
+- All four fixed retrieval arms retain full expected-section recall on the 12
+  answerable cases. This is no measured recall gain; all 15 cases were seen before.
+- Task 7's Nebius adapter is offline-tested; no Nebius calls or paid fallback are
+  enabled. Verified account/model/rates/enforced billable bounds remain prerequisites.
+- Pinecone SDK 8 retries are disabled before lazy transport creation using pinned
+  private configuration; actual transport tests guard dependency upgrades.
+- Cache hits retain current request work; unknown usage stays unknown. Pinecone
+  units are separate from chat dollars. Local counters are not account balances.
+- Expansion preserves the original query and guarded identifiers/numbers/negation.
+  Guards are lexical, not semantic proof; punctuation-only alternatives may survive.
+- Task 9 adds code/rubric hashes and separate composition/request latency. Existing
+  Gemini expansion keys omit an unset optional context bound for compatibility.
+- Final evaluation stopped at q06 on a Pinecone search error. Preserve the partial
+  artifact; one explicit bounded continuation starts at q06 with cached expansions.
+  Do not classify its cause from the generic saved error. q06 succeeded on continuation.
+- Final source review already found q08 falsely denying documented correlation
+  fields despite correct selected evidence. Keep this failure; no answer tuning.
+- Continuation completed:9 answers/6 abstentions,12/15 frozen status matches; q15
+  used one real repair. Final evaluation used16 free-tier calls,estimated USD0.
+  Detailed source review and first-attempt failure metrics are retained.
+- Finish one independent whole-branch review, verification and authorized branch
+  publication. Full Phase 2 acceptance remains incomplete until Nebius is verified.
 
 ## Authority and accepted direction
 

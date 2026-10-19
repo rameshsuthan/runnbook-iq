@@ -1,0 +1,78 @@
+{
+  "arms": [
+    {
+      "configuration": "dense",
+      "artifact": "eval/results/phase2-dense-retrieval.json",
+      "sha256": "0145c561f98753e1eaf2c6eebc569dc570242e73a24fce433eb5cb3c00cfc13b",
+      "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+      "questions_hash": "711bcb50c00eb882ef99d7f7b0b8d5b8fdeaca684cc53b97808a4b0c8e3b9171",
+      "prompt_version": "incident-evidence-v3",
+      "metrics": {
+        "answerable_cases": 12,
+        "hit_at_5": 1.0,
+        "macro_evidence_recall_at_5": 1.0,
+        "recorded_cases": 15,
+        "manual_grounding": "unreviewed",
+        "selected_hit_at_5": 1.0,
+        "selected_recall_at_5": 1.0,
+        "pool_recall_at_15": 1.0
+      }
+    },
+    {
+      "configuration": "hybrid",
+      "artifact": "eval/results/phase2-hybrid-retrieval.json",
+      "sha256": "885e1599afa40ead09ea590e45c5f4618e0b8f82f1e5278241df1aa6103e8275",
+      "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+      "questions_hash": "711bcb50c00eb882ef99d7f7b0b8d5b8fdeaca684cc53b97808a4b0c8e3b9171",
+      "prompt_version": "incident-evidence-v3",
+      "metrics": {
+        "answerable_cases": 12,
+        "hit_at_5": 1.0,
+        "macro_evidence_recall_at_5": 1.0,
+        "recorded_cases": 15,
+        "manual_grounding": "unreviewed",
+        "selected_hit_at_5": 1.0,
+        "selected_recall_at_5": 1.0,
+        "pool_recall_at_15": 1.0
+      }
+    },
+    {
+      "configuration": "rerank",
+      "artifact": "eval/results/phase2-rerank-retrieval.json",
+      "sha256": "9c35072f0a6acc5e2b82cdc035781037d4af445f8c2ff9a44e7c9549c2c5029b",
+      "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+      "questions_hash": "711bcb50c00eb882ef99d7f7b0b8d5b8fdeaca684cc53b97808a4b0c8e3b9171",
+      "prompt_version": "incident-evidence-v3",
+      "metrics": {
+        "answerable_cases": 12,
+        "hit_at_5": 1.0,
+        "macro_evidence_recall_at_5": 1.0,
+        "recorded_cases": 15,
+        "manual_grounding": "unreviewed",
+        "selected_hit_at_5": 1.0,
+        "selected_recall_at_5": 1.0,
+        "pool_recall_at_15": 1.0
+      }
+    },
+    {
+      "configuration": "multiquery",
+      "artifact": "eval/results/phase2-multiquery-retrieval.json",
+      "sha256": "a481ec9be75d8b6f5d6739b3ab6384041a570911b3247d0ece0eff66d8b14adf",
+      "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+      "questions_hash": "711bcb50c00eb882ef99d7f7b0b8d5b8fdeaca684cc53b97808a4b0c8e3b9171",
+      "prompt_version": "incident-evidence-v3",
+      "metrics": {
+        "answerable_cases": 12,
+        "hit_at_5": 1.0,
+        "macro_evidence_recall_at_5": 1.0,
+        "recorded_cases": 15,
+        "manual_grounding": "unreviewed",
+        "selected_hit_at_5": 1.0,
+        "selected_recall_at_5": 1.0,
+        "pool_recall_at_15": 1.0
+      }
+    }
+  ],
+  "assessment": "No measured expected-section recall gain: all four arms reach 1.0 on the 12 answerable cases. All 15 cases are previously observed.",
+  "reuse": "Recorded milestone artifacts reused: same active corpus/questions/answer prompt and fixed ranking parameters. Later changes add operation metadata, optional provider bounds and report manifests, not retrieval tuning. Early arms predate operation metadata; do not invent missing per-request counts."
+}

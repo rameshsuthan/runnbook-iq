@@ -471,3 +471,37 @@ was not performed. UI behavior is AppTest-verified, not visually verified.
 Next: final comparison manifests/partial-failure tests, fixed answer evaluation,
 manual source review and one independent whole-branch review. Nebius live remains
 deferred. No new application API calls in this milestone.
+
+## Final evaluation in progress — 2026-10-18
+
+Task 9 manifest/cache tests observed two RED failures then GREEN; full suite129
+passed in1.64s. CLI help, offline doctor and git diff --check passed. Offline
+credential presence reports missing because doctor intentionally does not load .env.
+Report manifests include source commit/dirty flag plus source tree hash, rubric,
+schema, full settings and separate composition/request time. Frozen query cache
+compatibility is preserved when the optional provider context bound is unset.
+
+The answer evaluation saved q01–q05 then stopped at q06 with a dense-search error.
+The attempted search has unknown units and retains its embedding reservation; no
+chat call happened for q06. Local counts were 38 rerank units and 3,119 embedding
+tokens including the unknown reservation, below configured caps. Original error
+cause is unavailable in the safe saved report. One explicitly bounded continuation
+from q06 reuses recorded expansions and stops on any service failure. Its initial
+stdin dotenv discovery failed locally before any API calls; explicit .env path
+corrected that script. q06 then succeeded. Preserve both artifacts, never overwrite
+the original failure. q08 incorrectly denies documented telemetry correlation
+fields despite the selected guide containing them; record this semantic failure.
+
+Continuation completed all remaining ten cases without another service error.
+Final combined results:9 answered/6 abstentions,12/15 status agreement; first
+attempts:8 answered/6 abstentions/1 retrieval error,11/15 agreement. q02 caveat
+omission and q04/q11 conservative statuses persist; q08 fails source support.
+Manual source review is in eval/results/phase2-review.md. q15 naturally repaired
+once and returned a supported abstention. Initial rejected text/category was not
+retained; only the successful final result and both operation records are asserted.
+Across final runs:16 Gemini calls,17,064 input/5,843 output tokens,estimated USD0;
+38 successful dense searches+one failed,15 reranks,16 cached expansions. Local
+shared ledger now has90 reservations:88 known and2 unknown historic chat outcomes,
+estimated/reserved USD0. Local Pinecone counts:48 rerank units,95 known read units,
+3,485 embedding tokens including one unknown2,048-token reservation. These counters
+do not establish account-wide consumption. Next: independent branch review.

@@ -29,8 +29,10 @@ class AnswerCache:
 
 def expansion_cache_key(settings,question,filters,corpus_version):
     from .config import resolve_route
+    route=resolve_route(settings,'expand').model_dump(mode='json')
+    if route.get('context_window_tokens') is None:route.pop('context_window_tokens',None)
     return digest({'prompt':'query-expand-v1','schema':'alternatives-v1','question':question,
-        'filters':filters,'corpus_version':corpus_version,'route':resolve_route(settings,'expand').model_dump(mode='json')})
+        'filters':filters,'corpus_version':corpus_version,'route':route})
 
 class ExpansionCache:
     def __init__(self,path):

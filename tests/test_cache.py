@@ -26,3 +26,15 @@ def test_effective_retrieval_queries_change_key():
     first=answer_cache_key(*args,query_variants=['q'],retrieval_configuration={'hybrid':False})
     assert first!=answer_cache_key(*args,query_variants=['q'],retrieval_configuration={'hybrid':True})
     assert first!=answer_cache_key(*args,query_variants=['q','other'],retrieval_configuration={'hybrid':False})
+
+
+def test_unset_context_bound_preserves_frozen_expansion_cache(tmp_path):
+    from runbook_iq.config import resolve_route
+    from runbook_iq.corpus import digest
+    from runbook_iq.cache import ExpansionCache,expansion_cache_key
+    settings=Settings(model='test')
+    legacy_route=resolve_route(settings,'expand').model_dump(mode='json')
+    legacy_route.pop('context_window_tokens')
+    old_key=digest({'prompt':'query-expand-v1','schema':'alternatives-v1','question':'q','filters':{},'corpus_version':'v1','route':legacy_route})
+    cache=ExpansionCache(tmp_path/'c');cache.put(old_key,['q','other'])
+    assert cache.get(expansion_cache_key(settings,'q',{},'v1'))==['q','other']

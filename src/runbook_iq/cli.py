@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+import time
 from pathlib import Path
 from .config import load_settings
 from .corpus import build_corpus, read_snapshot, write_snapshot
@@ -127,12 +128,14 @@ def main(argv=None):
             output(sync_corpus(snapshot,settings,PineconeStore(settings,create=True)));return 0
         if args.command=='evaluate':
             from .evaluation import load_cases,validate_cases,evaluate
+            composition_started=time.perf_counter()
             retriever,graph=compose(settings,mode=args.mode,query_cache=args.query_cache)
+            composition_seconds=time.perf_counter()-composition_started
             cases=load_cases(Path('eval/questions.json'))
             validate_cases(cases,retriever.snapshot)
             cases=[c for c in cases if args.split=='all' or c.split==args.split]
             answer=(lambda q,f:invoke_question(graph,q,f)) if args.mode=='answers' else None
-            report=evaluate(cases,retriever,answer,settings,output_path=args.output,pause_seconds=max(0,args.pause_seconds),retrieval_run=(lambda q,f:invoke_question(graph,q,f)) if args.mode=='retrieval' else None)
+            report=evaluate(cases,retriever,answer,settings,output_path=args.output,pause_seconds=max(0,args.pause_seconds),retrieval_run=(lambda q,f:invoke_question(graph,q,f)) if args.mode=='retrieval' else None,composition_seconds=composition_seconds)
             output(report['metrics'])
             return 1 if report.get('stopped_reason') else 0
         filters={key:getattr(args,key) for key in ('service','environment') if getattr(args,key)}
