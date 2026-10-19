@@ -5,7 +5,7 @@ from langgraph.graph import StateGraph, START, END
 from .budget import BudgetExceeded
 from .cache import answer_cache_key
 from .generation import AnswerValidationError, validate_answer
-from .schemas import Candidate, GeneratedAnswer, ProviderResponse, RunResult, Usage
+from .schemas import Candidate, GeneratedAnswer, ProviderResponse, RunResult, Usage, RetrievalBatch
 
 class GraphState(TypedDict,total=False):
     question: str
@@ -25,9 +25,13 @@ class GraphState(TypedDict,total=False):
     repair_retries: int
     path: list[str]
     cache_key: str
+    batch: RetrievalBatch
 
 
-def build_graph(retriever,provider,cache,settings,corpus_version):
+def build_graph(retriever,provider,cache,settings,corpus_version,*,mode='answers',expander=None):
+    from .retrieval import retrieval_configuration
+    if mode not in ('answers','retrieval'):raise ValueError('Unknown graph mode')
+    if settings.hybrid and not hasattr(retriever,'retrieve'):raise ValueError('Hybrid requires the shared pipeline')
     def terminal(status,message=None,usage=None):
         return RunResult(status=status,provider=settings.provider,model=settings.model,
             errors=[message] if message else [],usage=usage or Usage(),corpus_version=corpus_version)
@@ -40,7 +44,9 @@ def build_graph(retriever,provider,cache,settings,corpus_version):
             update['timings']={**timings,name:time.perf_counter()-start}
             if 'result' in update:
                 update['result'].retrieved_candidates=state.get('candidates',[])
-                update['result'].selected_evidence=state.get('selected_evidence',[])
+                update['result'].selected_evidence=update.get('selected_evidence',state.get('selected_evidence',[]))
+                update['result'].query_variants=state.get('query_variants',[])
+                update['result'].retrieval_configuration=retrieval_configuration(settings)
                 update['result'].timings=update['timings']
                 update['status']=update['result'].status
                 update['errors']=update['result'].errors
@@ -57,21 +63,31 @@ def build_graph(retriever,provider,cache,settings,corpus_version):
         return update
     def queries(state):return {'query_variants':[state['question']]}
     def retrieve(state):
-        try:return {'candidates':retriever.search(state['query_variants'][0],state['filters'])}
+        try:
+            batch= retriever.retrieve(state['query_variants'],state['filters']) if hasattr(retriever,'retrieve') else RetrievalBatch(query_variants=state['query_variants'],candidates=retriever.search(state['question'],state['filters']))
+            return {'candidates':batch.candidates,'batch':batch}
         except Exception:return {'result':terminal('retrieval_error','Retrieval failed; verify active corpus, input limits and Pinecone access')}
     def select(state):
-        seen=set(); selected=[]
-        for candidate in state['candidates']:
-            if candidate.chunk.chunk_id not in seen:
-                selected.append(candidate); seen.add(candidate.chunk.chunk_id)
-        return {'selected_evidence':selected[:settings.top_k]}
+        try:
+            if hasattr(retriever,'select'):
+                selected=retriever.select(state['question'],state['batch']).evidence
+            else:
+                seen=set();selected=[]
+                for candidate in state['candidates']:
+                    if candidate.chunk.chunk_id not in seen:
+                        selected.append(candidate);seen.add(candidate.chunk.chunk_id)
+                selected=selected[:settings.top_k]
+            update={'selected_evidence':selected}
+            if mode=='retrieval':update['result']=terminal('retrieved')
+            return update
+        except Exception:return {'result':terminal('retrieval_error','Evidence selection failed; no fallback was made')}
     def fallback(state):
         result=terminal('insufficient_evidence')
         result.answer=GeneratedAnswer(status='insufficient_evidence',documented_evidence='',recommended_checks='',
             missing_information=['No matching source passages were found. Provide a documented service/question or additional source material.'],citations=[])
         return {'result':result}
     def generate(state):
-        key=answer_cache_key(settings,state['question'],state['filters'],corpus_version,state['selected_evidence'])
+        key=answer_cache_key(settings,state['question'],state['filters'],corpus_version,state['selected_evidence'],query_variants=state['query_variants'])
         try:
             cached=cache.get(key)
             if cached:
@@ -108,7 +124,7 @@ def build_graph(retriever,provider,cache,settings,corpus_version):
     graph.add_conditional_edges('prepare_request',lambda s:END if s.get('result') else 'prepare_queries')
     graph.add_edge('prepare_queries','retrieve')
     graph.add_conditional_edges('retrieve',lambda s:END if s.get('result') else 'select_evidence')
-    graph.add_conditional_edges('select_evidence',lambda s:'generate' if s['selected_evidence'] else 'fallback')
+    graph.add_conditional_edges('select_evidence',lambda s:END if s.get('result') else ('generate' if s['selected_evidence'] else 'fallback'))
     graph.add_conditional_edges('generate',lambda s:END if s.get('result') else 'validate')
     graph.add_edge('fallback',END);graph.add_edge('validate',END)
     return graph.compile()

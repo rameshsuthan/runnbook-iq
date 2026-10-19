@@ -28,3 +28,60 @@ class PineconeRetriever:
                 if hit.get('content_hash',chunk.content_hash)!=chunk.content_hash:continue
                 result.append(Candidate(chunk=chunk,rank=rank,scores={'dense':hit['score']}))
             return result
+
+
+def retrieval_configuration(settings):
+    return {'hybrid':settings.hybrid,'reranking':settings.reranking,'multi_query':settings.multi_query,
+            'top_k':settings.top_k,'embedding':settings.embedding_model,'rrf_k':60,
+            'keyword_version':'identifiers-v1','candidate_limit':15}
+
+
+class RetrievalPipeline:
+    def __init__(self,settings,snapshot,dense,keyword=None,reranker=None,verify_snapshot=None):
+        self.settings,self.snapshot,self.dense=settings,snapshot,dense
+        self.keyword,self.reranker=keyword,reranker
+        if verify_snapshot is None and not isinstance(dense,PineconeRetriever):
+            raise ValueError('A snapshot verifier is required')
+        self.verify_snapshot=verify_snapshot or self._verify
+
+    def _verify(self):
+        with corpus_lock(self.settings):
+            check_destination(self.settings,self.dense.client)
+            if load_active_snapshot(self.settings).version!=self.snapshot.version:
+                raise ValueError('Corpus changed; rebuild request context')
+
+    def retrieve(self,queries,filters):
+        from .schemas import RetrievalBatch,RetrievalOrigin
+        from .fusion import fuse
+        if not 1<=len(queries)<=3 or any(not isinstance(q,str) or not q.strip() for q in queries):
+            raise ValueError('Use one to three nonempty queries')
+        if not set(filters)<={'service','environment'}:raise ValueError('Unsupported filter')
+        self.verify_snapshot()
+        lists=[]
+        for index,query in enumerate(queries):
+            methods=[('dense',self.dense)]
+            if self.settings.hybrid:
+                if self.keyword is None:raise ValueError('Keyword retrieval is unavailable')
+                methods.append(('keyword',self.keyword))
+            for method,search in methods:
+                candidates=[]
+                for c in search.search(query,filters)[:5]:
+                    candidates.append(c.model_copy(update={'provenance':[RetrievalOrigin(
+                        query_id=f'q{index}',method=method,rank=c.rank,score=c.scores[method])]}))
+                lists.append(candidates)
+        self.verify_snapshot()
+        candidates=lists[0] if len(lists)==1 else fuse(lists)
+        return RetrievalBatch(query_variants=queries,candidates=candidates)
+
+    def select(self,question,batch):
+        from .schemas import SelectionResult
+        if self.settings.reranking:
+            if self.reranker is None:raise ValueError('Reranker unavailable')
+            return self.reranker.rerank(question,batch.candidates)
+        seen=set();selected=[]
+        for c in batch.candidates:
+            if c.chunk.chunk_id not in seen:selected.append(c);seen.add(c.chunk.chunk_id)
+        return SelectionResult(evidence=selected[:self.settings.top_k])
+
+    def search(self,query,filters):
+        return self.retrieve([query],filters).candidates[:5]

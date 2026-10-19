@@ -38,6 +38,15 @@ class Candidate(Record):
     provenance: list[RetrievalOrigin] = Field(default_factory=list)
 
 
+class RetrievalBatch(Record):
+    query_variants: list[str]
+    candidates: list[Candidate]
+
+
+class SelectionResult(Record):
+    evidence: list[Candidate]
+
+
 class Usage(Record):
     input_tokens: int | None = None
     output_tokens: int | None = None  # Includes reasoning when returned by LangChain.
@@ -61,9 +70,11 @@ class ProviderResponse(Record):
 
 
 class RunResult(Record):
-    status: Literal['answered', 'insufficient_evidence', 'invalid_request', 'retrieval_error', 'provider_error', 'invalid_output', 'budget_exceeded']
+    status: Literal['retrieved', 'answered', 'insufficient_evidence', 'invalid_request', 'retrieval_error', 'provider_error', 'invalid_output', 'budget_exceeded']
     answer: GeneratedAnswer | None = None
     sources: list[Chunk] = Field(default_factory=list)
+    query_variants: list[str] = Field(default_factory=list)
+    retrieval_configuration: dict = Field(default_factory=dict)
     retrieved_candidates: list[Candidate] = Field(default_factory=list)
     selected_evidence: list[Candidate] = Field(default_factory=list)
     provider: str | None = None

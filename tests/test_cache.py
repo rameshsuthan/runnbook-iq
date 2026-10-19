@@ -16,3 +16,13 @@ def test_cache_scope_and_invalid_results(tmp_path):
     result=RunResult(status='insufficient_evidence',answer=GeneratedAnswer(status='insufficient_evidence',documented_evidence='',recommended_checks='',missing_information=['Need evidence'],citations=[]))
     cache.put(base,result)
     assert cache.get(base)==result and cache.get('absent') is None
+
+
+def test_effective_retrieval_queries_change_key():
+    from runbook_iq.cache import answer_cache_key
+    from runbook_iq.config import Settings
+    from test_graph import evidence
+    args=(Settings(model='m'),'q',{},'v1',evidence())
+    first=answer_cache_key(*args,query_variants=['q'],retrieval_configuration={'hybrid':False})
+    assert first!=answer_cache_key(*args,query_variants=['q'],retrieval_configuration={'hybrid':True})
+    assert first!=answer_cache_key(*args,query_variants=['q','other'],retrieval_configuration={'hybrid':False})

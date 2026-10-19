@@ -1,0 +1,143 @@
+{
+  "source": "eval/results/phase1-baseline-v3.json",
+  "source_sha256": "6061178aabe088f3bab92d9a4824eac1070b99baa705b62d344ad8395419294d",
+  "rubric_sha256": "21db7fcf966bb47ce6d5f5b0f34139aa975e616c98488da8954571d5e7f7c998",
+  "method": "Supplemental rubric mapping of retained assistant source reviews; not new generation or a new live baseline. Original expected statuses unchanged.",
+  "cases": [
+    {
+      "id": "q01",
+      "coverage": "complete",
+      "support": "supported",
+      "citations": "supported_in_recorded_source_review",
+      "clarification": "no_new_issue_identified_in_recorded_review",
+      "status_matches_frozen": true,
+      "notes": "Pool wait meaning and documented per-process checks match sources."
+    },
+    {
+      "id": "q02",
+      "coverage": "partial",
+      "support": "supported",
+      "citations": "supported_in_recorded_source_review",
+      "clarification": "no_new_issue_identified_in_recorded_review",
+      "status_matches_frozen": true,
+      "notes": "Correct 1500 ms deadline and checks; omitted the frozen expected caveat that the error alone does not establish cause."
+    },
+    {
+      "id": "q03",
+      "coverage": "complete",
+      "support": "supported",
+      "citations": "supported_in_recorded_source_review",
+      "clarification": "no_new_issue_identified_in_recorded_review",
+      "status_matches_frozen": true,
+      "notes": "Both deadlines, different wait stages and appropriate metrics/spans are covered."
+    },
+    {
+      "id": "q04",
+      "coverage": "complete_with_status_disagreement",
+      "support": "supported",
+      "citations": "field_valid_sentence_coverage_limitation",
+      "clarification": "appropriate_in_recorded_review",
+      "status_matches_frozen": false,
+      "notes": "Correctly explains 503 ambiguity and asks for identifying observations, but returns insufficient_evidence rather than frozen expected answered. One uncertainty sentence has no inline citation; field-level validation is not sentence-level entailment."
+    },
+    {
+      "id": "q05",
+      "coverage": "complete",
+      "support": "supported",
+      "citations": "supported_in_recorded_source_review",
+      "clarification": "no_new_issue_identified_in_recorded_review",
+      "status_matches_frozen": true,
+      "notes": "No automatic retry, possible prior reservation, and outcome/idempotency checks match runbook."
+    },
+    {
+      "id": "q06",
+      "coverage": "complete",
+      "support": "supported",
+      "citations": "supported_in_recorded_source_review",
+      "clarification": "no_new_issue_identified_in_recorded_review",
+      "status_matches_frozen": true,
+      "notes": "September historical cause, rollback and corrective checkout ordering are supported; does not claim a current incident."
+    },
+    {
+      "id": "q07",
+      "coverage": "complete",
+      "support": "supported",
+      "citations": "supported_in_recorded_source_review",
+      "clarification": "no_new_issue_identified_in_recorded_review",
+      "status_matches_frozen": true,
+      "notes": "Historical 12 versus current 20 and separate capacity review are explicit."
+    },
+    {
+      "id": "q08",
+      "coverage": "complete",
+      "support": "supported",
+      "citations": "supported_in_recorded_source_review",
+      "clarification": "no_new_issue_identified_in_recorded_review",
+      "status_matches_frozen": true,
+      "notes": "Correlation identifiers, pool/inventory timing meanings, and same time window/process are present and cited."
+    },
+    {
+      "id": "q09",
+      "coverage": "incomplete",
+      "support": "unsupported_recommendation",
+      "citations": "unsupported_uncited_check",
+      "clarification": "appropriate_in_recorded_review",
+      "status_matches_frozen": true,
+      "notes": "Correct password abstention, but vault/environment-secret-manager recommendation is not documented or cited. Subsequent section-level validation rejects this answer."
+    },
+    {
+      "id": "q10",
+      "coverage": "complete",
+      "support": "supported",
+      "citations": "supported_in_recorded_source_review",
+      "clarification": "appropriate_in_recorded_review",
+      "status_matches_frozen": true,
+      "notes": "Correct abstention with explicit missing current observations."
+    },
+    {
+      "id": "q11",
+      "coverage": "complete_with_status_disagreement",
+      "support": "supported",
+      "citations": "supported_in_recorded_source_review",
+      "clarification": "appropriate_in_recorded_review",
+      "status_matches_frozen": false,
+      "notes": "Provides documented durations/concurrency/traces checks and notes missing definitive distinguishing criteria; frozen expected status was answered, actual status insufficient_evidence. Keep disagreement visible."
+    },
+    {
+      "id": "q12",
+      "coverage": "complete",
+      "support": "supported",
+      "citations": "supported_in_recorded_source_review",
+      "clarification": "no_new_issue_identified_in_recorded_review",
+      "status_matches_frozen": true,
+      "notes": "20 connections, 500 ms acquisition and 1500 ms inventory deadline are correctly scoped."
+    },
+    {
+      "id": "q13",
+      "coverage": "complete",
+      "support": "supported",
+      "citations": "supported_in_recorded_source_review",
+      "clarification": "no_new_issue_identified_in_recorded_review",
+      "status_matches_frozen": true,
+      "notes": "Historical route rollback 14:12 UTC and recovery 14:20 UTC match timeline; recommended correlation check derives from historical observations."
+    },
+    {
+      "id": "q14",
+      "coverage": "complete",
+      "support": "supported",
+      "citations": "supported_in_recorded_source_review",
+      "clarification": "no_new_issue_identified_in_recorded_review",
+      "status_matches_frozen": true,
+      "notes": "Missing status does not establish failure; outcome checks and retry boundary match passages."
+    },
+    {
+      "id": "q15",
+      "coverage": "complete",
+      "support": "supported",
+      "citations": "supported_in_recorded_source_review",
+      "clarification": "appropriate_in_recorded_review",
+      "status_matches_frozen": true,
+      "notes": "Appropriate abstention: no Kafka reset command invented; evidence absence is assessed across selected passages."
+    }
+  ]
+}

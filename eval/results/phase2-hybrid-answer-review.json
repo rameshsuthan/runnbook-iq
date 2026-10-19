@@ -1,0 +1,6 @@
+{
+  "status": "structurally_valid_cited_answer",
+  "reviewer": "assistant source review",
+  "support": "Thresholds (500/1500 ms), per-process pool limit 20, metric names and separate wait stages match the cited passages.",
+  "limitation": "Wording verify pool exhaustion is stronger than source supports investigating pool contention. No live cause established. This is not a semantic-grounding guarantee."
+}

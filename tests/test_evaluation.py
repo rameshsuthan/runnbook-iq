@@ -48,3 +48,16 @@ def test_answer_evaluation_uses_only_graph_retrieval(tmp_path):
     assert row['answer']['status']=='answered'
     assert row['retrieval'][0]['chunk']['chunk_id']==row['answer']['sources'][0]['chunk_id']
     assert row['selected_evidence']==row['answer']['selected_evidence']
+
+
+def test_fused_and_selected_metrics_are_separate():
+    from runbook_iq.evaluation import EvaluationCase,evaluate
+    from runbook_iq.schemas import RunResult
+    case=EvaluationCase(id='one',split='dev',question='q',expected_status='answered',expected_sources=[{'document_id':'doc','section':'Checks'}],expected_points=['fact'])
+    candidate=Candidate(chunk=snapshot().chunks[0],rank=1)
+    class Prefix:
+        def __call__(self,*args):return RunResult(status='retrieved',retrieved_candidates=[candidate],selected_evidence=[])
+    report=evaluate([case],None,None,Settings(),retrieval_run=Prefix())
+    assert report['metrics']['hit_at_5']==1
+    assert report['metrics']['selected_hit_at_5']==0
+    assert report['metrics']['pool_recall_at_15']==1

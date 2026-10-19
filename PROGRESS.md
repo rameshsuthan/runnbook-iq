@@ -341,3 +341,26 @@ conflict rejection. New tests first failed 7/7 for absent behavior; then
 `.venv/bin/pytest -q tests/test_keyword.py tests/test_fusion.py tests/test_retrieval.py`
 → 8 passed. No live calls or dependencies added. Next: wire the shared pipeline,
 graph and evaluation to deliver the first hybrid cited answer.
+
+## P2.1 hybrid graph milestone — 2026-10-18
+
+Shared retrieval/selection pipeline now drives CLI, LangGraph and retrieval-only
+evaluation. Default dense path retained. Active snapshot/destination checked around
+the batch; original queries and per-method provenance recorded. Cache identities
+include effective retrieval settings. Retrieval CLI now returns a RunResult with
+retrieved_candidates and selected_evidence rather than a bare list.
+
+Seven added behavioral tests observed RED→GREEN; 26 targeted tests and full suite
+77 passed. Live dense and hybrid retrieval-only evaluations each completed all 15
+cases on the unchanged active corpus: fused/selected hit@5 and recall@5 all 1.0 for
+12 answerable cases; no chat calls in these comparisons. No measured gain claimed.
+
+One hybrid graph answer: answered, two valid runbook citations, 1,132 input / 474
+output tokens, one Gemini free-tier call, estimated USD0. Sources support deadlines,
+metrics and wait-stage distinction; wording “verify pool exhaustion” is stronger
+than the source's “supports investigating pool contention.” Manual review retained
+in a separate artifact; no prompt tuning or semantic-verifier claim.
+
+Prospective rubric and supplemental mapping of retained Phase 1 source reviews
+added without modifying frozen expectations or results. Next: operation accounting
+and dedicated reranker. No reingestion, new dependencies, paid calls or Nebius calls.

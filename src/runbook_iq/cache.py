@@ -5,10 +5,11 @@ from .corpus import digest
 from .providers import PROMPT_VERSION
 from .schemas import RunResult
 
-def answer_cache_key(settings, question, filters, corpus_version, evidence):
-    return digest({'provider':settings.provider,'model':settings.model,'prompt':PROMPT_VERSION,
+def answer_cache_key(settings, question, filters, corpus_version, evidence, *, query_variants=None, retrieval_configuration=None):
+    from .retrieval import retrieval_configuration as configuration
+    return digest({'namespace':'phase2-v1','queries':query_variants or [question],'provider':settings.provider,'model':settings.model,'prompt':PROMPT_VERSION,
         'schema':'answer-v3','question':question,'filters':filters,'corpus_version':corpus_version,
-        'retrieval':{'top_k':settings.top_k,'embedding':settings.embedding_model,'method':'dense'},
+        'retrieval':retrieval_configuration if retrieval_configuration is not None else configuration(settings),
         'generation':{'temperature':0 if settings.model.startswith('gemini-2.5') else 'provider_default','max_output':settings.max_output_tokens,'thinking':settings.thinking_budget if settings.model.startswith('gemini-2.5') else 'minimal'},
         'evidence':[(c.chunk.chunk_id,c.chunk.content_hash) for c in evidence]})
 

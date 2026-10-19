@@ -8,21 +8,23 @@ from .corpus import build_corpus, read_snapshot, write_snapshot
 from .tokenization import load_embedding_tokenizer, setup_tokenizer
 
 
-def compose(settings):
+def compose(settings,*,mode='answers'):
     from .ingestion import load_active_snapshot
     from .pinecone_store import PineconeStore
-    from .retrieval import PineconeRetriever
+    from .retrieval import PineconeRetriever,RetrievalPipeline
+    from .keyword import BM25Retriever
     from .budget import BudgetLedger
     from .cache import AnswerCache
     from .graph import build_graph
     from .providers import create_provider
     snapshot=load_active_snapshot(settings)
-    retriever=PineconeRetriever(settings,snapshot,PineconeStore(settings))
+    dense=PineconeRetriever(settings,snapshot,PineconeStore(settings))
+    retriever=RetrievalPipeline(settings,snapshot,dense,BM25Retriever(snapshot) if settings.hybrid else None)
     class LazyProvider:
         def generate(self,question,evidence):
             ledger=BudgetLedger(settings.runtime_dir/'usage.db',settings.budget_usd)
             return create_provider(settings,ledger).generate(question,evidence)
-    graph=build_graph(retriever,LazyProvider(),AnswerCache(settings.runtime_dir/'answers.db'),settings,snapshot.version)
+    graph=build_graph(retriever,LazyProvider() if mode=='answers' else None,AnswerCache(settings.runtime_dir/'answers.db') if mode=='answers' else None,settings,snapshot.version,mode=mode)
     return retriever,graph
 
 
@@ -110,18 +112,18 @@ def main(argv=None):
             output(sync_corpus(snapshot,settings,PineconeStore(settings,create=True)));return 0
         if args.command=='evaluate':
             from .evaluation import load_cases,validate_cases,evaluate
-            retriever,graph=compose(settings)
+            retriever,graph=compose(settings,mode=args.mode)
             cases=load_cases(Path('eval/questions.json'))
             validate_cases(cases,retriever.snapshot)
             cases=[c for c in cases if args.split=='all' or c.split==args.split]
             answer=(lambda q,f:invoke_question(graph,q,f)) if args.mode=='answers' else None
-            report=evaluate(cases,retriever,answer,settings,output_path=args.output,pause_seconds=max(0,args.pause_seconds))
+            report=evaluate(cases,retriever,answer,settings,output_path=args.output,pause_seconds=max(0,args.pause_seconds),retrieval_run=(lambda q,f:invoke_question(graph,q,f)) if args.mode=='retrieval' else None)
             output(report['metrics'])
             return 1 if report.get('stopped_reason') else 0
         filters={key:getattr(args,key) for key in ('service','environment') if getattr(args,key)}
-        retriever,graph=compose(settings)
+        retriever,graph=compose(settings,mode='retrieval' if args.command=='retrieve' else 'answers')
         if args.command=='retrieve':
-            output([c.model_dump(mode='json') for c in retriever.search(args.question,filters)],args.output);return 0
+            result=invoke_question(graph,args.question,filters);output(result,args.output);return 0 if result.status=='retrieved' else 1
         result=invoke_question(graph,args.question,filters,diagnostics_dir=settings.runtime_dir/'diagnostics' if args.save_invalid_response else None);output(result,args.output)
         return 0 if result.status in ('answered','insufficient_evidence') else 1
     except Exception as error:
