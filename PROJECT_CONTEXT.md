@@ -9,7 +9,10 @@ Remote inspection on 2026-10-19 confirmed no existing `main`; it was created fro
 `phase-2`, which includes the complete `phase-1` history. Milestone branches are
 retained. Submission materials are included; unrelated local reference documents
 and `eval/results/my-answer.json` remain untracked. Fresh integration verification:
-135 tests passed. Publishing `main` is the next action for this checkpoint.
+135 tests passed. Published `main` at `cd37bdf` and verified its remote SHA matches
+the local commit. Next action: record the prepared demo and submit the deliverables.
+GitHub's default branch remains `phase-1`; changing repository settings was not
+part of this integration.
 
 The user explicitly authorized pushing history and starting next steps. Phase 1
 through `e15502e` is published on `origin/phase-1`; remote SHA was verified.

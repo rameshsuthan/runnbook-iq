@@ -11,9 +11,13 @@ documentation updates. Unrelated user-owned reference files and
 
 Actual verification before integration: `.venv/bin/pytest -q` — 135 passed in
 1.49 seconds; `git diff --check` passed. No live provider requests or paid usage.
-Next action: verify the final main tree, commit and push `main`, then confirm the
-remote commit matches. Demo recording and external assignment submission remain
-pending; known evaluation limitations are unchanged.
+Final main-tree verification: 135 tests passed in 1.42 seconds and whitespace
+checks passed. Committed the deliverables as `cd37bdf` and pushed `main`; verified
+the local and remote SHA both equal
+`cd37bdfb4e9073d7c2eb0cb8aed1a6878355f942`. No tracked changes remained after push.
+This follow-up records that successful publication. GitHub's default branch is
+still `phase-1`. Next action: record the demo and submit the assignment; known
+evaluation limitations are unchanged.
 
 ## Current status — 2026-10-19
 
