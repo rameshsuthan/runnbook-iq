@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RunbookIQ — Architecture visuals</title>
+<style>
+body{margin:0;padding:24px;font:18px/1.5 system-ui,sans-serif;background:#f7f9fc;color:#142c44}main{max-width:1280px;margin:auto}h1{font-size:32px;margin-bottom:8px}nav{display:flex;flex-wrap:wrap;gap:18px;margin:24px 0}a{color:#1755a2}figure{margin:32px 0 52px}img{display:block;width:100%;height:auto}figcaption{margin-top:10px}p{max-width:900px}@media print{nav,.intro{display:none}figure{break-after:page;margin:0}body{padding:0}}
+</style>
+</head>
+<body><main>
+<h1>RunbookIQ architecture visuals</h1>
+<p class="intro">Five recording visuals. Open an individual SVG for a clean view, or use its PNG in an editor. These simplified views accompany the complete Mermaid diagrams in architecture.md. No network resources or model calls are used by this page.</p>
+<nav aria-label="Diagram navigation"><a href="#system">Architecture</a><a href="#ingestion">Ingestion</a><a href="#graph">LangGraph</a><a href="#retrieval">Retrieval</a><a href="#cache">Cache and usage</a></nav>
+<figure id="system"><a href="system-overview.svg"><img src="system-overview.svg" alt="RunbookIQ system architecture: local graph and canonical data connect to Pinecone and Gemini." width="1920" height="1080"></a><figcaption>System overview · <a href="system-overview.png">PNG</a> · <a href="01-system.mmd">Detailed Mermaid source</a></figcaption></figure>
+<figure id="ingestion"><a href="ingestion-flow.svg"><img src="ingestion-flow.svg" alt="Explicit ingestion progresses from documents to canonical snapshot, remote verification and active publication." width="1920" height="1080"></a><figcaption>Ingestion · <a href="ingestion-flow.png">PNG</a> · <a href="02-ingestion.mmd">Detailed Mermaid source</a></figcaption></figure>
+<figure id="graph"><a href="langgraph-flow.svg"><img src="langgraph-flow.svg" alt="Bounded LangGraph workflow with preparation, retrieval, selection, generation, validation and one repair loop." width="1920" height="1080"></a><figcaption>Question workflow · <a href="langgraph-flow.png">PNG</a> · <a href="03-langgraph.mmd">All control-flow branches</a></figcaption></figure>
+<figure id="retrieval"><a href="retrieval-flow.svg"><img src="retrieval-flow.svg" alt="Dense and BM25 lists are rank-fused, optionally reranked, and mapped to five evidence chunks." width="1920" height="1080"></a><figcaption>Retrieval · <a href="retrieval-flow.png">PNG</a> · <a href="04-retrieval.mmd">Detailed Mermaid source</a></figcaption></figure>
+<figure id="cache"><a href="cache-and-usage.svg"><img src="cache-and-usage.svg" alt="The user's cached run used no Gemini calls but consumed 41 embedding tokens, three read units and one rerank unit." width="1920" height="1080"></a><figcaption>Cache and usage · <a href="cache-and-usage.png">PNG</a> · <a href="05-cache-sequence.mmd">Sequence source</a> · <a href="07-usage.mmd">Budget flow source</a></figcaption></figure>
+<p>Also available: <a href="06-data-contracts.mmd">data contracts</a>, <a href="../architecture.md">full architecture guide</a>, and <a href="../demo/README.md">recording kit</a>.</p>
+</main></body></html>

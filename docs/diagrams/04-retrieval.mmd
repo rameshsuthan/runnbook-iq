@@ -1,0 +1,21 @@
+flowchart LR
+  Original[Original question] --> Prep[Original plus 0-2 validated alternatives]
+  Prep --> Verify[Verify active snapshot and destination]
+  Verify --> Dense[Each query: up to 5 Pinecone dense hits]
+  Verify --> Keyword[Hybrid on: up to 5 local BM25 hits per query]
+  Canon[Same active canonical chunks] --> Dense
+  Canon --> Keyword
+  Dense --> Canonical[Check IDs, text, hash, version and explicit filters]
+  Canonical --> Lists[Ranked lists with query/method provenance]
+  Keyword --> Lists
+  Lists --> Recheck[Recheck active snapshot; reject changed batch]
+  Recheck --> Fuse{More than one list?}
+  Fuse -->|yes| RRF[Equal-weight RRF; constant 60; at most 15 unique candidates]
+  Fuse -->|no| Preserve[Preserve single dense list order]
+  RRF --> Select{Reranking enabled?}
+  Preserve --> Select
+  Select -->|yes| BGE[BGE uses original question and canonical text; truncate NONE]
+  Select -->|no| Top[Deduplicate and take configured top-k, up to 5]
+  BGE --> Map[Validate indices/scores; map back to canonical chunks]
+  Map --> Evidence[Selected evidence: up to 5 chunks]
+  Top --> Evidence

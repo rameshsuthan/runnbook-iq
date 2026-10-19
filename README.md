@@ -7,6 +7,17 @@ RunbookIQ finds documented checks and historical lessons, displays cited passage
 and states when evidence is insufficient. It cannot inspect a live system,
 establish a current root cause, or execute remediation.
 
+## Architecture and demo materials
+
+- [Complete architecture guide](docs/architecture.md): system, ingestion, LangGraph
+  control flow, hybrid retrieval, cache sequence, data contracts and usage boundaries.
+- [Recording visuals](docs/diagrams/index.html): five local SVG/PNG diagrams; editable
+  Mermaid sources accompany the detailed guide.
+- [Demo preparation](docs/demo/README.md): 4:35 narration, exact questions, screen
+  actions, Mac recording steps and submission checklist.
+- [Project documentation draft](docs/demo/project-summary.md): copy-ready overview,
+  dataset, prompts, iterations and observed results for the assignment Google Doc.
+
 ## Quick start
 
 Python 3.12 and [uv](https://docs.astral.sh/uv/) are required. Run commands from the repository root.

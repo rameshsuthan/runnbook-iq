@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img"><title>RunbookIQ | System architecture</title><desc>Local orchestration and canonical evidence; Pinecone retrieval and Gemini generation</desc><rect width="1920" height="1080" fill="#F7F9FC"/>
+<text x="64" y="88.0" font-family="Arial, DejaVu Sans, sans-serif" font-size="50" font-weight="700" fill="#142C44">RunbookIQ | System architecture</text>
+<text x="64" y="135.8" font-family="Arial, DejaVu Sans, sans-serif" font-size="26" font-weight="400" fill="#40576D">Local orchestration and canonical evidence; Pinecone retrieval and Gemini generation</text>
+<polyline points="300,340 300,440" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="300.0,440.0 293.5,426.5 306.5,426.5" fill="#60788F"/>
+<text x="335" y="393.4" font-family="Arial, DejaVu Sans, sans-serif" font-size="23" font-weight="400" fill="#40576D">explicit build / ingest</text>
+<polyline points="530,530 700,530" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="700.0,530.0 686.5,536.5 686.5,523.5" fill="#60788F"/>
+<text x="545" y="508.4" font-family="Arial, DejaVu Sans, sans-serif" font-size="23" font-weight="400" fill="#40576D">same chunks</text>
+<polyline points="960,300 960,380" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="960.0,380.0 953.5,366.5 966.5,366.5" fill="#60788F"/>
+<polyline points="1220,430 1300,430 1300,265 1390,265" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="1390.0,265.0 1376.5,271.5 1376.5,258.5" fill="#60788F"/>
+<polyline points="1220,530 1390,530" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="1390.0,530.0 1376.5,536.5 1376.5,523.5" fill="#60788F"/>
+<polyline points="960,640 960,780" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="960.0,780.0 953.5,766.5 966.5,766.5" fill="#60788F"/>
+<polyline points="530,850 630,850 630,600 700,600" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="700.0,600.0 686.5,606.5 686.5,593.5" fill="#60788F"/>
+<polyline points="1390,850 1290,850 1290,600 1220,600" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="1220.0,600.0 1233.5,593.5 1233.5,606.5" fill="#60788F"/>
+<rect x="70" y="190" width="460" height="150" rx="18" fill="#FFF0CF"/>
+<text x="92" y="234.0" font-family="Arial, DejaVu Sans, sans-serif" font-size="30" font-weight="700" fill="#142C44">Synthetic source documents</text>
+<text x="92" y="279.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">9 Markdown documents</text>
+<text x="92" y="316.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Explicit ingestion path</text>
+<rect x="70" y="440" width="460" height="185" rx="18" fill="#FFF0CF"/>
+<text x="92" y="485.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">Canonical local snapshot</text>
+<text x="92" y="529.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">21 retained active chunks</text>
+<text x="92" y="566.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">IDs, hashes, versions</text>
+<text x="92" y="603.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">BM25 uses this same text</text>
+<rect x="700" y="190" width="520" height="110" rx="18" fill="#E8F0FA"/>
+<text x="722" y="235.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">Streamlit / CLI / evaluation</text>
+<text x="722" y="279.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Question + explicit filters</text>
+<rect x="700" y="380" width="520" height="260" rx="18" fill="#E8F0FA"/>
+<text x="722" y="425.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">Compiled LangGraph</text>
+<text x="722" y="469.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Prepare queries; retrieve + fuse</text>
+<text x="722" y="506.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Select evidence; cache / generate</text>
+<text x="722" y="543.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Validate; optionally repair once</text>
+<text x="722" y="580.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Return current request records</text>
+<rect x="1390" y="190" width="460" height="150" rx="18" fill="#DDF3ED"/>
+<text x="1412" y="235.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">Gemini Developer API</text>
+<text x="1412" y="279.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Expand, generate, repair</text>
+<text x="1412" y="316.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">User-confirmed free tier</text>
+<rect x="1390" y="440" width="460" height="185" rx="18" fill="#DDF3ED"/>
+<text x="1412" y="485.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">Pinecone services</text>
+<text x="1412" y="529.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Integrated dense embeddings</text>
+<text x="1412" y="566.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Dedicated BGE reranker</text>
+<text x="1412" y="603.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Returned usage units</text>
+<rect x="70" y="780" width="460" height="150" rx="18" fill="#FFF0CF"/>
+<text x="92" y="825.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">Local SQLite storage</text>
+<text x="92" y="869.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Query and answer caches</text>
+<text x="92" y="906.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">USD 3 ledger + quota counters</text>
+<rect x="700" y="780" width="520" height="150" rx="18" fill="#E9E5F7"/>
+<text x="722" y="825.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">Inspectable result</text>
+<text x="722" y="869.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Cited answer or explicit failure</text>
+<text x="722" y="906.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Sources, stages, usage, timings</text>
+<rect x="1390" y="780" width="460" height="150" rx="18" fill="#E8F0FA"/>
+<text x="1412" y="824.8" font-family="Arial, DejaVu Sans, sans-serif" font-size="31" font-weight="700" fill="#142C44">Configuration / private keys</text>
+<text x="1412" y="869.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Phase 2 profile is explicit</text>
+<text x="1412" y="906.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Keys stay outside graph state</text>
+<text x="64" y="1029.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="24" font-weight="400" fill="#40576D">Local synthetic assistant. No live incident access or remediation. Nebius is optional Phase 3, inactive.</text>
+</svg>

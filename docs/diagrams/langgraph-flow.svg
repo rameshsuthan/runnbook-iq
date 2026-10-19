@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img"><title>RunbookIQ | The bounded question workflow</title><desc>Simplified recording view; architecture.md contains every terminal branch and retrieval-only exit</desc><rect width="1920" height="1080" fill="#F7F9FC"/>
+<text x="64" y="88.0" font-family="Arial, DejaVu Sans, sans-serif" font-size="50" font-weight="700" fill="#142C44">RunbookIQ | The bounded question workflow</text>
+<text x="64" y="135.8" font-family="Arial, DejaVu Sans, sans-serif" font-size="26" font-weight="400" fill="#40576D">Simplified recording view; architecture.md contains every terminal branch and retrieval-only exit</text>
+<polyline points="330,350 330,440" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="330.0,440.0 323.5,426.5 336.5,426.5" fill="#60788F"/>
+<polyline points="330,580 330,670" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="330.0,670.0 323.5,656.5 336.5,656.5" fill="#60788F"/>
+<polyline points="570,740 730,740" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="730.0,740.0 716.5,746.5 716.5,733.5" fill="#60788F"/>
+<polyline points="970,670 970,580" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="970.0,580.0 976.5,593.5 963.5,593.5" fill="#60788F"/>
+<text x="990" y="633.4" font-family="Arial, DejaVu Sans, sans-serif" font-size="23" font-weight="400" fill="#40576D">evidence</text>
+<polyline points="970,440 970,350" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="970.0,350.0 976.5,363.5 963.5,363.5" fill="#60788F"/>
+<text x="995" y="408.4" font-family="Arial, DejaVu Sans, sans-serif" font-size="23" font-weight="400" fill="#40576D">fresh response</text>
+<polyline points="1210,245 1390,245" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="1390.0,245.0 1376.5,251.5 1376.5,238.5" fill="#60788F"/>
+<text x="1225" y="223.4" font-family="Arial, DejaVu Sans, sans-serif" font-size="23" font-weight="400" fill="#40576D">invalid: once</text>
+<polyline points="1390,315 1210,315" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="1210.0,315.0 1223.5,308.5 1223.5,321.5" fill="#60788F"/>
+<text x="1220" y="368.4" font-family="Arial, DejaVu Sans, sans-serif" font-size="23" font-weight="400" fill="#40576D">validate again</text>
+<polyline points="1160,350 1160,385 1320,385 1320,740 1390,740" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="1390.0,740.0 1376.5,746.5 1376.5,733.5" fill="#60788F"/>
+<text x="1330" y="468.4" font-family="Arial, DejaVu Sans, sans-serif" font-size="23" font-weight="400" fill="#40576D">valid</text>
+<polyline points="1210,510 1320,510" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="1320.0,510.0 1306.5,516.5 1306.5,503.5" fill="#60788F"/>
+<text x="1220" y="548.4" font-family="Arial, DejaVu Sans, sans-serif" font-size="23" font-weight="400" fill="#40576D">cache</text>
+<text x="1220" y="578.4" font-family="Arial, DejaVu Sans, sans-serif" font-size="23" font-weight="400" fill="#40576D">hit</text>
+<polyline points="1210,770 1390,770" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="1390.0,770.0 1376.5,776.5 1376.5,763.5" fill="#60788F"/>
+<text x="1230" y="813.4" font-family="Arial, DejaVu Sans, sans-serif" font-size="23" font-weight="400" fill="#40576D">empty</text>
+<polyline points="1630,350 1630,670" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="1630.0,670.0 1623.5,656.5 1636.5,656.5" fill="#60788F"/>
+<text x="1660" y="508.4" font-family="Arial, DejaVu Sans, sans-serif" font-size="23" font-weight="400" fill="#40576D">failure</text>
+<rect x="90" y="210" width="480" height="140" rx="18" fill="#E8F0FA"/>
+<text x="112" y="255.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">1  prepare_request</text>
+<text x="112" y="299.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Question and explicit filters</text>
+<text x="112" y="336.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Reset request counters</text>
+<rect x="90" y="440" width="480" height="140" rx="18" fill="#E8F0FA"/>
+<text x="112" y="485.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">2  prepare_queries</text>
+<text x="112" y="529.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Original + up to 2 alternatives</text>
+<text x="112" y="566.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Cache or one expansion call</text>
+<rect x="90" y="670" width="480" height="140" rx="18" fill="#E8F0FA"/>
+<text x="112" y="715.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">3  retrieve</text>
+<text x="112" y="759.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Dense + optional BM25 / RRF</text>
+<text x="112" y="796.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Canonical snapshot checks</text>
+<rect x="730" y="670" width="480" height="140" rx="18" fill="#E8F0FA"/>
+<text x="752" y="715.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">4  select_evidence</text>
+<text x="752" y="759.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Optional BGE reranking</text>
+<text x="752" y="796.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">At most 5 canonical chunks</text>
+<rect x="730" y="440" width="480" height="140" rx="18" fill="#E8F0FA"/>
+<text x="752" y="485.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">5  generate</text>
+<text x="752" y="529.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Validate cached answer first</text>
+<text x="752" y="566.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Otherwise one answer call</text>
+<rect x="730" y="210" width="480" height="140" rx="18" fill="#E8F0FA"/>
+<text x="752" y="255.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">6  validate</text>
+<text x="752" y="299.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Schema and citation IDs</text>
+<text x="752" y="336.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">No semantic entailment test</text>
+<rect x="1390" y="210" width="480" height="140" rx="18" fill="#E8F0FA"/>
+<text x="1412" y="255.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">7  repair once</text>
+<text x="1412" y="299.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Same question and evidence</text>
+<text x="1412" y="336.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Increment before invocation</text>
+<rect x="1390" y="670" width="480" height="180" rx="18" fill="#E9E5F7"/>
+<text x="1412" y="715.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">END: return result</text>
+<text x="1412" y="759.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Answer, abstention or failure</text>
+<text x="1412" y="796.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Current operations and sources</text>
+<text x="1412" y="833.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">No silent provider fallback</text>
+<text x="90" y="931.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="27" font-weight="400" fill="#142C44">Other request, retrieval and provider failures also terminate. Invalid cache entries never trigger repair.</text>
+<text x="64" y="1029.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="24" font-weight="400" fill="#40576D">State carries data. Nodes return updates. Conditional edges choose the next step. END is not proof of correctness.</text>
+</svg>

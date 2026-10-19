@@ -1,0 +1,21 @@
+flowchart TD
+  Start([START]) --> P[prepare_request]
+  P -->|valid question and explicit filters| Q[prepare_queries]
+  P -->|invalid_request| End([END])
+  Q -->|original or validated alternatives| R[retrieve]
+  Q -->|cache requirement or setup error| End
+  R -->|canonical candidate batch| S[select_evidence]
+  R -->|retrieval_error| End
+  S -->|retrieval-only mode: retrieved| End
+  S -->|selection error| End
+  S -->|answer mode, no evidence| F[fallback: insufficient_evidence]
+  F --> End
+  S -->|answer mode, evidence present| G[generate: check answer cache first]
+  G -->|valid cached answer| End
+  G -->|invalid cached answer / provider or budget error| End
+  G -->|fresh provider response| V[validate]
+  V -->|valid answer or supported abstention: cache result| End
+  V -->|eligible invalid output, repair enabled, count zero| Fix[repair: increment counter; same question and evidence]
+  V -->|repair off, ineligible error, or count exhausted| End
+  Fix -->|fresh repair response| V
+  Fix -->|provider or budget error| End

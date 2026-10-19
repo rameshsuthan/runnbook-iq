@@ -1,29 +1,26 @@
-# RunbookIQ demo outline (4 minutes 30 seconds)
+# RunbookIQ demo outline — target 4:35
 
-- **0:00–0:25 — Purpose.** Fictional order service, database pool waits and inventory
-  timeouts. Recommend documented checks; never claim access to live systems.
-- **0:25–0:55 — Evidence.** Show a runbook and historical incident, canonical chunk
-  IDs and explicit ingestion. Pinecone dense and local BM25 share the same chunks.
-- **0:55–1:45 — One question.** Use the multi-query profile and ask how to distinguish
-  the two wait types. Expand sources; verify the 500 ms / 1500 ms meanings. Show
-  queries, retrieval provenance, RRF scores and reranked selection in inspection.
-  State whether expansion/answer came from cache; do not hide current request usage.
-- **1:45–2:35 — LangGraph lesson.** State is data; nodes return updates; conditional
-  edges select fallback, validation or repair. Show the one-repair counter and a
-  saved deterministic failure test. END is termination, not proof of correctness.
-- **2:35–3:00 — Missing information.** Use a saved unavailable-fact example or submit
-  once; show abstention and missing observations. Explain that passage relevance
-  and citation-ID validity do not prove every generated claim.
-- **3:00–3:55 — Measured comparisons.** Show all four fixed retrieval configurations:
-  dense, hybrid, reranked hybrid and multi-query reranked hybrid. The small corpus
-  already had full expected-section recall; advanced retrieval showed no recall
-  gain. Show actual final answer failures/status differences and manual source review.
-  All 15 cases have been observed; none is a fresh unseen test now.
-- **3:55–4:30 — Engineering and limits.** Persistent USD3 guard, unknown-usage
-  reservations, zero SDK retries, bounded calls, and offline tests. Gemini is live;
-  Nebius adapter is offline-tested and live verification remains pending. Mention
-  how AI-assisted implementation was checked with tests, services and code review.
+Use the [word-for-word script](demo/demo-script.md) and
+[recording checklist](demo/README.md). The complete [architecture guide](architecture.md)
+has seven detailed diagrams; the [visual gallery](diagrams/index.html) has five
+recording-ready SVG/PNG assets. Nebius is optional Phase 3, outside this demo's scope.
 
-Use retained synthetic results when time or free-tier quota is tight. Never show
-.env, rejected private diagnostics, key values, or private account screens. This
-is an outline; no video has been recorded by the agent.
+| Time | Screen | Main point |
+|---|---|---|
+| 0:00–0:20 | App home | Fictional incident-evidence assistant; no live-system access |
+| 0:20–0:50 | System overview | Canonical corpus, explicit ingestion, local graph and services |
+| 0:50–1:45 | App question and sources | Two wait types,500/1500 ms and source verification |
+| 1:45–2:20 | Retrieval and usage inspection | Enabled profile, query/provenance stages, actual cache behavior |
+| 2:20–2:55 | LangGraph visual | State, nodes, conditional edges and one bounded repair |
+| 2:55–3:25 | App live-cause question | Abstention and missing observations |
+| 3:25–4:10 | Saved evaluation report | No retrieval gain; status counts and q08 failure |
+| 4:10–4:35 | Repository / project summary | AI-assisted development,135-test gate, costs and limitations |
+
+Narration has 400 words before optional cache-status wording. At125 words/minute,
+that is about 3:12 of speech, leaving time for interactions within the 4:35 target.
+Rehearse to verify your actual duration; five minutes is the hard assignment limit.
+
+No video has been recorded. Saved results are labeled recorded; cache hits are
+never described as fresh generation. Never show keys, private diagnostics or
+unrelated account screens. See the recording kit for failure contingencies and a
+copy-ready project-documentation draft.

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img"><title>RunbookIQ | Why zero chat tokens can still mean work</title><desc>A recorded cache-hit example supplied by the user; no additional API calls were made to create this visual</desc><rect width="1920" height="1080" fill="#F7F9FC"/>
+<text x="64" y="88.0" font-family="Arial, DejaVu Sans, sans-serif" font-size="50" font-weight="700" fill="#142C44">RunbookIQ | Why zero chat tokens can still mean work</text>
+<text x="64" y="135.8" font-family="Arial, DejaVu Sans, sans-serif" font-size="26" font-weight="400" fill="#40576D">A recorded cache-hit example supplied by the user; no additional API calls were made to create this visual</text>
+<polyline points="840,275 1060,275" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="1060.0,275.0 1046.5,281.5 1046.5,268.5" fill="#60788F"/>
+<polyline points="470,340 470,400" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="470.0,400.0 463.5,386.5 476.5,386.5" fill="#60788F"/>
+<rect x="100" y="210" width="740" height="130" rx="18" fill="#FFF0CF"/>
+<text x="122" y="255.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">1  Expansion cache hit</text>
+<text x="122" y="299.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Reuse original + 2 alternatives</text>
+<rect x="1060" y="210" width="760" height="130" rx="18" fill="#E9E5F7"/>
+<text x="1082" y="255.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">No Gemini request</text>
+<text x="1082" y="299.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">attempted = false; calls = 0</text>
+<polyline points="840,465 1060,465" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="1060.0,465.0 1046.5,471.5 1046.5,458.5" fill="#60788F"/>
+<polyline points="470,530 470,590" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="470.0,590.0 463.5,576.5 476.5,576.5" fill="#60788F"/>
+<rect x="100" y="400" width="740" height="130" rx="18" fill="#DDF3ED"/>
+<text x="122" y="445.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">2  Three dense searches</text>
+<text x="122" y="489.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Pinecone retrieves evidence again</text>
+<rect x="1060" y="400" width="760" height="130" rx="18" fill="#E9E5F7"/>
+<text x="1082" y="445.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">Pinecone consumption</text>
+<text x="1082" y="489.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">41 embedding tokens; 3 read units</text>
+<polyline points="840,655 1060,655" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="1060.0,655.0 1046.5,661.5 1046.5,648.5" fill="#60788F"/>
+<polyline points="470,720 470,780" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="470.0,780.0 463.5,766.5 476.5,766.5" fill="#60788F"/>
+<rect x="100" y="590" width="740" height="130" rx="18" fill="#DDF3ED"/>
+<text x="122" y="635.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">3  One reranking request</text>
+<text x="122" y="679.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Select the most relevant evidence</text>
+<rect x="1060" y="590" width="760" height="130" rx="18" fill="#E9E5F7"/>
+<text x="1082" y="635.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">Pinecone consumption</text>
+<text x="1082" y="679.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">1 rerank unit</text>
+<polyline points="840,845 1060,845" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="1060.0,845.0 1046.5,851.5 1046.5,838.5" fill="#60788F"/>
+<rect x="100" y="780" width="740" height="130" rx="18" fill="#FFF0CF"/>
+<text x="122" y="825.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">4  Answer cache hit</text>
+<text x="122" y="869.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Revalidate cached citations; return answer</text>
+<rect x="1060" y="780" width="760" height="130" rx="18" fill="#E9E5F7"/>
+<text x="1082" y="825.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">No Gemini request</text>
+<text x="1082" y="869.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">New chat usage = 0; prior usage not repeated</text>
+<text x="64" y="1029.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="24" font-weight="400" fill="#40576D">Chat usage and Pinecone units are separate. Null can mean not applicable or unreported; status supplies the context.</text>
+</svg>

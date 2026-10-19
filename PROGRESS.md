@@ -560,3 +560,35 @@ Outstanding follow-ups, distinguished from implementation completion:
 
 Recommended next action is targeted q08 diagnosis, followed by UI/demo preparation.
 Nebius requires a separate future decision and verified model/rate/bound setup.
+
+## Architecture and demo kit prepared
+
+Created docs/architecture.md with seven detailed Mermaid diagrams: system,
+ingestion, graph control flow, retrieval, cache-hit sequence, data contracts and
+usage/budget boundaries. Exported seven matching .mmd sources and five simplified
+1920×1080 SVG/PNG visuals with an offline Pillow renderer using existing dependencies.
+Added a local visual gallery with no external resources. No product code or profile
+changed; no credentials read and no Pinecone/Gemini calls made.
+
+Prepared a400-word narration with a4:35 storyboard, exact live questions, source
+inspection steps, actual-cache wording, known-failure disclosure, Mac recording
+instructions, contingency wording and submission checklist. Added a copy-ready
+project summary addressing the supplied handout's Google Doc headings. Original
+handout was read, not modified; no reference solution was consulted. Nebius is
+correctly described as optional Phase3. Existing demo outline now points to this kit.
+
+Verification: all7 Mermaid source files exactly match guide blocks; all5 SVG files
+parse as XML and all5 PNGs are1920×1080. Visually inspected the five-PNG contact
+sheet and the revised full-size runtime diagram; adjusted a crossing for clarity.
+Checked18 local Markdown links plus gallery links. Compiled the real graph offline
+with non-invoking adapters and verified its8 named nodes against the detailed flow;
+all5 configuration profiles match the documented flags. Saved evaluation counts
+match15 completed cases,12 status matches and16 chat calls. Renderer completed and
+git diff --check passed. No automated Mermaid renderer/browser visual validation
+was available; only the supplied SVG/PNG exports were render-checked. The application
+suite was not rerun for this documentation-only change; last code gate remains135.
+
+Next action: user rehearses and records the timed live walkthrough, checks audio,
+legibility and <=5-minute duration, then publishes the video/Google Doc and submits.
+No video, Google Doc or submission has been created by the agent. Native app visual
+walkthrough and existing answer-quality issues remain outstanding.

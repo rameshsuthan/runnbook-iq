@@ -1,0 +1,59 @@
+classDiagram
+  class GraphState {
+    question
+    filters
+    query_variants
+    candidates
+    selected_evidence
+    operations
+    repair_retries
+    result
+  }
+  class Candidate {
+    canonical_chunk
+    method
+    rank
+    stage_scores
+    provenance
+  }
+  class Chunk {
+    chunk_id
+    document_id
+    title_and_section
+    service_and_environment
+    revision_and_document_type
+    text
+    content_hash
+    corpus_version
+  }
+  class RetrievalOrigin {
+    query_id
+    method
+    original_rank
+    raw_score
+  }
+  class OperationRecord {
+    stage_and_provider_and_model
+    status_and_attempted
+    chat_usage
+    reservation_usd
+    pinecone_units
+    elapsed_seconds
+  }
+  class RunResult {
+    status_and_answer
+    sources
+    effective_queries_and_settings
+    candidates_and_evidence
+    operations_and_known_subtotal
+    usage_complete
+    warnings_and_errors
+    cache_hit_and_repair_attempts
+  }
+  GraphState --> Candidate : candidates and evidence
+  Candidate --> Chunk : canonical source
+  Candidate --> RetrievalOrigin : per-list origin
+  GraphState --> OperationRecord : accumulates
+  GraphState --> RunResult : terminal result
+  RunResult --> Chunk : cited sources
+  RunResult --> OperationRecord : current request only

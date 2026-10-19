@@ -1,0 +1,13 @@
+flowchart TD
+  Chat[Expansion, answer or repair cache miss] --> Preflight[Verified provider/model/billing and input limits]
+  Preflight --> Reserve[Atomic reservation in shared usage.db]
+  Reserve -->|guard denies| Deny[No model invocation; explicit blocked path]
+  Reserve -->|allowed| Call[One provider invocation; SDK retries zero]
+  Call -->|usage known| Settle[Settle actual estimated cost and retain usage]
+  Call -->|timeout or unknown usage| Keep[Keep reservation; report unknown totals and known subtotal]
+  PC[Pinecone search / rerank] --> Quota[Separate local quota ledger]
+  Quota --> Units[Embedding/read/rerank units; not chat tokens or chat dollars]
+  Settle --> Current[Current-request operation records]
+  Keep --> Current
+  Units --> Current
+  Cache[Cache hit: attempted false] --> Current

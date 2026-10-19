@@ -1,0 +1,15 @@
+flowchart TD
+  D[Read synthetic Markdown and front matter] --> B[Section-aware chunking and local token checks]
+  B --> C[Write candidate snapshot and manifest]
+  C --> I[Explicit ingest command]
+  I --> Lock[Acquire corpus lock; validate owned index and destination binding]
+  Lock --> Same{Same active corpus version?}
+  Same -->|yes, no pending journal| Skip[Skip all upserts; retain active snapshot]
+  Same -->|new version or resume same pending target| Journal[Write or reuse ingestion journal]
+  Journal --> Upsert[Upsert canonical text and metadata in batches up to 96]
+  Upsert --> Delete[Delete only obsolete IDs from previous owned snapshot]
+  Delete --> Fetch[Bounded fetch checks: version, hash and obsolete-ID removal]
+  Fetch --> Ready{Remote freshness verified?}
+  Ready -->|yes| Publish[Atomically publish active.json; remove journal]
+  Ready -->|no / interrupted| Block[Keep journal; question requests refuse incomplete ingestion]
+  Block -. explicit resume with same candidate .-> I

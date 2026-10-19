@@ -1,0 +1,25 @@
+sequenceDiagram
+  actor U as Engineer
+  participant UI as Streamlit
+  participant G as LangGraph
+  participant EC as Expansion cache
+  participant P as Pinecone
+  participant L as Local BM25/RRF
+  participant AC as Answer cache
+  U->>UI: Submit question
+  UI->>G: invoke(question, filters)
+  G->>EC: Look up question / corpus / route key
+  EC-->>G: Valid cached original and alternatives
+  loop Each query, up to three
+    G->>P: Dense search with integrated embedding
+    P-->>G: Hits and embedding/read units
+    G->>L: Keyword hits, when hybrid enabled
+  end
+  G->>L: Fuse lists; recheck canonical snapshot
+  G->>P: One rerank, when enabled
+  P-->>G: Selected indices/scores and rerank units
+  G->>AC: Look up key including ordered evidence and exact queries
+  AC-->>G: Cached answer
+  G->>G: Revalidate citations against current evidence
+  G-->>UI: RunResult with current operations and zero new chat calls
+  UI-->>U: Answer, sources and inspection

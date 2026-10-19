@@ -26,6 +26,22 @@ recorded follow-up issues, not hidden passing results. Native visual UI inspecti
 and recording/submitting the <=5-minute assignment demo remain undone; the demo
 outline and project documentation are ready. Deployment is outside current scope.
 
+## Architecture and demo preparation
+
+The user requested complete architecture/flow diagrams and help preparing the demo.
+`docs/architecture.md` documents the implemented system with seven Mermaid diagrams;
+`docs/diagrams/` contains standalone sources and five1920×1080 SVG/PNG recording
+visuals. The code remains unchanged. `docs/demo/` supplies a400-word timed script,
+recording checklist and copy-ready assignment documentation. The target is4:35,
+within the supplied handout's five-minute limit, with the user's own narration.
+Show the actual Phase2 profile and disclose cache hits. The user's pasted usage
+example (41 embedding tokens,3 reads,1 rerank,zero Gemini calls) is labeled as that
+observed run, not newly measured usage. No new application API calls were made.
+Video recording, Google Doc publication, submission and native app visual inspection
+are not claimed complete. Next action: rehearse the two scripted questions once,
+verify source support and observed cache status, then record and review the video.
+Known q08/q02 quality follow-ups remain separately recorded.
+
 ## Phase 2 implementation checkpoints
 
 - Tasks 1–6 and 8 are implemented and committed: canonical BM25/RRF, dedicated

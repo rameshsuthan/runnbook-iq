@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img"><title>RunbookIQ | Ingestion and publication</title><desc>A separate explicit command path; ordinary questions never rebuild or re-embed the corpus</desc><rect width="1920" height="1080" fill="#F7F9FC"/>
+<text x="64" y="88.0" font-family="Arial, DejaVu Sans, sans-serif" font-size="50" font-weight="700" fill="#142C44">RunbookIQ | Ingestion and publication</text>
+<text x="64" y="135.8" font-family="Arial, DejaVu Sans, sans-serif" font-size="26" font-weight="400" fill="#40576D">A separate explicit command path; ordinary questions never rebuild or re-embed the corpus</text>
+<polyline points="570,330 720,330" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="720.0,330.0 706.5,336.5 706.5,323.5" fill="#60788F"/>
+<polyline points="1200,330 1350,330" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="1350.0,330.0 1336.5,336.5 1336.5,323.5" fill="#60788F"/>
+<polyline points="1590,420 1590,610" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="1590.0,610.0 1583.5,596.5 1596.5,596.5" fill="#60788F"/>
+<polyline points="1350,700 1200,700" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="1200.0,700.0 1213.5,693.5 1213.5,706.5" fill="#60788F"/>
+<polyline points="720,700 570,700" fill="none" stroke="#60788F" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="570.0,700.0 583.5,693.5 583.5,706.5" fill="#60788F"/>
+<rect x="90" y="240" width="480" height="180" rx="18" fill="#E8F0FA"/>
+<text x="112" y="285.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">1  Read and chunk</text>
+<text x="112" y="329.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Synthetic Markdown sections</text>
+<text x="112" y="366.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Token checks; canonical IDs</text>
+<text x="112" y="403.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Target 400; maximum 2048</text>
+<rect x="720" y="240" width="480" height="180" rx="18" fill="#FFF0CF"/>
+<text x="742" y="285.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">2  Candidate snapshot</text>
+<text x="742" y="329.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Text, metadata, content hashes</text>
+<text x="742" y="366.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Corpus version + manifest</text>
+<text x="742" y="403.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Existing baseline stays frozen</text>
+<rect x="1350" y="240" width="480" height="180" rx="18" fill="#DDF3ED"/>
+<text x="1372" y="285.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">3  Explicit ingest</text>
+<text x="1372" y="329.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Lock and destination checks</text>
+<text x="1372" y="366.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Journal; owned upsert/delete</text>
+<text x="1372" y="403.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Pinecone embeds supplied text</text>
+<rect x="1350" y="610" width="480" height="180" rx="18" fill="#DDF3ED"/>
+<text x="1372" y="655.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">4  Verify remote freshness</text>
+<text x="1372" y="699.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Fetch expected IDs and hashes</text>
+<text x="1372" y="736.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Confirm obsolete IDs removed</text>
+<text x="1372" y="773.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Bounded consistency checks</text>
+<rect x="720" y="610" width="480" height="180" rx="18" fill="#FFF0CF"/>
+<text x="742" y="655.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">5  Publish active snapshot</text>
+<text x="742" y="699.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Atomic local publication</text>
+<text x="742" y="736.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Clear journal only on success</text>
+<text x="742" y="773.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Unchanged corpus skips upsert</text>
+<rect x="90" y="610" width="480" height="180" rx="18" fill="#E9E5F7"/>
+<text x="112" y="655.6" font-family="Arial, DejaVu Sans, sans-serif" font-size="32" font-weight="700" fill="#142C44">6  Ready for questions</text>
+<text x="112" y="699.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Dense + BM25 share records</text>
+<text x="112" y="736.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">Canonical citation evidence</text>
+<text x="112" y="773.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="29" font-weight="400" fill="#142C44">No background refresh</text>
+<text x="120" y="909.8" font-family="Arial, DejaVu Sans, sans-serif" font-size="31" font-weight="700" fill="#142C44">Interrupted ingestion keeps the journal: question requests refuse incomplete state.</text>
+<text x="64" y="1029.2" font-family="Arial, DejaVu Sans, sans-serif" font-size="24" font-weight="400" fill="#40576D">The retained experiments use 21 sections-v1 chunks. A future explicit rebuild uses the updated splitter identity.</text>
+</svg>

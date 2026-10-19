@@ -1,0 +1,52 @@
+flowchart TB
+  User[Engineer] --> UI[Streamlit form / app.py]
+  User --> CLI[CLI / cli.py]
+  Cases[15 frozen evaluation cases] --> Eval[evaluation.py]
+  UI --> Compose[Configuration and dependency composition]
+  CLI --> Compose
+  Eval --> Compose
+  Profile[config.yaml or explicit Phase 2 profile] --> Compose
+  Compose --> Graph[Compiled LangGraph / graph.py]
+  subgraph Local[Local Python application]
+    Graph --> Q[QueryPreparer / queries.py]
+    Graph --> R[RetrievalPipeline / retrieval.py]
+    R --> BM[Local BM25 / keyword.py]
+    R --> RF[RRF / fusion.py]
+    R --> RR[Reranker adapter / reranking.py]
+    Graph --> Chat[Provider factory / providers.py]
+    Graph --> V[Schema and citation validation / generation.py]
+    V --> Result[RunResult: answer, sources, inspection, usage]
+  end
+  subgraph Disk[Local durable data]
+    Docs[data/docs: synthetic Markdown]
+    Active[data/processed: active canonical snapshot]
+    EC[expansions.db]
+    AC[answers.db]
+    USD[usage.db: shared USD 3 ledger]
+    Quota[quotas.db: Pinecone monthly counters]
+    Reports[eval/results: frozen reports and source review]
+  end
+  Docs --> Ingest[Explicit build and ingest commands]
+  Ingest --> Active
+  Active --> R
+  Active --> BM
+  Q <--> EC
+  Graph <--> AC
+  Chat <--> USD
+  R --> Quota
+  RR --> Quota
+  subgraph Remote[External services]
+    PC[Pinecone index with integrated llama-text-embed-v2]
+    BGE[Pinecone inference: bge-reranker-v2-m3]
+    Gemini[Gemini Developer API: gemini-3.5-flash-lite]
+  end
+  Ingest --> PC
+  R --> PC
+  RR --> BGE
+  Q --> Chat
+  Chat --> Gemini
+  Result --> UI
+  Result --> CLI
+  Result --> Eval
+  Eval --> Reports
+  Secrets[Local environment / ignored .env] -. client construction only .-> Compose
