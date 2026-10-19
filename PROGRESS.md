@@ -380,3 +380,22 @@ additional usage-return/partial-failure tests also observed RED→GREEN. Full su
 85 passed. One legacy exception-type assertion was updated to the deliberate
 safe CallFailure contract; snapshot-change rejection remains tested. No live calls.
 Next: dedicated Starter BGE reranking, then Gemini query expansion.
+
+## P2.2 dedicated reranker — 2026-10-18
+
+BGE reranker adapter validates result counts/indices/finiteness, preserves canonical
+text and provenance, uses original question and truncate=NONE. Eight new tests
+observed RED→GREEN. SDK inspection found implicit Pinecone transport retries;
+disabled via pinned SDK configuration with an actual inference/index transport test.
+Full offline suite: 94 passed. SDK introspection found no close() on Pinecone 8;
+no service call involved. Smoke script dotenv discovery initially failed under
+stdin; explicit local path fixed it before any request.
+
+Live metadata confirms BGE 1024-token pairs, max batch100 and NONE truncation. One
+synthetic rerank smoke succeeded (1 unit). Full 15-case reranked retrieval comparison
+completed; 12 answerable cases retain selected/fused hit and recall1.0. One real
+graph answer succeeded, 1,140 input/619 output tokens, one Gemini free-tier call,
+estimated USD0. Selected passages support deadline distinctions, pool/dependency
+checks and the 503 caveat; no live cause claimed. These are small synthetic results,
+not proof of improved answer quality. This milestone used 17 rerank requests total.
+Next: one bounded Gemini expansion call, original-only fallback and expansion cache.

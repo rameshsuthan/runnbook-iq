@@ -19,7 +19,12 @@ def compose(settings,*,mode='answers'):
     from .providers import create_provider
     snapshot=load_active_snapshot(settings)
     dense=PineconeRetriever(settings,snapshot,PineconeStore(settings))
-    retriever=RetrievalPipeline(settings,snapshot,dense,BM25Retriever(snapshot) if settings.hybrid else None)
+    reranker=None
+    if settings.reranking:
+        from .reranking import PineconeReranker
+        from .quota import QuotaLedger
+        reranker=PineconeReranker(settings,dense.client.pc.inference,QuotaLedger(settings.runtime_dir/'quotas.db'))
+    retriever=RetrievalPipeline(settings,snapshot,dense,BM25Retriever(snapshot) if settings.hybrid else None,reranker)
     class LazyProvider:
         def generate(self,question,evidence):
             ledger=BudgetLedger(settings.runtime_dir/'usage.db',settings.budget_usd)

@@ -1,0 +1,66 @@
+{
+  "model_metadata": {
+    "model": "bge-reranker-v2-m3",
+    "max_sequence_length": 1024,
+    "max_batch_size": 100,
+    "supported_parameters": [
+      {
+        "parameter": "truncate",
+        "type": "one_of",
+        "value_type": "string",
+        "required": false,
+        "default": "NONE",
+        "allowed_values": [
+          "END",
+          "NONE"
+        ]
+      }
+    ]
+  },
+  "result": {
+    "evidence": [
+      {
+        "chunk": {
+          "chunk_id": "synthetic-check",
+          "document_id": "smoke",
+          "title": "Synthetic",
+          "section": "Check",
+          "text": "A database pool wait is time spent waiting to acquire a database connection.",
+          "service": "order-api",
+          "document_type": "runbook",
+          "revision": "2026-10-18",
+          "corpus_version": "smoke",
+          "content_hash": "smoke",
+          "environment": null
+        },
+        "method": "reranker",
+        "rank": 1,
+        "scores": {
+          "reranker": 0.99971753
+        },
+        "provenance": []
+      }
+    ],
+    "operations": [
+      {
+        "stage": "rerank",
+        "provider": "pinecone",
+        "model": "bge-reranker-v2-m3",
+        "status": "ok",
+        "attempted": true,
+        "usage": {
+          "input_tokens": null,
+          "output_tokens": null,
+          "reasoning_tokens": null,
+          "estimated_usd": null,
+          "calls": 0
+        },
+        "reservation_usd": null,
+        "units": {
+          "rerank_units": 1.0
+        },
+        "elapsed_seconds": 0.32590220801648684
+      }
+    ]
+  }
+}

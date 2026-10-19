@@ -1,0 +1,542 @@
+{
+  "status": "answered",
+  "answer": {
+    "status": "answered",
+    "documented_evidence": "Database pool exhaustion is indicated by DB_POOL_ACQUIRE_TIMEOUT, which means order-api waited 500 ms for a pool slot [c-8b07e11e14a4069f84d9dc0f, c-fb06c0f3dd49511f54a7a5b8]. Conversely, an inventory dependency timeout is indicated by DEPENDENCY_REQUEST_TIMEOUT, which describes waiting for inventory-api rather than acquiring a database connection and means the order-api inventory client exceeded its 1500 ms request deadline [c-8b07e11e14a4069f84d9dc0f, c-8eb6f00c104ca799f19afdbf, c-fb06c0f3dd49511f54a7a5b8]. A caller-visible 503 error alone cannot distinguish a database wait from a dependency timeout [c-9f8c21e76a052f6c052e635e, c-fb06c0f3dd49511f54a7a5b8].",
+    "recommended_checks": "To check for database pool exhaustion, compare db_pool_in_use with the per-process limit of 20, db_pool_waiters, and db_pool_acquire_ms for the same process and time window, and inspect active and long-running transaction durations, connection checkout duration, and recent request concurrency [c-8b07e11e14a4069f84d9dc0f, c-b558d4a54b99f92199c0a0f0]. To check for an inventory dependency timeout, inspect dependency_name, upstream_status, inventory_request_ms, and trace spans for the same request_id and time window [c-8eb6f00c104ca799f19afdbf].",
+    "missing_information": [],
+    "citations": [
+      "c-8b07e11e14a4069f84d9dc0f",
+      "c-8eb6f00c104ca799f19afdbf",
+      "c-b558d4a54b99f92199c0a0f0",
+      "c-9f8c21e76a052f6c052e635e",
+      "c-fb06c0f3dd49511f54a7a5b8"
+    ]
+  },
+  "sources": [
+    {
+      "chunk_id": "c-8b07e11e14a4069f84d9dc0f",
+      "document_id": "rb-db-pool",
+      "title": "Database connection-pool exhaustion runbook (synthetic)",
+      "section": "Distinguishing checks",
+      "text": "Database connection-pool exhaustion runbook (synthetic) | Distinguishing checks\nDB_POOL_ACQUIRE_TIMEOUT means order-api waited 500 ms for a pool slot. Compare db_pool_in_use with the per-process limit of 20, db_pool_waiters, and db_pool_acquire_ms for the same process and time window. A full pool with waiting requests supports investigating pool contention; it does not prove that PostgreSQL itself is unavailable. The error differs from DEPENDENCY_REQUEST_TIMEOUT, which describes waiting for inventory-api rather than acquiring a database connection.",
+      "service": "order-api",
+      "document_type": "runbook",
+      "revision": "2026-10-18",
+      "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+      "content_hash": "114792d0295c37503a63d7ac2b38fab7ce3509dbdcbba9659bb9db02eb593aeb",
+      "environment": null
+    },
+    {
+      "chunk_id": "c-8eb6f00c104ca799f19afdbf",
+      "document_id": "rb-dependency-timeouts",
+      "title": "Inventory dependency timeout runbook (synthetic)",
+      "section": "Distinguishing checks",
+      "text": "Inventory dependency timeout runbook (synthetic) | Distinguishing checks\nDEPENDENCY_REQUEST_TIMEOUT means the order-api inventory client exceeded its 1500 ms request deadline. Inspect dependency_name, upstream_status, inventory_request_ms and trace spans for the same request_id and time window. A missing upstream_status can mean no response was received before the deadline; it does not establish whether inventory-api completed the operation. Compare database pool metrics separately: DB_POOL_ACQUIRE_TIMEOUT indicates waiting for a database slot, not an inventory response.",
+      "service": "order-api",
+      "document_type": "runbook",
+      "revision": "2026-10-18",
+      "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+      "content_hash": "2c09561c0a7cfd997d279bebbde059d592ea0e1ed29bd3b3360d221650df23b8",
+      "environment": null
+    },
+    {
+      "chunk_id": "c-b558d4a54b99f92199c0a0f0",
+      "document_id": "rb-db-pool",
+      "title": "Database connection-pool exhaustion runbook (synthetic)",
+      "section": "Follow-up evidence",
+      "text": "Database connection-pool exhaustion runbook (synthetic) | Follow-up evidence\nInspect active and long-running transaction durations, connection checkout duration and recent request concurrency. Correlate slow inventory calls with long checkouts to test whether a code path holds a connection while waiting on a dependency. The intended request path calls inventory-api before acquiring a database connection. A connection leak, long transaction, or burst of concurrency can produce similar symptoms; request traces and pool metrics are needed to distinguish them.",
+      "service": "order-api",
+      "document_type": "runbook",
+      "revision": "2026-10-18",
+      "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+      "content_hash": "c31c2d0f670addd94220a37c75a2b31b85c2d1168288430850de98c3ebe20386",
+      "environment": null
+    },
+    {
+      "chunk_id": "c-9f8c21e76a052f6c052e635e",
+      "document_id": "svc-order-api",
+      "title": "Order API architecture (synthetic)",
+      "section": "Request path",
+      "text": "Order API architecture (synthetic) | Request path\nThis document describes a fictional training service, not a real production system.\norder-api validates an order, calls inventory-api to reserve stock, then opens a short PostgreSQL transaction to save the order. An inventory request should not hold a database connection. Every request has a request_id and trace_id. A caller-visible 503 alone cannot distinguish a database wait from a dependency timeout.",
+      "service": "order-api",
+      "document_type": "architecture",
+      "revision": "2026-10-18",
+      "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+      "content_hash": "34c3cde01c845be841b69ad71d400ba73b3f43377290c7de4727becf86c3480f",
+      "environment": null
+    },
+    {
+      "chunk_id": "c-fb06c0f3dd49511f54a7a5b8",
+      "document_id": "ref-errors",
+      "title": "Error identifier reference (synthetic)",
+      "section": "Error meanings",
+      "text": "Error identifier reference (synthetic) | Error meanings\nDB_POOL_ACQUIRE_TIMEOUT: waiting longer than 500 ms for an order-api PostgreSQL pool slot. DEPENDENCY_REQUEST_TIMEOUT: the order-api inventory request exceeds 1500 ms. These describe different stages; neither code proves an underlying cause. A 503 returned to the order caller is shared by multiple failures and is insufficient for diagnosis.",
+      "service": "order-api",
+      "document_type": "reference",
+      "revision": "2026-10-18",
+      "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+      "content_hash": "e0a4743ede7847750fa54dd8435b85b6ab3fda658943c86577805f661a98e833",
+      "environment": null
+    }
+  ],
+  "query_variants": [
+    "What documented checks distinguish database pool exhaustion from an inventory dependency timeout in order-api?"
+  ],
+  "retrieval_configuration": {
+    "hybrid": true,
+    "reranking": true,
+    "multi_query": false,
+    "top_k": 5,
+    "embedding": "llama-text-embed-v2",
+    "rrf_k": 60,
+    "keyword_version": "identifiers-v1",
+    "candidate_limit": 15
+  },
+  "retrieved_candidates": [
+    {
+      "chunk": {
+        "chunk_id": "c-8b07e11e14a4069f84d9dc0f",
+        "document_id": "rb-db-pool",
+        "title": "Database connection-pool exhaustion runbook (synthetic)",
+        "section": "Distinguishing checks",
+        "text": "Database connection-pool exhaustion runbook (synthetic) | Distinguishing checks\nDB_POOL_ACQUIRE_TIMEOUT means order-api waited 500 ms for a pool slot. Compare db_pool_in_use with the per-process limit of 20, db_pool_waiters, and db_pool_acquire_ms for the same process and time window. A full pool with waiting requests supports investigating pool contention; it does not prove that PostgreSQL itself is unavailable. The error differs from DEPENDENCY_REQUEST_TIMEOUT, which describes waiting for inventory-api rather than acquiring a database connection.",
+        "service": "order-api",
+        "document_type": "runbook",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "114792d0295c37503a63d7ac2b38fab7ce3509dbdcbba9659bb9db02eb593aeb",
+        "environment": null
+      },
+      "method": "fusion",
+      "rank": 1,
+      "scores": {
+        "fusion": 0.03252247488101534
+      },
+      "provenance": [
+        {
+          "query_id": "q0",
+          "method": "dense",
+          "rank": 2,
+          "score": 0.6325792670249939
+        },
+        {
+          "query_id": "q0",
+          "method": "keyword",
+          "rank": 1,
+          "score": 13.386870148654284
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-8eb6f00c104ca799f19afdbf",
+        "document_id": "rb-dependency-timeouts",
+        "title": "Inventory dependency timeout runbook (synthetic)",
+        "section": "Distinguishing checks",
+        "text": "Inventory dependency timeout runbook (synthetic) | Distinguishing checks\nDEPENDENCY_REQUEST_TIMEOUT means the order-api inventory client exceeded its 1500 ms request deadline. Inspect dependency_name, upstream_status, inventory_request_ms and trace spans for the same request_id and time window. A missing upstream_status can mean no response was received before the deadline; it does not establish whether inventory-api completed the operation. Compare database pool metrics separately: DB_POOL_ACQUIRE_TIMEOUT indicates waiting for a database slot, not an inventory response.",
+        "service": "order-api",
+        "document_type": "runbook",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "2c09561c0a7cfd997d279bebbde059d592ea0e1ed29bd3b3360d221650df23b8",
+        "environment": null
+      },
+      "method": "fusion",
+      "rank": 2,
+      "scores": {
+        "fusion": 0.032266458495966696
+      },
+      "provenance": [
+        {
+          "query_id": "q0",
+          "method": "dense",
+          "rank": 1,
+          "score": 0.6400761008262634
+        },
+        {
+          "query_id": "q0",
+          "method": "keyword",
+          "rank": 3,
+          "score": 9.778136075239237
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-b558d4a54b99f92199c0a0f0",
+        "document_id": "rb-db-pool",
+        "title": "Database connection-pool exhaustion runbook (synthetic)",
+        "section": "Follow-up evidence",
+        "text": "Database connection-pool exhaustion runbook (synthetic) | Follow-up evidence\nInspect active and long-running transaction durations, connection checkout duration and recent request concurrency. Correlate slow inventory calls with long checkouts to test whether a code path holds a connection while waiting on a dependency. The intended request path calls inventory-api before acquiring a database connection. A connection leak, long transaction, or burst of concurrency can produce similar symptoms; request traces and pool metrics are needed to distinguish them.",
+        "service": "order-api",
+        "document_type": "runbook",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "c31c2d0f670addd94220a37c75a2b31b85c2d1168288430850de98c3ebe20386",
+        "environment": null
+      },
+      "method": "fusion",
+      "rank": 3,
+      "scores": {
+        "fusion": 0.03125763125763126
+      },
+      "provenance": [
+        {
+          "query_id": "q0",
+          "method": "dense",
+          "rank": 3,
+          "score": 0.5745811462402344
+        },
+        {
+          "query_id": "q0",
+          "method": "keyword",
+          "rank": 5,
+          "score": 7.825655687429104
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-38704fb688127a7e75c1050c",
+        "document_id": "guide-triage",
+        "title": "Ambiguous symptom triage guide (synthetic)",
+        "section": "Clarifying a 503",
+        "text": "Ambiguous symptom triage guide (synthetic) | Clarifying a 503\nIf the only evidence is an order-api 503 or \"orders are slow\", ask for the request_id, affected interval, error identifier and process IDs. Then compare database acquisition waits with inventory request spans in that interval. Do not choose database exhaustion or dependency failure based on the caller-visible symptom alone.",
+        "service": "order-api",
+        "document_type": "guide",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "01adadbf9cab76d57399d74b04fdc45de78800ecb7b686a31292ec7208770a94",
+        "environment": null
+      },
+      "method": "fusion",
+      "rank": 4,
+      "scores": {
+        "fusion": 0.031009615384615385
+      },
+      "provenance": [
+        {
+          "query_id": "q0",
+          "method": "dense",
+          "rank": 5,
+          "score": 0.5442922115325928
+        },
+        {
+          "query_id": "q0",
+          "method": "keyword",
+          "rank": 4,
+          "score": 8.961175944729748
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-9f8c21e76a052f6c052e635e",
+        "document_id": "svc-order-api",
+        "title": "Order API architecture (synthetic)",
+        "section": "Request path",
+        "text": "Order API architecture (synthetic) | Request path\nThis document describes a fictional training service, not a real production system.\norder-api validates an order, calls inventory-api to reserve stock, then opens a short PostgreSQL transaction to save the order. An inventory request should not hold a database connection. Every request has a request_id and trace_id. A caller-visible 503 alone cannot distinguish a database wait from a dependency timeout.",
+        "service": "order-api",
+        "document_type": "architecture",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "34c3cde01c845be841b69ad71d400ba73b3f43377290c7de4727becf86c3480f",
+        "environment": null
+      },
+      "method": "fusion",
+      "rank": 5,
+      "scores": {
+        "fusion": 0.016129032258064516
+      },
+      "provenance": [
+        {
+          "query_id": "q0",
+          "method": "keyword",
+          "rank": 2,
+          "score": 11.391537733236861
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-fb06c0f3dd49511f54a7a5b8",
+        "document_id": "ref-errors",
+        "title": "Error identifier reference (synthetic)",
+        "section": "Error meanings",
+        "text": "Error identifier reference (synthetic) | Error meanings\nDB_POOL_ACQUIRE_TIMEOUT: waiting longer than 500 ms for an order-api PostgreSQL pool slot. DEPENDENCY_REQUEST_TIMEOUT: the order-api inventory request exceeds 1500 ms. These describe different stages; neither code proves an underlying cause. A 503 returned to the order caller is shared by multiple failures and is insufficient for diagnosis.",
+        "service": "order-api",
+        "document_type": "reference",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "e0a4743ede7847750fa54dd8435b85b6ab3fda658943c86577805f661a98e833",
+        "environment": null
+      },
+      "method": "fusion",
+      "rank": 6,
+      "scores": {
+        "fusion": 0.015625
+      },
+      "provenance": [
+        {
+          "query_id": "q0",
+          "method": "dense",
+          "rank": 4,
+          "score": 0.551970362663269
+        }
+      ]
+    }
+  ],
+  "selected_evidence": [
+    {
+      "chunk": {
+        "chunk_id": "c-8b07e11e14a4069f84d9dc0f",
+        "document_id": "rb-db-pool",
+        "title": "Database connection-pool exhaustion runbook (synthetic)",
+        "section": "Distinguishing checks",
+        "text": "Database connection-pool exhaustion runbook (synthetic) | Distinguishing checks\nDB_POOL_ACQUIRE_TIMEOUT means order-api waited 500 ms for a pool slot. Compare db_pool_in_use with the per-process limit of 20, db_pool_waiters, and db_pool_acquire_ms for the same process and time window. A full pool with waiting requests supports investigating pool contention; it does not prove that PostgreSQL itself is unavailable. The error differs from DEPENDENCY_REQUEST_TIMEOUT, which describes waiting for inventory-api rather than acquiring a database connection.",
+        "service": "order-api",
+        "document_type": "runbook",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "114792d0295c37503a63d7ac2b38fab7ce3509dbdcbba9659bb9db02eb593aeb",
+        "environment": null
+      },
+      "method": "reranker",
+      "rank": 1,
+      "scores": {
+        "fusion": 0.03252247488101534,
+        "reranker": 0.97608364
+      },
+      "provenance": [
+        {
+          "query_id": "q0",
+          "method": "dense",
+          "rank": 2,
+          "score": 0.6325792670249939
+        },
+        {
+          "query_id": "q0",
+          "method": "keyword",
+          "rank": 1,
+          "score": 13.386870148654284
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-8eb6f00c104ca799f19afdbf",
+        "document_id": "rb-dependency-timeouts",
+        "title": "Inventory dependency timeout runbook (synthetic)",
+        "section": "Distinguishing checks",
+        "text": "Inventory dependency timeout runbook (synthetic) | Distinguishing checks\nDEPENDENCY_REQUEST_TIMEOUT means the order-api inventory client exceeded its 1500 ms request deadline. Inspect dependency_name, upstream_status, inventory_request_ms and trace spans for the same request_id and time window. A missing upstream_status can mean no response was received before the deadline; it does not establish whether inventory-api completed the operation. Compare database pool metrics separately: DB_POOL_ACQUIRE_TIMEOUT indicates waiting for a database slot, not an inventory response.",
+        "service": "order-api",
+        "document_type": "runbook",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "2c09561c0a7cfd997d279bebbde059d592ea0e1ed29bd3b3360d221650df23b8",
+        "environment": null
+      },
+      "method": "reranker",
+      "rank": 2,
+      "scores": {
+        "fusion": 0.032266458495966696,
+        "reranker": 0.97140163
+      },
+      "provenance": [
+        {
+          "query_id": "q0",
+          "method": "dense",
+          "rank": 1,
+          "score": 0.6400761008262634
+        },
+        {
+          "query_id": "q0",
+          "method": "keyword",
+          "rank": 3,
+          "score": 9.778136075239237
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-b558d4a54b99f92199c0a0f0",
+        "document_id": "rb-db-pool",
+        "title": "Database connection-pool exhaustion runbook (synthetic)",
+        "section": "Follow-up evidence",
+        "text": "Database connection-pool exhaustion runbook (synthetic) | Follow-up evidence\nInspect active and long-running transaction durations, connection checkout duration and recent request concurrency. Correlate slow inventory calls with long checkouts to test whether a code path holds a connection while waiting on a dependency. The intended request path calls inventory-api before acquiring a database connection. A connection leak, long transaction, or burst of concurrency can produce similar symptoms; request traces and pool metrics are needed to distinguish them.",
+        "service": "order-api",
+        "document_type": "runbook",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "c31c2d0f670addd94220a37c75a2b31b85c2d1168288430850de98c3ebe20386",
+        "environment": null
+      },
+      "method": "reranker",
+      "rank": 3,
+      "scores": {
+        "fusion": 0.03125763125763126,
+        "reranker": 0.88875884
+      },
+      "provenance": [
+        {
+          "query_id": "q0",
+          "method": "dense",
+          "rank": 3,
+          "score": 0.5745811462402344
+        },
+        {
+          "query_id": "q0",
+          "method": "keyword",
+          "rank": 5,
+          "score": 7.825655687429104
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-9f8c21e76a052f6c052e635e",
+        "document_id": "svc-order-api",
+        "title": "Order API architecture (synthetic)",
+        "section": "Request path",
+        "text": "Order API architecture (synthetic) | Request path\nThis document describes a fictional training service, not a real production system.\norder-api validates an order, calls inventory-api to reserve stock, then opens a short PostgreSQL transaction to save the order. An inventory request should not hold a database connection. Every request has a request_id and trace_id. A caller-visible 503 alone cannot distinguish a database wait from a dependency timeout.",
+        "service": "order-api",
+        "document_type": "architecture",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "34c3cde01c845be841b69ad71d400ba73b3f43377290c7de4727becf86c3480f",
+        "environment": null
+      },
+      "method": "reranker",
+      "rank": 4,
+      "scores": {
+        "fusion": 0.016129032258064516,
+        "reranker": 0.6695288
+      },
+      "provenance": [
+        {
+          "query_id": "q0",
+          "method": "keyword",
+          "rank": 2,
+          "score": 11.391537733236861
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-fb06c0f3dd49511f54a7a5b8",
+        "document_id": "ref-errors",
+        "title": "Error identifier reference (synthetic)",
+        "section": "Error meanings",
+        "text": "Error identifier reference (synthetic) | Error meanings\nDB_POOL_ACQUIRE_TIMEOUT: waiting longer than 500 ms for an order-api PostgreSQL pool slot. DEPENDENCY_REQUEST_TIMEOUT: the order-api inventory request exceeds 1500 ms. These describe different stages; neither code proves an underlying cause. A 503 returned to the order caller is shared by multiple failures and is insufficient for diagnosis.",
+        "service": "order-api",
+        "document_type": "reference",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "e0a4743ede7847750fa54dd8435b85b6ab3fda658943c86577805f661a98e833",
+        "environment": null
+      },
+      "method": "reranker",
+      "rank": 5,
+      "scores": {
+        "fusion": 0.015625,
+        "reranker": 0.58130306
+      },
+      "provenance": [
+        {
+          "query_id": "q0",
+          "method": "dense",
+          "rank": 4,
+          "score": 0.551970362663269
+        }
+      ]
+    }
+  ],
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 1140,
+    "output_tokens": 619,
+    "reasoning_tokens": null,
+    "estimated_usd": "0",
+    "calls": 1
+  },
+  "timings": {
+    "prepare_request": 0.000039749982533976436,
+    "prepare_queries": 7.089984137564898e-7,
+    "retrieve": 0.2726173750124872,
+    "select_evidence": 0.1696454159973655,
+    "generate": 2.3096280839818064,
+    "validate": 0.0013957920018583536
+  },
+  "errors": [],
+  "validation_error": null,
+  "operations": [
+    {
+      "stage": "dense_search",
+      "provider": "pinecone",
+      "model": "llama-text-embed-v2",
+      "status": "ok",
+      "attempted": true,
+      "usage": {
+        "input_tokens": null,
+        "output_tokens": null,
+        "reasoning_tokens": null,
+        "estimated_usd": null,
+        "calls": 0
+      },
+      "reservation_usd": null,
+      "units": {
+        "read_units": 1.0,
+        "embed_total_tokens": 19.0
+      },
+      "elapsed_seconds": 0.2681817500269972
+    },
+    {
+      "stage": "rerank",
+      "provider": "pinecone",
+      "model": "bge-reranker-v2-m3",
+      "status": "ok",
+      "attempted": true,
+      "usage": {
+        "input_tokens": null,
+        "output_tokens": null,
+        "reasoning_tokens": null,
+        "estimated_usd": null,
+        "calls": 0
+      },
+      "reservation_usd": null,
+      "units": {
+        "rerank_units": 1.0
+      },
+      "elapsed_seconds": 0.1680621669802349
+    },
+    {
+      "stage": "generate",
+      "provider": "gemini",
+      "model": "gemini-3.5-flash-lite",
+      "status": "ok",
+      "attempted": true,
+      "usage": {
+        "input_tokens": 1140,
+        "output_tokens": 619,
+        "reasoning_tokens": null,
+        "estimated_usd": "0",
+        "calls": 1
+      },
+      "reservation_usd": "0",
+      "units": {},
+      "elapsed_seconds": 2.1473484589951113
+    }
+  ],
+  "known_usage_subtotal": {
+    "input_tokens": 1140,
+    "output_tokens": 619,
+    "reasoning_tokens": 0,
+    "estimated_usd": "0",
+    "calls": 1
+  },
+  "usage_complete": true,
+  "cache_hit": false,
+  "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0"
+}

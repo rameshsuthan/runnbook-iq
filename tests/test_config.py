@@ -8,7 +8,8 @@ def test_settings_enforce_budget_and_baseline():
     assert s.budget_usd == Decimal('3') and s.top_k == 5
     assert not s.paid_fallback and s.retries == 0
     assert Settings(hybrid=True).hybrid
-    for feature in ('reranking', 'multi_query', 'repair'):
+    assert Settings(reranking=True).reranking
+    for feature in ('multi_query', 'repair'):
         with pytest.raises(ValueError, match='Phase 2'):
             Settings(**{feature: True})
 

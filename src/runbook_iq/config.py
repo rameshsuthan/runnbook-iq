@@ -45,7 +45,7 @@ class Settings(BaseModel):
 
     @model_validator(mode='after')
     def baseline(self):
-        if any((self.reranking, self.multi_query, self.repair)):
+        if any((self.multi_query, self.repair)):
             raise ValueError('Phase 2 features are not implemented')
         if not self.namespace.startswith('runbook-iq-') or not self.index_name.startswith('runbook-iq'):
             raise ValueError('Use a dedicated RunbookIQ index and namespace')

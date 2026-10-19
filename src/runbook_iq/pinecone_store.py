@@ -7,12 +7,19 @@ from .config import credentials
 def plain(value):
     return value.to_dict() if hasattr(value,'to_dict') else value
 
+def create_pinecone_client(key):
+    from pinecone import Pinecone
+    client=Pinecone(api_key=key)
+    # SDK 8 has no constructor option for retries. Set its configuration before
+    # lazy inference/index transports are built; pinned transport tests guard this.
+    client._openapi_config.retries=0
+    return client
+
 class PineconeStore:
     def __init__(self,settings,create=False):
         if not settings.pinecone_starter_verified:raise ValueError('Confirm Pinecone Starter entitlement before live access')
-        from pinecone import Pinecone
         self.settings=settings
-        self.pc=Pinecone(api_key=credentials('pinecone'))
+        self.pc=create_pinecone_client(credentials('pinecone'))
         if create and not self.pc.has_index(name=settings.index_name):
             self.pc.create_index_for_model(name=settings.index_name,cloud='aws',region=settings.region,
                 embed={'model':settings.embedding_model,'field_map':{'text':'text'},
