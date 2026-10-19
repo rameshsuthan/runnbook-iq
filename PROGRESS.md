@@ -421,3 +421,19 @@ first failed by summing a cache-hit null token field; corrected to count attempt
 operations and report token completeness explicitly. No product result was altered.
 
 Next: one bounded response-repair edge using Gemini. Nebius remains deferred.
+
+## P2.5 bounded response repair — 2026-10-18
+
+Added one explicit repair→validate graph edge. Counter increments before repair;
+second invalid output ends invalid_output. Original question/evidence remain fixed,
+provider failures do not trigger repair, invalid cache entries do not regenerate,
+and budget denial preserves the initial validation category. Each call is accounted
+for; repaired answers are cached only after successful validation.
+
+Six sequence-provider tests observed RED→GREEN, including invalid→valid,
+invalid→invalid, budget denial, transport failure, invalid cache and three-call
+maximum with expansion. Targeted suite27 passed; full suite113 passed. Tests use
+injected responses and make no network calls. No natural invalid fresh answer has
+needed repair in the Phase 2 live samples, so live repair is not yet verified.
+No extra live calls were made for this milestone. Next: offline Nebius adapter,
+with its live acceptance deferred, then inspection and final comparison/review.

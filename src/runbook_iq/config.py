@@ -61,8 +61,6 @@ class Settings(BaseModel):
 
     @model_validator(mode='after')
     def baseline(self):
-        if self.repair:
-            raise ValueError('Phase 2 features are not implemented')
         if not self.namespace.startswith('runbook-iq-') or not self.index_name.startswith('runbook-iq'):
             raise ValueError('Use a dedicated RunbookIQ index and namespace')
         for rate in (self.input_usd_per_million, self.output_usd_per_million):

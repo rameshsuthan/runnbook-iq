@@ -7,7 +7,7 @@ from .schemas import RunResult
 
 def answer_cache_key(settings, question, filters, corpus_version, evidence, *, query_variants=None, retrieval_configuration=None):
     from .retrieval import retrieval_configuration as configuration
-    return digest({'namespace':'phase2-v1','expansion_route':settings.expansion.model_dump(mode='json') if settings.expansion else None,'queries':query_variants or [question],'provider':settings.provider,'model':settings.model,'prompt':PROMPT_VERSION,
+    return digest({'namespace':'phase2-v1','repair':settings.repair,'repair_prompt':'repair-v1','expansion_route':settings.expansion.model_dump(mode='json') if settings.expansion else None,'queries':query_variants or [question],'provider':settings.provider,'model':settings.model,'prompt':PROMPT_VERSION,
         'schema':'answer-v3','question':question,'filters':filters,'corpus_version':corpus_version,
         'retrieval':retrieval_configuration if retrieval_configuration is not None else configuration(settings),
         'generation':{'temperature':0 if settings.model.startswith('gemini-2.5') else 'provider_default','max_output':settings.max_output_tokens,'thinking':settings.thinking_budget if settings.model.startswith('gemini-2.5') else 'minimal'},

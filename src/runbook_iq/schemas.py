@@ -112,5 +112,6 @@ class RunResult(Record):
     operations: list[OperationRecord] = Field(default_factory=list)
     known_usage_subtotal: Usage = Field(default_factory=Usage)
     usage_complete: bool = False
+    repair_attempts: int = 0
     cache_hit: bool = False
     corpus_version: str = ''

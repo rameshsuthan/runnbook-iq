@@ -10,9 +10,7 @@ def test_settings_enforce_budget_and_baseline():
     assert Settings(hybrid=True).hybrid
     assert Settings(reranking=True).reranking
     assert Settings(multi_query=True).multi_query
-    for feature in ('repair',):
-        with pytest.raises(ValueError, match='Phase 2'):
-            Settings(**{feature: True})
+    assert Settings(repair=True).repair
 
 
 def test_credential_conflict_never_echoes_values(monkeypatch):

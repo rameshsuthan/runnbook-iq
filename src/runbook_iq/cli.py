@@ -29,6 +29,8 @@ def compose(settings,*,mode='answers',query_cache='allow'):
         def generate(self,question,evidence):
             ledger=BudgetLedger(settings.runtime_dir/'usage.db',settings.budget_usd)
             return create_provider(settings,ledger).generate(question,evidence)
+        def repair(self,question,evidence,rejected,error):
+            return create_provider(settings,BudgetLedger(settings.runtime_dir/'usage.db',settings.budget_usd),task='repair').repair(question,evidence,rejected,error)
     expander=None
     if settings.multi_query:
         from .queries import QueryPreparer
@@ -44,7 +46,7 @@ def compose(settings,*,mode='answers',query_cache='allow'):
 def invoke_question(graph,question,filters,*,diagnostics_dir=None):
     from langsmith import tracing_context
     with tracing_context(enabled=False):
-        state=graph.invoke({'question':question,'filters':filters},config={'recursion_limit':12})
+        state=graph.invoke({'question':question,'filters':filters},config={'recursion_limit':16})
     result=state['result']
     if diagnostics_dir is not None and result.status=='invalid_output' and 'response' in state:
         import sys

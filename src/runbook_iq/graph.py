@@ -45,7 +45,7 @@ def build_graph(retriever,provider,cache,settings,corpus_version,*,mode='answers
             timings={} if name=='prepare_request' else state.get('timings',{})
             update['path']=[*path,name]
             update['timings']={**timings,name:time.perf_counter()-start}
-            if 'result' in update:
+            if update.get('result') is not None:
                 update['result'].retrieved_candidates=state.get('candidates',[])
                 update['result'].selected_evidence=update.get('selected_evidence',state.get('selected_evidence',[]))
                 update['result'].query_variants=state.get('query_variants',[])
@@ -54,6 +54,7 @@ def build_graph(retriever,provider,cache,settings,corpus_version,*,mode='answers
                 operations=update.get('operations',state.get('operations',[]))
                 update['result'].operations=operations
                 update['result'].warnings=state.get('warnings',[])
+                update['result'].repair_attempts=update.get('repair_retries',state.get('repair_retries',0))
                 update['result'].retrieval_configuration['effective_query_count']=len(state.get('query_variants',[]))
                 for key,value in summarize_operations(operations).items():setattr(update['result'],key,value)
                 update['status']=update['result'].status
@@ -135,12 +136,33 @@ def build_graph(retriever,provider,cache,settings,corpus_version,*,mode='answers
             cache.put(state['cache_key'],result)
             return {'result':result,'citations':answer.citations}
         except AnswerValidationError as error:
-            result=terminal('invalid_output',f'Answer validation failed: {error.code}. No repair attempted.',response.usage)
+            result=terminal('invalid_output',f'Answer validation failed: {error.code}.',response.usage)
             result.validation_error=error.code
             return {'result':result}
         except Exception:return {'result':terminal('invalid_output','Answer schema/citation validation failed; no repair attempted',response.usage)}
+    def repair(state):
+        count=state.get('repair_retries',0)+1
+        original_error=state['result'].validation_error
+        operations=state.get('operations',[])
+        try:
+            response=provider.repair(state['question'],state['selected_evidence'],state['response'],original_error)
+            operation=response.operation or OperationRecord(stage='repair',provider=settings.provider,model=settings.model,attempted=True,usage=response.usage)
+            return {'result':None,'response':response,'repair_retries':count,'operations':[*operations,operation]}
+        except BudgetExceeded:
+            result=terminal('budget_exceeded','Repair blocked by paid-usage guard')
+        except CallFailure as error:
+            result=terminal('provider_error',error.code);operations=[*operations,*error.operations]
+        except Exception:
+            result=terminal('provider_error','Repair setup failed; no recorded model invocation')
+        result.validation_error=original_error
+        return {'result':result,'repair_retries':count,'operations':operations}
+    def after_validation(state):
+        result=state['result']
+        if settings.repair and result.status=='invalid_output' and result.validation_error and state.get('repair_retries',0)==0:
+            return 'repair'
+        return END
     graph=StateGraph(GraphState)
-    nodes={'prepare_request':prepare,'prepare_queries':queries,'retrieve':retrieve,'select_evidence':select,'fallback':fallback,'generate':generate,'validate':validate}
+    nodes={'prepare_request':prepare,'prepare_queries':queries,'retrieve':retrieve,'select_evidence':select,'fallback':fallback,'generate':generate,'validate':validate,'repair':repair}
     for name,fn in nodes.items():graph.add_node(name,measured(name,fn))
     graph.add_edge(START,'prepare_request')
     graph.add_conditional_edges('prepare_request',lambda s:END if s.get('result') else 'prepare_queries')
@@ -148,5 +170,7 @@ def build_graph(retriever,provider,cache,settings,corpus_version,*,mode='answers
     graph.add_conditional_edges('retrieve',lambda s:END if s.get('result') else 'select_evidence')
     graph.add_conditional_edges('select_evidence',lambda s:END if s.get('result') else ('generate' if s['selected_evidence'] else 'fallback'))
     graph.add_conditional_edges('generate',lambda s:END if s.get('result') else 'validate')
-    graph.add_edge('fallback',END);graph.add_edge('validate',END)
+    graph.add_edge('fallback',END)
+    graph.add_conditional_edges('validate',after_validation)
+    graph.add_conditional_edges('repair',lambda s:END if s.get('result') else 'validate')
     return graph.compile()
