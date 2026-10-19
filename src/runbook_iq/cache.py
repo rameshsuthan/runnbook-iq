@@ -7,7 +7,7 @@ from .schemas import RunResult
 
 def answer_cache_key(settings, question, filters, corpus_version, evidence):
     return digest({'provider':settings.provider,'model':settings.model,'prompt':PROMPT_VERSION,
-        'schema':'answer-v1','question':question,'filters':filters,'corpus_version':corpus_version,
+        'schema':'answer-v2','question':question,'filters':filters,'corpus_version':corpus_version,
         'retrieval':{'top_k':settings.top_k,'embedding':settings.embedding_model,'method':'dense'},
         'generation':{'temperature':0 if settings.model.startswith('gemini-2.5') else 'provider_default','max_output':settings.max_output_tokens,'thinking':settings.thinking_budget if settings.model.startswith('gemini-2.5') else 'minimal'},
         'evidence':[(c.chunk.chunk_id,c.chunk.content_hash) for c in evidence]})

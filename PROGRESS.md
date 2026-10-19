@@ -141,3 +141,45 @@ Before commit: all 64 staged files checked against configured credential values
 without printing them; no matches, private-key marker, .env or runtime artifacts.
 `git diff --cached --check` passed. Original reference solution and assignment
 handout remain untracked and untouched. No remote publication occurred.
+
+## Phase 1 quality follow-up — 2026-10-18
+
+User approved committing history and proceeding. Confirmed existing baseline
+commits `82de23b` / `40150f4`. Preserved the user's newly created untracked
+`eval/results/my-answer.json` and both original reference handouts without edits.
+
+Investigation: q03 reused an existing valid cache entry (zero new generation).
+One q06 live diagnostic failed: valid source-ID list but no inline references in
+evidence/checks. The original response remains in ignored private local storage.
+Root cause for this observed case is output-contract noncompliance, not retrieval
+or the grouped-citation parser. Other old invalid outputs cannot be retrospectively
+classified because their raw responses were not retained.
+
+Implemented safe validation categories and explicit CLI opt-in for private local
+failed-response diagnostics. Eight category tests plus graph redaction/termination
+failed before the change, then passed. Two diagnostic tests first failed for the
+missing option; an implementation mistake using Path.open(opener=...) was corrected
+to built-in open after its TypeError. File permissions, default non-retention and
+successful-response non-retention are verified. Prompt/schema guidance was clarified
+and versioned (incident-evidence-v2 / answer-v2) to invalidate older cached answers.
+
+Actual verification:
+- `.venv/bin/pytest -q` → 60 passed.
+- `.venv/bin/runbook-iq ask --help` → explicit `--save-invalid-response` documented.
+- Targeted evaluation using the actual graph and frozen development cases q06,
+  q08, q10 → answered / answered / insufficient_evidence; three new calls, all
+  structurally valid, 3,212 input / 821 output tokens, estimated USD 0.
+- Assistant source review: q06 covers supported historical cause/correction;
+  q10 correctly abstains and names missing live observations; q08 remains incomplete
+  despite relevant telemetry fields in selected evidence. Results saved in
+  `eval/results/phase1-followup-v2.json`; baseline files unchanged.
+
+This continuation used four new generation calls total (one diagnostic plus three
+follow-up), no retry/repair and no paid fallback. Ledger snapshot: 38 attempts,
+36 with known usage, two older unknown outcomes, USD 0 estimated paid usage;
+includes intervening user activity. No keys or provider exception bodies logged.
+
+Next action: inspect q08's selected telemetry passages and compare them with its
+incomplete answer before considering another bounded development experiment.
+All original Phase 2 exclusions remain. No broad brainstorming or new design
+approval is needed for these Phase 1 contract fixes.

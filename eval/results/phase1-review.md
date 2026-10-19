@@ -116,3 +116,45 @@ Next focused quality task: preserve safe validation categories and synthetic rej
 outputs in an opt-in local diagnostic, then investigate the seven failures and
 q08/q10 behavior on development cases. Do not add advanced retrieval or retry logic
 as a substitute for understanding this baseline. Phase 2 remains unimplemented.
+
+## Targeted development follow-up — prompt v2, 2026-10-18
+
+After preserving the baseline in Git, one uncached q06 diagnostic reproduced an
+actual cause: its response listed valid source IDs but had **no inline citations**.
+This is a correctly rejected model output, unlike the earlier comma-group parser
+bug. Raw synthetic diagnostic data stays in ignored local storage.
+
+The validator now reports value-free categories (including
+`missing_inline_citations`, `citation_mismatch`, `invalid_schema` and
+`incomplete_response`). The CLI offers explicit `--save-invalid-response` for
+local mode-0600 files containing the failed response and exact evidence, without
+serializing clients, headers or environment variables. Default output excludes the
+raw rejected answer. No automatic repair/retry was introduced.
+
+Prompt `incident-evidence-v2` and schema guidance clarify inline citations,
+requested-fact coverage and unknown-live-cause status. Prompt/schema cache versions
+changed so previous answers cannot mask the new behavior. Three development cases
+were run once each; results are in `phase1-followup-v2.json`:
+
+| Case | Outcome | Source review |
+|---|---|---|
+| q06 | answered | Inline citations now present; historical cause/correction supported and requested points covered. |
+| q08 | answered | Citation supported, but still incomplete: omitted requested correlation/telemetry fields. Selected evidence contains them. |
+| q10 | insufficient_evidence | Correct status, supported uncertainty, explicit missing current observations. |
+
+All three passed structural validation; **two of three** met the substantive
+expectations. This is targeted development verification, not a new 15-case score
+or evidence that all seven original failures are fixed. The old baseline is intact.
+
+This continuation used four new generation calls: one diagnostic, then three
+follow-up cases (3,212 input / 821 output tokens for the follow-up). A q03 check
+used the existing cache and made no generation call. Estimated paid usage remains
+USD 0. At the final snapshot the local ledger had 38 attempts, 36 known usage
+records and two older unknown outcomes; it also includes user runs between turns.
+
+Verification: 60 offline tests pass, including all eight validation categories,
+no raw-response leakage in normal results, opt-in diagnostic permissions, and
+unchanged one-call graph termination. CLI help exposes the diagnostic flag.
+The next quality issue is q08's incomplete use of already-retrieved evidence;
+additional prompt changes or Phase 2 retrieval must not be claimed as fixes until
+measured. No full answer rerun or Phase 2 implementation was performed.

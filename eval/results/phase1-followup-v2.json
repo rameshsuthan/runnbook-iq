@@ -1,0 +1,1560 @@
+{
+  "created_at": "2026-10-19T00:21:47.215811+00:00",
+  "mode": "answers",
+  "configuration": {
+    "provider": "gemini",
+    "model": "gemini-3.5-flash-lite",
+    "billing": "free",
+    "account_verified": true,
+    "pricing_verified": false,
+    "input_usd_per_million": null,
+    "output_usd_per_million": null,
+    "budget_usd": "3",
+    "max_output_tokens": 1500,
+    "max_input_tokens": 10000,
+    "thinking_budget": 0,
+    "retries": 0,
+    "paid_fallback": false,
+    "hybrid": false,
+    "reranking": false,
+    "multi_query": false,
+    "repair": false,
+    "top_k": 5,
+    "index_name": "runbook-iq",
+    "namespace": "runbook-iq-v1",
+    "pinecone_starter_verified": true,
+    "region": "us-east-1",
+    "embedding_model": "llama-text-embed-v2",
+    "chunk_target_tokens": 400,
+    "embedding_max_tokens": 2048,
+    "tokenizer_revision": "",
+    "source_dir": "data/docs",
+    "processed_dir": "data/processed",
+    "runtime_dir": ".runbook_iq",
+    "readiness_attempts": 10
+  },
+  "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+  "questions_hash": "7f0d1413ecbaa120e3d22638a2859cb29243d0797f32441e2dd5d418e0fad3f4",
+  "prompt_version": "incident-evidence-v2",
+  "cases": [
+    {
+      "case": {
+        "id": "q06",
+        "split": "dev",
+        "question": "What caused the September 4 pool incident and what corrected it?",
+        "filters": {},
+        "expected_status": "answered",
+        "expected_sources": [
+          {
+            "document_id": "incident-db-pool",
+            "section": "Findings and scope"
+          },
+          {
+            "document_id": "incident-db-pool",
+            "section": "Timeline"
+          }
+        ],
+        "expected_points": [
+          "connections held across inventory requests",
+          "rollback and move acquisition after inventory",
+          "historical event only"
+        ],
+        "expected_clarification": []
+      },
+      "retrieval": [
+        {
+          "chunk": {
+            "chunk_id": "c-baae5073193928aab9317093",
+            "document_id": "ref-config",
+            "title": "Current configuration reference (synthetic)",
+            "section": "Historical comparison",
+            "text": "Current configuration reference (synthetic) | Historical comparison\nThe 2026-09-04 pool incident involved a historical per-process pool limit of 12. The current limit of 20 came from a separate capacity review. The incident correction was acquiring a connection after the inventory request, not a blanket recommendation to enlarge pools. Always compare the revision and process scope before treating historical configuration as current.",
+            "service": "order-api",
+            "document_type": "reference",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "86313cb4cb7561b72131198f0ad0cd1079f2f5a90cbb362e8d77e0ba08beb2c9",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 1,
+          "scores": {
+            "dense": 0.3309384286403656
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-cda48a204d1aca1d76dbdb01",
+            "document_id": "incident-db-pool",
+            "title": "Pool checkout regression incident (synthetic)",
+            "section": "Timeline",
+            "text": "Pool checkout regression incident (synthetic) | Timeline\nHistorical synthetic incident on 2026-09-04, all times UTC. At 10:00 a release introduced growing DB_POOL_ACQUIRE_TIMEOUT counts. At 10:08 traces showed a connection was checked out before an inventory-api call and held during slow inventory responses. At 10:17 operators rolled back the release. By 10:22 acquisition waits returned to the pre-incident range.",
+            "service": "order-api",
+            "document_type": "incident",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "9111aad564df656d14df54b97613a822689cb8db83f6a10f14dbd29b9443019f",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 2,
+          "scores": {
+            "dense": 0.32741522789001465
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-2e80e36841419b2f09a3039b",
+            "document_id": "incident-db-pool",
+            "title": "Pool checkout regression incident (synthetic)",
+            "section": "Findings and scope",
+            "text": "Pool checkout regression incident (synthetic) | Findings and scope\nThe affected revision used 12 connections per process. The confirmed finding for this historical incident was a code path holding database connections across inventory calls; it was not proof that PostgreSQL capacity was exhausted. The corrective change moved connection acquisition after the inventory operation and added a regression test. The current revision uses 20 connections after a separate capacity review; increasing the pool was not the documented incident fix. This historical finding does not diagnose a new event.",
+            "service": "order-api",
+            "document_type": "incident",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "952e1242632cd0dd5ac9260cbf03b50b6b0393f95c1e56cc2cb2501022dc099f",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 3,
+          "scores": {
+            "dense": 0.2701321840286255
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-b461dee17767deb930d12f29",
+            "document_id": "incident-dependency-timeouts",
+            "title": "Inventory path latency incident (synthetic)",
+            "section": "Timeline",
+            "text": "Inventory path latency incident (synthetic) | Timeline\nHistorical synthetic incident on 2026-10-02, all times UTC. At 14:00 inventory request latency increased after a network routing change. At 14:06 dependency spans showed long connection-establishment time while database pool acquisition remained normal. The routing change was reverted at 14:12. By 14:20 inventory request durations returned to baseline.",
+            "service": "order-api",
+            "document_type": "incident",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "69acccd8f82aa34d08b88982d3661084b5af494a720a6485c87bbec58351d459",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 4,
+          "scores": {
+            "dense": 0.21940049529075623
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-47d727617dcf9528ccbce2ea",
+            "document_id": "rb-db-pool",
+            "title": "Database connection-pool exhaustion runbook (synthetic)",
+            "section": "Safe interpretation",
+            "text": "Database connection-pool exhaustion runbook (synthetic) | Safe interpretation\nDo not increase the pool size or restart services solely from the error code. Gather the affected process IDs, interval, pool metrics, transaction durations and recent code/configuration changes. A historical incident is an example, not proof of the current cause. This assistant cannot inspect these signals or perform remediation.",
+            "service": "order-api",
+            "document_type": "runbook",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "ba0b3913c3a12c29e75d446e6abf46b427f5dcf73f1cad59e34c03edfc471b90",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 5,
+          "scores": {
+            "dense": 0.16432306170463562
+          }
+        }
+      ],
+      "selected_evidence": [
+        {
+          "chunk": {
+            "chunk_id": "c-baae5073193928aab9317093",
+            "document_id": "ref-config",
+            "title": "Current configuration reference (synthetic)",
+            "section": "Historical comparison",
+            "text": "Current configuration reference (synthetic) | Historical comparison\nThe 2026-09-04 pool incident involved a historical per-process pool limit of 12. The current limit of 20 came from a separate capacity review. The incident correction was acquiring a connection after the inventory request, not a blanket recommendation to enlarge pools. Always compare the revision and process scope before treating historical configuration as current.",
+            "service": "order-api",
+            "document_type": "reference",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "86313cb4cb7561b72131198f0ad0cd1079f2f5a90cbb362e8d77e0ba08beb2c9",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 1,
+          "scores": {
+            "dense": 0.3309384286403656
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-cda48a204d1aca1d76dbdb01",
+            "document_id": "incident-db-pool",
+            "title": "Pool checkout regression incident (synthetic)",
+            "section": "Timeline",
+            "text": "Pool checkout regression incident (synthetic) | Timeline\nHistorical synthetic incident on 2026-09-04, all times UTC. At 10:00 a release introduced growing DB_POOL_ACQUIRE_TIMEOUT counts. At 10:08 traces showed a connection was checked out before an inventory-api call and held during slow inventory responses. At 10:17 operators rolled back the release. By 10:22 acquisition waits returned to the pre-incident range.",
+            "service": "order-api",
+            "document_type": "incident",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "9111aad564df656d14df54b97613a822689cb8db83f6a10f14dbd29b9443019f",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 2,
+          "scores": {
+            "dense": 0.32741522789001465
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-2e80e36841419b2f09a3039b",
+            "document_id": "incident-db-pool",
+            "title": "Pool checkout regression incident (synthetic)",
+            "section": "Findings and scope",
+            "text": "Pool checkout regression incident (synthetic) | Findings and scope\nThe affected revision used 12 connections per process. The confirmed finding for this historical incident was a code path holding database connections across inventory calls; it was not proof that PostgreSQL capacity was exhausted. The corrective change moved connection acquisition after the inventory operation and added a regression test. The current revision uses 20 connections after a separate capacity review; increasing the pool was not the documented incident fix. This historical finding does not diagnose a new event.",
+            "service": "order-api",
+            "document_type": "incident",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "952e1242632cd0dd5ac9260cbf03b50b6b0393f95c1e56cc2cb2501022dc099f",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 3,
+          "scores": {
+            "dense": 0.2701321840286255
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-b461dee17767deb930d12f29",
+            "document_id": "incident-dependency-timeouts",
+            "title": "Inventory path latency incident (synthetic)",
+            "section": "Timeline",
+            "text": "Inventory path latency incident (synthetic) | Timeline\nHistorical synthetic incident on 2026-10-02, all times UTC. At 14:00 inventory request latency increased after a network routing change. At 14:06 dependency spans showed long connection-establishment time while database pool acquisition remained normal. The routing change was reverted at 14:12. By 14:20 inventory request durations returned to baseline.",
+            "service": "order-api",
+            "document_type": "incident",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "69acccd8f82aa34d08b88982d3661084b5af494a720a6485c87bbec58351d459",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 4,
+          "scores": {
+            "dense": 0.21940049529075623
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-47d727617dcf9528ccbce2ea",
+            "document_id": "rb-db-pool",
+            "title": "Database connection-pool exhaustion runbook (synthetic)",
+            "section": "Safe interpretation",
+            "text": "Database connection-pool exhaustion runbook (synthetic) | Safe interpretation\nDo not increase the pool size or restart services solely from the error code. Gather the affected process IDs, interval, pool metrics, transaction durations and recent code/configuration changes. A historical incident is an example, not proof of the current cause. This assistant cannot inspect these signals or perform remediation.",
+            "service": "order-api",
+            "document_type": "runbook",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "ba0b3913c3a12c29e75d446e6abf46b427f5dcf73f1cad59e34c03edfc471b90",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 5,
+          "scores": {
+            "dense": 0.16432306170463562
+          }
+        }
+      ],
+      "retrieval_seconds": 0.6664107920078095,
+      "retrieval_error": null,
+      "hit_at_5": true,
+      "evidence_recall_at_5": 1.0,
+      "first_relevant_rank": 2,
+      "answer": {
+        "status": "answered",
+        "answer": {
+          "status": "answered",
+          "documented_evidence": "The September 4 pool incident was caused by a code path that checked out a database connection before an inventory-api call and held it during slow inventory responses [c-baae5073193928aab9317093, c-cda48a204d1aca1d76dbdb01, c-2e80e36841419b2f09a3039b]. This release introduced growing DB_POOL_ACQUIRE_TIMEOUT counts [c-cda48a204d1aca1d76dbdb01]. The incident was corrected by operators rolling back the release, moving connection acquisition to occur after the inventory operation, and adding a regression test [c-cda48a204d1aca1d76dbdb01, c-2e80e36841419b2f09a3039b].",
+          "recommended_checks": "Gather the affected process IDs, interval, pool metrics, transaction durations, and recent code or configuration changes [c-47d727617dcf9528ccbce2ea].",
+          "missing_information": [],
+          "citations": [
+            "c-baae5073193928aab9317093",
+            "c-cda48a204d1aca1d76dbdb01",
+            "c-2e80e36841419b2f09a3039b",
+            "c-47d727617dcf9528ccbce2ea"
+          ]
+        },
+        "sources": [
+          {
+            "chunk_id": "c-baae5073193928aab9317093",
+            "document_id": "ref-config",
+            "title": "Current configuration reference (synthetic)",
+            "section": "Historical comparison",
+            "text": "Current configuration reference (synthetic) | Historical comparison\nThe 2026-09-04 pool incident involved a historical per-process pool limit of 12. The current limit of 20 came from a separate capacity review. The incident correction was acquiring a connection after the inventory request, not a blanket recommendation to enlarge pools. Always compare the revision and process scope before treating historical configuration as current.",
+            "service": "order-api",
+            "document_type": "reference",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "86313cb4cb7561b72131198f0ad0cd1079f2f5a90cbb362e8d77e0ba08beb2c9",
+            "environment": null
+          },
+          {
+            "chunk_id": "c-cda48a204d1aca1d76dbdb01",
+            "document_id": "incident-db-pool",
+            "title": "Pool checkout regression incident (synthetic)",
+            "section": "Timeline",
+            "text": "Pool checkout regression incident (synthetic) | Timeline\nHistorical synthetic incident on 2026-09-04, all times UTC. At 10:00 a release introduced growing DB_POOL_ACQUIRE_TIMEOUT counts. At 10:08 traces showed a connection was checked out before an inventory-api call and held during slow inventory responses. At 10:17 operators rolled back the release. By 10:22 acquisition waits returned to the pre-incident range.",
+            "service": "order-api",
+            "document_type": "incident",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "9111aad564df656d14df54b97613a822689cb8db83f6a10f14dbd29b9443019f",
+            "environment": null
+          },
+          {
+            "chunk_id": "c-2e80e36841419b2f09a3039b",
+            "document_id": "incident-db-pool",
+            "title": "Pool checkout regression incident (synthetic)",
+            "section": "Findings and scope",
+            "text": "Pool checkout regression incident (synthetic) | Findings and scope\nThe affected revision used 12 connections per process. The confirmed finding for this historical incident was a code path holding database connections across inventory calls; it was not proof that PostgreSQL capacity was exhausted. The corrective change moved connection acquisition after the inventory operation and added a regression test. The current revision uses 20 connections after a separate capacity review; increasing the pool was not the documented incident fix. This historical finding does not diagnose a new event.",
+            "service": "order-api",
+            "document_type": "incident",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "952e1242632cd0dd5ac9260cbf03b50b6b0393f95c1e56cc2cb2501022dc099f",
+            "environment": null
+          },
+          {
+            "chunk_id": "c-47d727617dcf9528ccbce2ea",
+            "document_id": "rb-db-pool",
+            "title": "Database connection-pool exhaustion runbook (synthetic)",
+            "section": "Safe interpretation",
+            "text": "Database connection-pool exhaustion runbook (synthetic) | Safe interpretation\nDo not increase the pool size or restart services solely from the error code. Gather the affected process IDs, interval, pool metrics, transaction durations and recent code/configuration changes. A historical incident is an example, not proof of the current cause. This assistant cannot inspect these signals or perform remediation.",
+            "service": "order-api",
+            "document_type": "runbook",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "ba0b3913c3a12c29e75d446e6abf46b427f5dcf73f1cad59e34c03edfc471b90",
+            "environment": null
+          }
+        ],
+        "retrieved_candidates": [
+          {
+            "chunk": {
+              "chunk_id": "c-baae5073193928aab9317093",
+              "document_id": "ref-config",
+              "title": "Current configuration reference (synthetic)",
+              "section": "Historical comparison",
+              "text": "Current configuration reference (synthetic) | Historical comparison\nThe 2026-09-04 pool incident involved a historical per-process pool limit of 12. The current limit of 20 came from a separate capacity review. The incident correction was acquiring a connection after the inventory request, not a blanket recommendation to enlarge pools. Always compare the revision and process scope before treating historical configuration as current.",
+              "service": "order-api",
+              "document_type": "reference",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "86313cb4cb7561b72131198f0ad0cd1079f2f5a90cbb362e8d77e0ba08beb2c9",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 1,
+            "scores": {
+              "dense": 0.3309384286403656
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-cda48a204d1aca1d76dbdb01",
+              "document_id": "incident-db-pool",
+              "title": "Pool checkout regression incident (synthetic)",
+              "section": "Timeline",
+              "text": "Pool checkout regression incident (synthetic) | Timeline\nHistorical synthetic incident on 2026-09-04, all times UTC. At 10:00 a release introduced growing DB_POOL_ACQUIRE_TIMEOUT counts. At 10:08 traces showed a connection was checked out before an inventory-api call and held during slow inventory responses. At 10:17 operators rolled back the release. By 10:22 acquisition waits returned to the pre-incident range.",
+              "service": "order-api",
+              "document_type": "incident",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "9111aad564df656d14df54b97613a822689cb8db83f6a10f14dbd29b9443019f",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 2,
+            "scores": {
+              "dense": 0.32741522789001465
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-2e80e36841419b2f09a3039b",
+              "document_id": "incident-db-pool",
+              "title": "Pool checkout regression incident (synthetic)",
+              "section": "Findings and scope",
+              "text": "Pool checkout regression incident (synthetic) | Findings and scope\nThe affected revision used 12 connections per process. The confirmed finding for this historical incident was a code path holding database connections across inventory calls; it was not proof that PostgreSQL capacity was exhausted. The corrective change moved connection acquisition after the inventory operation and added a regression test. The current revision uses 20 connections after a separate capacity review; increasing the pool was not the documented incident fix. This historical finding does not diagnose a new event.",
+              "service": "order-api",
+              "document_type": "incident",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "952e1242632cd0dd5ac9260cbf03b50b6b0393f95c1e56cc2cb2501022dc099f",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 3,
+            "scores": {
+              "dense": 0.2701321840286255
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-b461dee17767deb930d12f29",
+              "document_id": "incident-dependency-timeouts",
+              "title": "Inventory path latency incident (synthetic)",
+              "section": "Timeline",
+              "text": "Inventory path latency incident (synthetic) | Timeline\nHistorical synthetic incident on 2026-10-02, all times UTC. At 14:00 inventory request latency increased after a network routing change. At 14:06 dependency spans showed long connection-establishment time while database pool acquisition remained normal. The routing change was reverted at 14:12. By 14:20 inventory request durations returned to baseline.",
+              "service": "order-api",
+              "document_type": "incident",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "69acccd8f82aa34d08b88982d3661084b5af494a720a6485c87bbec58351d459",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 4,
+            "scores": {
+              "dense": 0.21940049529075623
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-47d727617dcf9528ccbce2ea",
+              "document_id": "rb-db-pool",
+              "title": "Database connection-pool exhaustion runbook (synthetic)",
+              "section": "Safe interpretation",
+              "text": "Database connection-pool exhaustion runbook (synthetic) | Safe interpretation\nDo not increase the pool size or restart services solely from the error code. Gather the affected process IDs, interval, pool metrics, transaction durations and recent code/configuration changes. A historical incident is an example, not proof of the current cause. This assistant cannot inspect these signals or perform remediation.",
+              "service": "order-api",
+              "document_type": "runbook",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "ba0b3913c3a12c29e75d446e6abf46b427f5dcf73f1cad59e34c03edfc471b90",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 5,
+            "scores": {
+              "dense": 0.16432306170463562
+            }
+          }
+        ],
+        "selected_evidence": [
+          {
+            "chunk": {
+              "chunk_id": "c-baae5073193928aab9317093",
+              "document_id": "ref-config",
+              "title": "Current configuration reference (synthetic)",
+              "section": "Historical comparison",
+              "text": "Current configuration reference (synthetic) | Historical comparison\nThe 2026-09-04 pool incident involved a historical per-process pool limit of 12. The current limit of 20 came from a separate capacity review. The incident correction was acquiring a connection after the inventory request, not a blanket recommendation to enlarge pools. Always compare the revision and process scope before treating historical configuration as current.",
+              "service": "order-api",
+              "document_type": "reference",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "86313cb4cb7561b72131198f0ad0cd1079f2f5a90cbb362e8d77e0ba08beb2c9",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 1,
+            "scores": {
+              "dense": 0.3309384286403656
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-cda48a204d1aca1d76dbdb01",
+              "document_id": "incident-db-pool",
+              "title": "Pool checkout regression incident (synthetic)",
+              "section": "Timeline",
+              "text": "Pool checkout regression incident (synthetic) | Timeline\nHistorical synthetic incident on 2026-09-04, all times UTC. At 10:00 a release introduced growing DB_POOL_ACQUIRE_TIMEOUT counts. At 10:08 traces showed a connection was checked out before an inventory-api call and held during slow inventory responses. At 10:17 operators rolled back the release. By 10:22 acquisition waits returned to the pre-incident range.",
+              "service": "order-api",
+              "document_type": "incident",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "9111aad564df656d14df54b97613a822689cb8db83f6a10f14dbd29b9443019f",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 2,
+            "scores": {
+              "dense": 0.32741522789001465
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-2e80e36841419b2f09a3039b",
+              "document_id": "incident-db-pool",
+              "title": "Pool checkout regression incident (synthetic)",
+              "section": "Findings and scope",
+              "text": "Pool checkout regression incident (synthetic) | Findings and scope\nThe affected revision used 12 connections per process. The confirmed finding for this historical incident was a code path holding database connections across inventory calls; it was not proof that PostgreSQL capacity was exhausted. The corrective change moved connection acquisition after the inventory operation and added a regression test. The current revision uses 20 connections after a separate capacity review; increasing the pool was not the documented incident fix. This historical finding does not diagnose a new event.",
+              "service": "order-api",
+              "document_type": "incident",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "952e1242632cd0dd5ac9260cbf03b50b6b0393f95c1e56cc2cb2501022dc099f",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 3,
+            "scores": {
+              "dense": 0.2701321840286255
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-b461dee17767deb930d12f29",
+              "document_id": "incident-dependency-timeouts",
+              "title": "Inventory path latency incident (synthetic)",
+              "section": "Timeline",
+              "text": "Inventory path latency incident (synthetic) | Timeline\nHistorical synthetic incident on 2026-10-02, all times UTC. At 14:00 inventory request latency increased after a network routing change. At 14:06 dependency spans showed long connection-establishment time while database pool acquisition remained normal. The routing change was reverted at 14:12. By 14:20 inventory request durations returned to baseline.",
+              "service": "order-api",
+              "document_type": "incident",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "69acccd8f82aa34d08b88982d3661084b5af494a720a6485c87bbec58351d459",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 4,
+            "scores": {
+              "dense": 0.21940049529075623
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-47d727617dcf9528ccbce2ea",
+              "document_id": "rb-db-pool",
+              "title": "Database connection-pool exhaustion runbook (synthetic)",
+              "section": "Safe interpretation",
+              "text": "Database connection-pool exhaustion runbook (synthetic) | Safe interpretation\nDo not increase the pool size or restart services solely from the error code. Gather the affected process IDs, interval, pool metrics, transaction durations and recent code/configuration changes. A historical incident is an example, not proof of the current cause. This assistant cannot inspect these signals or perform remediation.",
+              "service": "order-api",
+              "document_type": "runbook",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "ba0b3913c3a12c29e75d446e6abf46b427f5dcf73f1cad59e34c03edfc471b90",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 5,
+            "scores": {
+              "dense": 0.16432306170463562
+            }
+          }
+        ],
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "usage": {
+          "input_tokens": 1060,
+          "output_tokens": 416,
+          "reasoning_tokens": null,
+          "estimated_usd": "0",
+          "calls": 1
+        },
+        "timings": {
+          "prepare_request": 3.875000402331352e-06,
+          "prepare_queries": 7.500057108700275e-07,
+          "retrieve": 0.6664107920078095,
+          "select_evidence": 3.082997864112258e-06,
+          "generate": 1.7158233329828363,
+          "validate": 0.001142708002589643
+        },
+        "errors": [],
+        "validation_error": null,
+        "cache_hit": false,
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0"
+      },
+      "manual_review": {
+        "reviewer": "assistant source review",
+        "claim_support": "supported",
+        "coverage": "complete",
+        "notes": "Supported historical cause and correction, with inline references resolving to incident and runbook passages. Requested points covered."
+      }
+    },
+    {
+      "case": {
+        "id": "q08",
+        "split": "dev",
+        "question": "Which fields correlate pool waits with inventory requests?",
+        "filters": {},
+        "expected_status": "answered",
+        "expected_sources": [
+          {
+            "document_id": "guide-telemetry",
+            "section": "Correlation and pool fields"
+          },
+          {
+            "document_id": "guide-telemetry",
+            "section": "Dependency fields"
+          }
+        ],
+        "expected_points": [
+          "request_id, trace_id and same interval/process",
+          "acquisition time versus inventory elapsed time"
+        ],
+        "expected_clarification": []
+      },
+      "retrieval": [
+        {
+          "chunk": {
+            "chunk_id": "c-86a311dbd0dd4b58d0c0fe02",
+            "document_id": "guide-telemetry",
+            "title": "Telemetry field guide (synthetic)",
+            "section": "Correlation and pool fields",
+            "text": "Telemetry field guide (synthetic) | Correlation and pool fields\nrequest_id identifies a caller request; trace_id connects its spans. Compare signals in the same time window and process. db_pool_in_use is the number of checked-out connections in one process; compare against 20 for the current revision. db_pool_waiters counts pending acquisitions. db_pool_acquire_ms measures time spent waiting for a slot; it is not SQL execution duration.",
+            "service": "order-api",
+            "document_type": "guide",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "7e1cfd323ae4b05ce7e189b77557654e8a47ed2a2cf0528012c090ad78d7fad2",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 1,
+          "scores": {
+            "dense": 0.4385170340538025
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-8b07e11e14a4069f84d9dc0f",
+            "document_id": "rb-db-pool",
+            "title": "Database connection-pool exhaustion runbook (synthetic)",
+            "section": "Distinguishing checks",
+            "text": "Database connection-pool exhaustion runbook (synthetic) | Distinguishing checks\nDB_POOL_ACQUIRE_TIMEOUT means order-api waited 500 ms for a pool slot. Compare db_pool_in_use with the per-process limit of 20, db_pool_waiters, and db_pool_acquire_ms for the same process and time window. A full pool with waiting requests supports investigating pool contention; it does not prove that PostgreSQL itself is unavailable. The error differs from DEPENDENCY_REQUEST_TIMEOUT, which describes waiting for inventory-api rather than acquiring a database connection.",
+            "service": "order-api",
+            "document_type": "runbook",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "114792d0295c37503a63d7ac2b38fab7ce3509dbdcbba9659bb9db02eb593aeb",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 2,
+          "scores": {
+            "dense": 0.39059978723526
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-8eb6f00c104ca799f19afdbf",
+            "document_id": "rb-dependency-timeouts",
+            "title": "Inventory dependency timeout runbook (synthetic)",
+            "section": "Distinguishing checks",
+            "text": "Inventory dependency timeout runbook (synthetic) | Distinguishing checks\nDEPENDENCY_REQUEST_TIMEOUT means the order-api inventory client exceeded its 1500 ms request deadline. Inspect dependency_name, upstream_status, inventory_request_ms and trace spans for the same request_id and time window. A missing upstream_status can mean no response was received before the deadline; it does not establish whether inventory-api completed the operation. Compare database pool metrics separately: DB_POOL_ACQUIRE_TIMEOUT indicates waiting for a database slot, not an inventory response.",
+            "service": "order-api",
+            "document_type": "runbook",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "2c09561c0a7cfd997d279bebbde059d592ea0e1ed29bd3b3360d221650df23b8",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 3,
+          "scores": {
+            "dense": 0.38524025678634644
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-b558d4a54b99f92199c0a0f0",
+            "document_id": "rb-db-pool",
+            "title": "Database connection-pool exhaustion runbook (synthetic)",
+            "section": "Follow-up evidence",
+            "text": "Database connection-pool exhaustion runbook (synthetic) | Follow-up evidence\nInspect active and long-running transaction durations, connection checkout duration and recent request concurrency. Correlate slow inventory calls with long checkouts to test whether a code path holds a connection while waiting on a dependency. The intended request path calls inventory-api before acquiring a database connection. A connection leak, long transaction, or burst of concurrency can produce similar symptoms; request traces and pool metrics are needed to distinguish them.",
+            "service": "order-api",
+            "document_type": "runbook",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "c31c2d0f670addd94220a37c75a2b31b85c2d1168288430850de98c3ebe20386",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 4,
+          "scores": {
+            "dense": 0.3787888288497925
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-0f45ebfa20d4d867d43eff2a",
+            "document_id": "guide-telemetry",
+            "title": "Telemetry field guide (synthetic)",
+            "section": "Dependency fields",
+            "text": "Telemetry field guide (synthetic) | Dependency fields\ninventory_request_ms measures elapsed client time for an inventory request. dependency_name identifies the upstream. upstream_status is the received HTTP status when available; it may be absent on a timeout. Inspect connection-establishment and response-wait spans separately. The corpus documents field meanings but includes no current field values.",
+            "service": "order-api",
+            "document_type": "guide",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "a383851493654564ab2b295c309ee88bb2327ca3e2f72712f386c9a0119af680",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 5,
+          "scores": {
+            "dense": 0.3780459761619568
+          }
+        }
+      ],
+      "selected_evidence": [
+        {
+          "chunk": {
+            "chunk_id": "c-86a311dbd0dd4b58d0c0fe02",
+            "document_id": "guide-telemetry",
+            "title": "Telemetry field guide (synthetic)",
+            "section": "Correlation and pool fields",
+            "text": "Telemetry field guide (synthetic) | Correlation and pool fields\nrequest_id identifies a caller request; trace_id connects its spans. Compare signals in the same time window and process. db_pool_in_use is the number of checked-out connections in one process; compare against 20 for the current revision. db_pool_waiters counts pending acquisitions. db_pool_acquire_ms measures time spent waiting for a slot; it is not SQL execution duration.",
+            "service": "order-api",
+            "document_type": "guide",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "7e1cfd323ae4b05ce7e189b77557654e8a47ed2a2cf0528012c090ad78d7fad2",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 1,
+          "scores": {
+            "dense": 0.4385170340538025
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-8b07e11e14a4069f84d9dc0f",
+            "document_id": "rb-db-pool",
+            "title": "Database connection-pool exhaustion runbook (synthetic)",
+            "section": "Distinguishing checks",
+            "text": "Database connection-pool exhaustion runbook (synthetic) | Distinguishing checks\nDB_POOL_ACQUIRE_TIMEOUT means order-api waited 500 ms for a pool slot. Compare db_pool_in_use with the per-process limit of 20, db_pool_waiters, and db_pool_acquire_ms for the same process and time window. A full pool with waiting requests supports investigating pool contention; it does not prove that PostgreSQL itself is unavailable. The error differs from DEPENDENCY_REQUEST_TIMEOUT, which describes waiting for inventory-api rather than acquiring a database connection.",
+            "service": "order-api",
+            "document_type": "runbook",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "114792d0295c37503a63d7ac2b38fab7ce3509dbdcbba9659bb9db02eb593aeb",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 2,
+          "scores": {
+            "dense": 0.39059978723526
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-8eb6f00c104ca799f19afdbf",
+            "document_id": "rb-dependency-timeouts",
+            "title": "Inventory dependency timeout runbook (synthetic)",
+            "section": "Distinguishing checks",
+            "text": "Inventory dependency timeout runbook (synthetic) | Distinguishing checks\nDEPENDENCY_REQUEST_TIMEOUT means the order-api inventory client exceeded its 1500 ms request deadline. Inspect dependency_name, upstream_status, inventory_request_ms and trace spans for the same request_id and time window. A missing upstream_status can mean no response was received before the deadline; it does not establish whether inventory-api completed the operation. Compare database pool metrics separately: DB_POOL_ACQUIRE_TIMEOUT indicates waiting for a database slot, not an inventory response.",
+            "service": "order-api",
+            "document_type": "runbook",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "2c09561c0a7cfd997d279bebbde059d592ea0e1ed29bd3b3360d221650df23b8",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 3,
+          "scores": {
+            "dense": 0.38524025678634644
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-b558d4a54b99f92199c0a0f0",
+            "document_id": "rb-db-pool",
+            "title": "Database connection-pool exhaustion runbook (synthetic)",
+            "section": "Follow-up evidence",
+            "text": "Database connection-pool exhaustion runbook (synthetic) | Follow-up evidence\nInspect active and long-running transaction durations, connection checkout duration and recent request concurrency. Correlate slow inventory calls with long checkouts to test whether a code path holds a connection while waiting on a dependency. The intended request path calls inventory-api before acquiring a database connection. A connection leak, long transaction, or burst of concurrency can produce similar symptoms; request traces and pool metrics are needed to distinguish them.",
+            "service": "order-api",
+            "document_type": "runbook",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "c31c2d0f670addd94220a37c75a2b31b85c2d1168288430850de98c3ebe20386",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 4,
+          "scores": {
+            "dense": 0.3787888288497925
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-0f45ebfa20d4d867d43eff2a",
+            "document_id": "guide-telemetry",
+            "title": "Telemetry field guide (synthetic)",
+            "section": "Dependency fields",
+            "text": "Telemetry field guide (synthetic) | Dependency fields\ninventory_request_ms measures elapsed client time for an inventory request. dependency_name identifies the upstream. upstream_status is the received HTTP status when available; it may be absent on a timeout. Inspect connection-establishment and response-wait spans separately. The corpus documents field meanings but includes no current field values.",
+            "service": "order-api",
+            "document_type": "guide",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "a383851493654564ab2b295c309ee88bb2327ca3e2f72712f386c9a0119af680",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 5,
+          "scores": {
+            "dense": 0.3780459761619568
+          }
+        }
+      ],
+      "retrieval_seconds": 0.44300412500160746,
+      "retrieval_error": null,
+      "hit_at_5": true,
+      "evidence_recall_at_5": 1.0,
+      "first_relevant_rank": 1,
+      "answer": {
+        "status": "answered",
+        "answer": {
+          "status": "answered",
+          "documented_evidence": "Correlating slow inventory calls with long checkouts tests whether a code path holds a connection while waiting on a dependency [c-b558d4a54b99f92199c0a0f0].",
+          "recommended_checks": "Inspect active and long-running transaction durations, connection checkout duration, and recent request concurrency to test if a code path holds a connection while waiting on an inventory dependency [c-b558d4a54b99f92199c0a0f0].",
+          "missing_information": [],
+          "citations": [
+            "c-b558d4a54b99f92199c0a0f0"
+          ]
+        },
+        "sources": [
+          {
+            "chunk_id": "c-b558d4a54b99f92199c0a0f0",
+            "document_id": "rb-db-pool",
+            "title": "Database connection-pool exhaustion runbook (synthetic)",
+            "section": "Follow-up evidence",
+            "text": "Database connection-pool exhaustion runbook (synthetic) | Follow-up evidence\nInspect active and long-running transaction durations, connection checkout duration and recent request concurrency. Correlate slow inventory calls with long checkouts to test whether a code path holds a connection while waiting on a dependency. The intended request path calls inventory-api before acquiring a database connection. A connection leak, long transaction, or burst of concurrency can produce similar symptoms; request traces and pool metrics are needed to distinguish them.",
+            "service": "order-api",
+            "document_type": "runbook",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "c31c2d0f670addd94220a37c75a2b31b85c2d1168288430850de98c3ebe20386",
+            "environment": null
+          }
+        ],
+        "retrieved_candidates": [
+          {
+            "chunk": {
+              "chunk_id": "c-86a311dbd0dd4b58d0c0fe02",
+              "document_id": "guide-telemetry",
+              "title": "Telemetry field guide (synthetic)",
+              "section": "Correlation and pool fields",
+              "text": "Telemetry field guide (synthetic) | Correlation and pool fields\nrequest_id identifies a caller request; trace_id connects its spans. Compare signals in the same time window and process. db_pool_in_use is the number of checked-out connections in one process; compare against 20 for the current revision. db_pool_waiters counts pending acquisitions. db_pool_acquire_ms measures time spent waiting for a slot; it is not SQL execution duration.",
+              "service": "order-api",
+              "document_type": "guide",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "7e1cfd323ae4b05ce7e189b77557654e8a47ed2a2cf0528012c090ad78d7fad2",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 1,
+            "scores": {
+              "dense": 0.4385170340538025
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-8b07e11e14a4069f84d9dc0f",
+              "document_id": "rb-db-pool",
+              "title": "Database connection-pool exhaustion runbook (synthetic)",
+              "section": "Distinguishing checks",
+              "text": "Database connection-pool exhaustion runbook (synthetic) | Distinguishing checks\nDB_POOL_ACQUIRE_TIMEOUT means order-api waited 500 ms for a pool slot. Compare db_pool_in_use with the per-process limit of 20, db_pool_waiters, and db_pool_acquire_ms for the same process and time window. A full pool with waiting requests supports investigating pool contention; it does not prove that PostgreSQL itself is unavailable. The error differs from DEPENDENCY_REQUEST_TIMEOUT, which describes waiting for inventory-api rather than acquiring a database connection.",
+              "service": "order-api",
+              "document_type": "runbook",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "114792d0295c37503a63d7ac2b38fab7ce3509dbdcbba9659bb9db02eb593aeb",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 2,
+            "scores": {
+              "dense": 0.39059978723526
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-8eb6f00c104ca799f19afdbf",
+              "document_id": "rb-dependency-timeouts",
+              "title": "Inventory dependency timeout runbook (synthetic)",
+              "section": "Distinguishing checks",
+              "text": "Inventory dependency timeout runbook (synthetic) | Distinguishing checks\nDEPENDENCY_REQUEST_TIMEOUT means the order-api inventory client exceeded its 1500 ms request deadline. Inspect dependency_name, upstream_status, inventory_request_ms and trace spans for the same request_id and time window. A missing upstream_status can mean no response was received before the deadline; it does not establish whether inventory-api completed the operation. Compare database pool metrics separately: DB_POOL_ACQUIRE_TIMEOUT indicates waiting for a database slot, not an inventory response.",
+              "service": "order-api",
+              "document_type": "runbook",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "2c09561c0a7cfd997d279bebbde059d592ea0e1ed29bd3b3360d221650df23b8",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 3,
+            "scores": {
+              "dense": 0.38524025678634644
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-b558d4a54b99f92199c0a0f0",
+              "document_id": "rb-db-pool",
+              "title": "Database connection-pool exhaustion runbook (synthetic)",
+              "section": "Follow-up evidence",
+              "text": "Database connection-pool exhaustion runbook (synthetic) | Follow-up evidence\nInspect active and long-running transaction durations, connection checkout duration and recent request concurrency. Correlate slow inventory calls with long checkouts to test whether a code path holds a connection while waiting on a dependency. The intended request path calls inventory-api before acquiring a database connection. A connection leak, long transaction, or burst of concurrency can produce similar symptoms; request traces and pool metrics are needed to distinguish them.",
+              "service": "order-api",
+              "document_type": "runbook",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "c31c2d0f670addd94220a37c75a2b31b85c2d1168288430850de98c3ebe20386",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 4,
+            "scores": {
+              "dense": 0.3787888288497925
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-0f45ebfa20d4d867d43eff2a",
+              "document_id": "guide-telemetry",
+              "title": "Telemetry field guide (synthetic)",
+              "section": "Dependency fields",
+              "text": "Telemetry field guide (synthetic) | Dependency fields\ninventory_request_ms measures elapsed client time for an inventory request. dependency_name identifies the upstream. upstream_status is the received HTTP status when available; it may be absent on a timeout. Inspect connection-establishment and response-wait spans separately. The corpus documents field meanings but includes no current field values.",
+              "service": "order-api",
+              "document_type": "guide",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "a383851493654564ab2b295c309ee88bb2327ca3e2f72712f386c9a0119af680",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 5,
+            "scores": {
+              "dense": 0.3780459761619568
+            }
+          }
+        ],
+        "selected_evidence": [
+          {
+            "chunk": {
+              "chunk_id": "c-86a311dbd0dd4b58d0c0fe02",
+              "document_id": "guide-telemetry",
+              "title": "Telemetry field guide (synthetic)",
+              "section": "Correlation and pool fields",
+              "text": "Telemetry field guide (synthetic) | Correlation and pool fields\nrequest_id identifies a caller request; trace_id connects its spans. Compare signals in the same time window and process. db_pool_in_use is the number of checked-out connections in one process; compare against 20 for the current revision. db_pool_waiters counts pending acquisitions. db_pool_acquire_ms measures time spent waiting for a slot; it is not SQL execution duration.",
+              "service": "order-api",
+              "document_type": "guide",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "7e1cfd323ae4b05ce7e189b77557654e8a47ed2a2cf0528012c090ad78d7fad2",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 1,
+            "scores": {
+              "dense": 0.4385170340538025
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-8b07e11e14a4069f84d9dc0f",
+              "document_id": "rb-db-pool",
+              "title": "Database connection-pool exhaustion runbook (synthetic)",
+              "section": "Distinguishing checks",
+              "text": "Database connection-pool exhaustion runbook (synthetic) | Distinguishing checks\nDB_POOL_ACQUIRE_TIMEOUT means order-api waited 500 ms for a pool slot. Compare db_pool_in_use with the per-process limit of 20, db_pool_waiters, and db_pool_acquire_ms for the same process and time window. A full pool with waiting requests supports investigating pool contention; it does not prove that PostgreSQL itself is unavailable. The error differs from DEPENDENCY_REQUEST_TIMEOUT, which describes waiting for inventory-api rather than acquiring a database connection.",
+              "service": "order-api",
+              "document_type": "runbook",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "114792d0295c37503a63d7ac2b38fab7ce3509dbdcbba9659bb9db02eb593aeb",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 2,
+            "scores": {
+              "dense": 0.39059978723526
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-8eb6f00c104ca799f19afdbf",
+              "document_id": "rb-dependency-timeouts",
+              "title": "Inventory dependency timeout runbook (synthetic)",
+              "section": "Distinguishing checks",
+              "text": "Inventory dependency timeout runbook (synthetic) | Distinguishing checks\nDEPENDENCY_REQUEST_TIMEOUT means the order-api inventory client exceeded its 1500 ms request deadline. Inspect dependency_name, upstream_status, inventory_request_ms and trace spans for the same request_id and time window. A missing upstream_status can mean no response was received before the deadline; it does not establish whether inventory-api completed the operation. Compare database pool metrics separately: DB_POOL_ACQUIRE_TIMEOUT indicates waiting for a database slot, not an inventory response.",
+              "service": "order-api",
+              "document_type": "runbook",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "2c09561c0a7cfd997d279bebbde059d592ea0e1ed29bd3b3360d221650df23b8",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 3,
+            "scores": {
+              "dense": 0.38524025678634644
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-b558d4a54b99f92199c0a0f0",
+              "document_id": "rb-db-pool",
+              "title": "Database connection-pool exhaustion runbook (synthetic)",
+              "section": "Follow-up evidence",
+              "text": "Database connection-pool exhaustion runbook (synthetic) | Follow-up evidence\nInspect active and long-running transaction durations, connection checkout duration and recent request concurrency. Correlate slow inventory calls with long checkouts to test whether a code path holds a connection while waiting on a dependency. The intended request path calls inventory-api before acquiring a database connection. A connection leak, long transaction, or burst of concurrency can produce similar symptoms; request traces and pool metrics are needed to distinguish them.",
+              "service": "order-api",
+              "document_type": "runbook",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "c31c2d0f670addd94220a37c75a2b31b85c2d1168288430850de98c3ebe20386",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 4,
+            "scores": {
+              "dense": 0.3787888288497925
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-0f45ebfa20d4d867d43eff2a",
+              "document_id": "guide-telemetry",
+              "title": "Telemetry field guide (synthetic)",
+              "section": "Dependency fields",
+              "text": "Telemetry field guide (synthetic) | Dependency fields\ninventory_request_ms measures elapsed client time for an inventory request. dependency_name identifies the upstream. upstream_status is the received HTTP status when available; it may be absent on a timeout. Inspect connection-establishment and response-wait spans separately. The corpus documents field meanings but includes no current field values.",
+              "service": "order-api",
+              "document_type": "guide",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "a383851493654564ab2b295c309ee88bb2327ca3e2f72712f386c9a0119af680",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 5,
+            "scores": {
+              "dense": 0.3780459761619568
+            }
+          }
+        ],
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "usage": {
+          "input_tokens": 1115,
+          "output_tokens": 186,
+          "reasoning_tokens": null,
+          "estimated_usd": "0",
+          "calls": 1
+        },
+        "timings": {
+          "prepare_request": 2.0917010260745883e-05,
+          "prepare_queries": 3.91600769944489e-06,
+          "retrieve": 0.44300412500160746,
+          "select_evidence": 1.129199517890811e-05,
+          "generate": 1.0092306250007823,
+          "validate": 0.001476415985962376
+        },
+        "errors": [],
+        "validation_error": null,
+        "cache_hit": false,
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0"
+      },
+      "manual_review": {
+        "reviewer": "assistant source review",
+        "claim_support": "supported",
+        "coverage": "incomplete",
+        "notes": "Cited claim is supported, but answer still omits request_id, trace_id and requested telemetry field distinctions despite their presence in selected evidence. Incomplete."
+      }
+    },
+    {
+      "case": {
+        "id": "q10",
+        "split": "dev",
+        "question": "What is the confirmed root cause of our live incident right now?",
+        "filters": {},
+        "expected_status": "insufficient_evidence",
+        "expected_sources": [],
+        "expected_points": [],
+        "expected_clarification": [
+          "current observations are unavailable"
+        ]
+      },
+      "retrieval": [
+        {
+          "chunk": {
+            "chunk_id": "c-67cbe5e6fdbf861dc79e9e44",
+            "document_id": "guide-triage",
+            "title": "Ambiguous symptom triage guide (synthetic)",
+            "section": "Evidence needed for a live cause",
+            "text": "Ambiguous symptom triage guide (synthetic) | Evidence needed for a live cause\nA current root cause requires current traces, metrics, deployment/configuration changes and dependency-side observations. This synthetic corpus supplies none of those live observations. State that the current cause is unknown and provide only documented investigative checks; do not state that a past incident is happening again.",
+            "service": "order-api",
+            "document_type": "guide",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "af18915560559f540dd1c8ed4aa814d84e6de6fffdb790253932e76a8eae04d8",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 1,
+          "scores": {
+            "dense": 0.41141122579574585
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-13ef8e89d25d1e39e1b0a0ce",
+            "document_id": "incident-dependency-timeouts",
+            "title": "Inventory path latency incident (synthetic)",
+            "section": "Findings and scope",
+            "text": "Inventory path latency incident (synthetic) | Findings and scope\nFor this historical event, the investigation attributed the delays to the changed network route. The client deadline was 1500 ms. Operators correlated caller spans with the routing change before reverting it. No evidence in this report establishes the cause of today's timeout, and a timeout alone cannot identify network routing as the cause. No automatic stock-reservation retry was introduced.",
+            "service": "order-api",
+            "document_type": "incident",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "f833a0e1f3cbaaa1cb35c6c3bd4f80389ee136bab4364882191adc9c7f50b5b9",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 2,
+          "scores": {
+            "dense": 0.32729360461235046
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-baae5073193928aab9317093",
+            "document_id": "ref-config",
+            "title": "Current configuration reference (synthetic)",
+            "section": "Historical comparison",
+            "text": "Current configuration reference (synthetic) | Historical comparison\nThe 2026-09-04 pool incident involved a historical per-process pool limit of 12. The current limit of 20 came from a separate capacity review. The incident correction was acquiring a connection after the inventory request, not a blanket recommendation to enlarge pools. Always compare the revision and process scope before treating historical configuration as current.",
+            "service": "order-api",
+            "document_type": "reference",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "86313cb4cb7561b72131198f0ad0cd1079f2f5a90cbb362e8d77e0ba08beb2c9",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 3,
+          "scores": {
+            "dense": 0.23946228623390198
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-b461dee17767deb930d12f29",
+            "document_id": "incident-dependency-timeouts",
+            "title": "Inventory path latency incident (synthetic)",
+            "section": "Timeline",
+            "text": "Inventory path latency incident (synthetic) | Timeline\nHistorical synthetic incident on 2026-10-02, all times UTC. At 14:00 inventory request latency increased after a network routing change. At 14:06 dependency spans showed long connection-establishment time while database pool acquisition remained normal. The routing change was reverted at 14:12. By 14:20 inventory request durations returned to baseline.",
+            "service": "order-api",
+            "document_type": "incident",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "69acccd8f82aa34d08b88982d3661084b5af494a720a6485c87bbec58351d459",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 4,
+          "scores": {
+            "dense": 0.2210063487291336
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-2e80e36841419b2f09a3039b",
+            "document_id": "incident-db-pool",
+            "title": "Pool checkout regression incident (synthetic)",
+            "section": "Findings and scope",
+            "text": "Pool checkout regression incident (synthetic) | Findings and scope\nThe affected revision used 12 connections per process. The confirmed finding for this historical incident was a code path holding database connections across inventory calls; it was not proof that PostgreSQL capacity was exhausted. The corrective change moved connection acquisition after the inventory operation and added a regression test. The current revision uses 20 connections after a separate capacity review; increasing the pool was not the documented incident fix. This historical finding does not diagnose a new event.",
+            "service": "order-api",
+            "document_type": "incident",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "952e1242632cd0dd5ac9260cbf03b50b6b0393f95c1e56cc2cb2501022dc099f",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 5,
+          "scores": {
+            "dense": 0.2206886112689972
+          }
+        }
+      ],
+      "selected_evidence": [
+        {
+          "chunk": {
+            "chunk_id": "c-67cbe5e6fdbf861dc79e9e44",
+            "document_id": "guide-triage",
+            "title": "Ambiguous symptom triage guide (synthetic)",
+            "section": "Evidence needed for a live cause",
+            "text": "Ambiguous symptom triage guide (synthetic) | Evidence needed for a live cause\nA current root cause requires current traces, metrics, deployment/configuration changes and dependency-side observations. This synthetic corpus supplies none of those live observations. State that the current cause is unknown and provide only documented investigative checks; do not state that a past incident is happening again.",
+            "service": "order-api",
+            "document_type": "guide",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "af18915560559f540dd1c8ed4aa814d84e6de6fffdb790253932e76a8eae04d8",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 1,
+          "scores": {
+            "dense": 0.41141122579574585
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-13ef8e89d25d1e39e1b0a0ce",
+            "document_id": "incident-dependency-timeouts",
+            "title": "Inventory path latency incident (synthetic)",
+            "section": "Findings and scope",
+            "text": "Inventory path latency incident (synthetic) | Findings and scope\nFor this historical event, the investigation attributed the delays to the changed network route. The client deadline was 1500 ms. Operators correlated caller spans with the routing change before reverting it. No evidence in this report establishes the cause of today's timeout, and a timeout alone cannot identify network routing as the cause. No automatic stock-reservation retry was introduced.",
+            "service": "order-api",
+            "document_type": "incident",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "f833a0e1f3cbaaa1cb35c6c3bd4f80389ee136bab4364882191adc9c7f50b5b9",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 2,
+          "scores": {
+            "dense": 0.32729360461235046
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-baae5073193928aab9317093",
+            "document_id": "ref-config",
+            "title": "Current configuration reference (synthetic)",
+            "section": "Historical comparison",
+            "text": "Current configuration reference (synthetic) | Historical comparison\nThe 2026-09-04 pool incident involved a historical per-process pool limit of 12. The current limit of 20 came from a separate capacity review. The incident correction was acquiring a connection after the inventory request, not a blanket recommendation to enlarge pools. Always compare the revision and process scope before treating historical configuration as current.",
+            "service": "order-api",
+            "document_type": "reference",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "86313cb4cb7561b72131198f0ad0cd1079f2f5a90cbb362e8d77e0ba08beb2c9",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 3,
+          "scores": {
+            "dense": 0.23946228623390198
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-b461dee17767deb930d12f29",
+            "document_id": "incident-dependency-timeouts",
+            "title": "Inventory path latency incident (synthetic)",
+            "section": "Timeline",
+            "text": "Inventory path latency incident (synthetic) | Timeline\nHistorical synthetic incident on 2026-10-02, all times UTC. At 14:00 inventory request latency increased after a network routing change. At 14:06 dependency spans showed long connection-establishment time while database pool acquisition remained normal. The routing change was reverted at 14:12. By 14:20 inventory request durations returned to baseline.",
+            "service": "order-api",
+            "document_type": "incident",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "69acccd8f82aa34d08b88982d3661084b5af494a720a6485c87bbec58351d459",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 4,
+          "scores": {
+            "dense": 0.2210063487291336
+          }
+        },
+        {
+          "chunk": {
+            "chunk_id": "c-2e80e36841419b2f09a3039b",
+            "document_id": "incident-db-pool",
+            "title": "Pool checkout regression incident (synthetic)",
+            "section": "Findings and scope",
+            "text": "Pool checkout regression incident (synthetic) | Findings and scope\nThe affected revision used 12 connections per process. The confirmed finding for this historical incident was a code path holding database connections across inventory calls; it was not proof that PostgreSQL capacity was exhausted. The corrective change moved connection acquisition after the inventory operation and added a regression test. The current revision uses 20 connections after a separate capacity review; increasing the pool was not the documented incident fix. This historical finding does not diagnose a new event.",
+            "service": "order-api",
+            "document_type": "incident",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "952e1242632cd0dd5ac9260cbf03b50b6b0393f95c1e56cc2cb2501022dc099f",
+            "environment": null
+          },
+          "method": "dense",
+          "rank": 5,
+          "scores": {
+            "dense": 0.2206886112689972
+          }
+        }
+      ],
+      "retrieval_seconds": 0.16032616700977087,
+      "retrieval_error": null,
+      "hit_at_5": null,
+      "evidence_recall_at_5": null,
+      "first_relevant_rank": null,
+      "answer": {
+        "status": "insufficient_evidence",
+        "answer": {
+          "status": "insufficient_evidence",
+          "documented_evidence": "The current root cause of the live incident is unknown because a current root cause requires current traces, metrics, deployment/configuration changes, and dependency-side observations, none of which are supplied by this corpus [c-67cbe5e6fdbf861dc79e9e44].",
+          "recommended_checks": "An engineer would need to examine current traces, current metrics, deployment or configuration changes, and dependency-side observations [c-67cbe5e6fdbf861dc79e9e44].",
+          "missing_information": [
+            "Current traces",
+            "Current metrics",
+            "Deployment or configuration changes",
+            "Dependency-side observations"
+          ],
+          "citations": [
+            "c-67cbe5e6fdbf861dc79e9e44"
+          ]
+        },
+        "sources": [
+          {
+            "chunk_id": "c-67cbe5e6fdbf861dc79e9e44",
+            "document_id": "guide-triage",
+            "title": "Ambiguous symptom triage guide (synthetic)",
+            "section": "Evidence needed for a live cause",
+            "text": "Ambiguous symptom triage guide (synthetic) | Evidence needed for a live cause\nA current root cause requires current traces, metrics, deployment/configuration changes and dependency-side observations. This synthetic corpus supplies none of those live observations. State that the current cause is unknown and provide only documented investigative checks; do not state that a past incident is happening again.",
+            "service": "order-api",
+            "document_type": "guide",
+            "revision": "2026-10-18",
+            "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+            "content_hash": "af18915560559f540dd1c8ed4aa814d84e6de6fffdb790253932e76a8eae04d8",
+            "environment": null
+          }
+        ],
+        "retrieved_candidates": [
+          {
+            "chunk": {
+              "chunk_id": "c-67cbe5e6fdbf861dc79e9e44",
+              "document_id": "guide-triage",
+              "title": "Ambiguous symptom triage guide (synthetic)",
+              "section": "Evidence needed for a live cause",
+              "text": "Ambiguous symptom triage guide (synthetic) | Evidence needed for a live cause\nA current root cause requires current traces, metrics, deployment/configuration changes and dependency-side observations. This synthetic corpus supplies none of those live observations. State that the current cause is unknown and provide only documented investigative checks; do not state that a past incident is happening again.",
+              "service": "order-api",
+              "document_type": "guide",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "af18915560559f540dd1c8ed4aa814d84e6de6fffdb790253932e76a8eae04d8",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 1,
+            "scores": {
+              "dense": 0.41141122579574585
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-13ef8e89d25d1e39e1b0a0ce",
+              "document_id": "incident-dependency-timeouts",
+              "title": "Inventory path latency incident (synthetic)",
+              "section": "Findings and scope",
+              "text": "Inventory path latency incident (synthetic) | Findings and scope\nFor this historical event, the investigation attributed the delays to the changed network route. The client deadline was 1500 ms. Operators correlated caller spans with the routing change before reverting it. No evidence in this report establishes the cause of today's timeout, and a timeout alone cannot identify network routing as the cause. No automatic stock-reservation retry was introduced.",
+              "service": "order-api",
+              "document_type": "incident",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "f833a0e1f3cbaaa1cb35c6c3bd4f80389ee136bab4364882191adc9c7f50b5b9",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 2,
+            "scores": {
+              "dense": 0.32729360461235046
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-baae5073193928aab9317093",
+              "document_id": "ref-config",
+              "title": "Current configuration reference (synthetic)",
+              "section": "Historical comparison",
+              "text": "Current configuration reference (synthetic) | Historical comparison\nThe 2026-09-04 pool incident involved a historical per-process pool limit of 12. The current limit of 20 came from a separate capacity review. The incident correction was acquiring a connection after the inventory request, not a blanket recommendation to enlarge pools. Always compare the revision and process scope before treating historical configuration as current.",
+              "service": "order-api",
+              "document_type": "reference",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "86313cb4cb7561b72131198f0ad0cd1079f2f5a90cbb362e8d77e0ba08beb2c9",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 3,
+            "scores": {
+              "dense": 0.23946228623390198
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-b461dee17767deb930d12f29",
+              "document_id": "incident-dependency-timeouts",
+              "title": "Inventory path latency incident (synthetic)",
+              "section": "Timeline",
+              "text": "Inventory path latency incident (synthetic) | Timeline\nHistorical synthetic incident on 2026-10-02, all times UTC. At 14:00 inventory request latency increased after a network routing change. At 14:06 dependency spans showed long connection-establishment time while database pool acquisition remained normal. The routing change was reverted at 14:12. By 14:20 inventory request durations returned to baseline.",
+              "service": "order-api",
+              "document_type": "incident",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "69acccd8f82aa34d08b88982d3661084b5af494a720a6485c87bbec58351d459",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 4,
+            "scores": {
+              "dense": 0.2210063487291336
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-2e80e36841419b2f09a3039b",
+              "document_id": "incident-db-pool",
+              "title": "Pool checkout regression incident (synthetic)",
+              "section": "Findings and scope",
+              "text": "Pool checkout regression incident (synthetic) | Findings and scope\nThe affected revision used 12 connections per process. The confirmed finding for this historical incident was a code path holding database connections across inventory calls; it was not proof that PostgreSQL capacity was exhausted. The corrective change moved connection acquisition after the inventory operation and added a regression test. The current revision uses 20 connections after a separate capacity review; increasing the pool was not the documented incident fix. This historical finding does not diagnose a new event.",
+              "service": "order-api",
+              "document_type": "incident",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "952e1242632cd0dd5ac9260cbf03b50b6b0393f95c1e56cc2cb2501022dc099f",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 5,
+            "scores": {
+              "dense": 0.2206886112689972
+            }
+          }
+        ],
+        "selected_evidence": [
+          {
+            "chunk": {
+              "chunk_id": "c-67cbe5e6fdbf861dc79e9e44",
+              "document_id": "guide-triage",
+              "title": "Ambiguous symptom triage guide (synthetic)",
+              "section": "Evidence needed for a live cause",
+              "text": "Ambiguous symptom triage guide (synthetic) | Evidence needed for a live cause\nA current root cause requires current traces, metrics, deployment/configuration changes and dependency-side observations. This synthetic corpus supplies none of those live observations. State that the current cause is unknown and provide only documented investigative checks; do not state that a past incident is happening again.",
+              "service": "order-api",
+              "document_type": "guide",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "af18915560559f540dd1c8ed4aa814d84e6de6fffdb790253932e76a8eae04d8",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 1,
+            "scores": {
+              "dense": 0.41141122579574585
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-13ef8e89d25d1e39e1b0a0ce",
+              "document_id": "incident-dependency-timeouts",
+              "title": "Inventory path latency incident (synthetic)",
+              "section": "Findings and scope",
+              "text": "Inventory path latency incident (synthetic) | Findings and scope\nFor this historical event, the investigation attributed the delays to the changed network route. The client deadline was 1500 ms. Operators correlated caller spans with the routing change before reverting it. No evidence in this report establishes the cause of today's timeout, and a timeout alone cannot identify network routing as the cause. No automatic stock-reservation retry was introduced.",
+              "service": "order-api",
+              "document_type": "incident",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "f833a0e1f3cbaaa1cb35c6c3bd4f80389ee136bab4364882191adc9c7f50b5b9",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 2,
+            "scores": {
+              "dense": 0.32729360461235046
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-baae5073193928aab9317093",
+              "document_id": "ref-config",
+              "title": "Current configuration reference (synthetic)",
+              "section": "Historical comparison",
+              "text": "Current configuration reference (synthetic) | Historical comparison\nThe 2026-09-04 pool incident involved a historical per-process pool limit of 12. The current limit of 20 came from a separate capacity review. The incident correction was acquiring a connection after the inventory request, not a blanket recommendation to enlarge pools. Always compare the revision and process scope before treating historical configuration as current.",
+              "service": "order-api",
+              "document_type": "reference",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "86313cb4cb7561b72131198f0ad0cd1079f2f5a90cbb362e8d77e0ba08beb2c9",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 3,
+            "scores": {
+              "dense": 0.23946228623390198
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-b461dee17767deb930d12f29",
+              "document_id": "incident-dependency-timeouts",
+              "title": "Inventory path latency incident (synthetic)",
+              "section": "Timeline",
+              "text": "Inventory path latency incident (synthetic) | Timeline\nHistorical synthetic incident on 2026-10-02, all times UTC. At 14:00 inventory request latency increased after a network routing change. At 14:06 dependency spans showed long connection-establishment time while database pool acquisition remained normal. The routing change was reverted at 14:12. By 14:20 inventory request durations returned to baseline.",
+              "service": "order-api",
+              "document_type": "incident",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "69acccd8f82aa34d08b88982d3661084b5af494a720a6485c87bbec58351d459",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 4,
+            "scores": {
+              "dense": 0.2210063487291336
+            }
+          },
+          {
+            "chunk": {
+              "chunk_id": "c-2e80e36841419b2f09a3039b",
+              "document_id": "incident-db-pool",
+              "title": "Pool checkout regression incident (synthetic)",
+              "section": "Findings and scope",
+              "text": "Pool checkout regression incident (synthetic) | Findings and scope\nThe affected revision used 12 connections per process. The confirmed finding for this historical incident was a code path holding database connections across inventory calls; it was not proof that PostgreSQL capacity was exhausted. The corrective change moved connection acquisition after the inventory operation and added a regression test. The current revision uses 20 connections after a separate capacity review; increasing the pool was not the documented incident fix. This historical finding does not diagnose a new event.",
+              "service": "order-api",
+              "document_type": "incident",
+              "revision": "2026-10-18",
+              "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+              "content_hash": "952e1242632cd0dd5ac9260cbf03b50b6b0393f95c1e56cc2cb2501022dc099f",
+              "environment": null
+            },
+            "method": "dense",
+            "rank": 5,
+            "scores": {
+              "dense": 0.2206886112689972
+            }
+          }
+        ],
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "usage": {
+          "input_tokens": 1037,
+          "output_tokens": 219,
+          "reasoning_tokens": null,
+          "estimated_usd": "0",
+          "calls": 1
+        },
+        "timings": {
+          "prepare_request": 1.1333002476021647e-05,
+          "prepare_queries": 3.6659766919910908e-06,
+          "retrieve": 0.16032616700977087,
+          "select_evidence": 4.375004209578037e-06,
+          "generate": 1.3274862079997547,
+          "validate": 0.0012195409799460322
+        },
+        "errors": [],
+        "validation_error": null,
+        "cache_hit": false,
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0"
+      },
+      "manual_review": {
+        "reviewer": "assistant source review",
+        "claim_support": "supported",
+        "coverage": "complete",
+        "notes": "Appropriate insufficient_evidence status; current cause remains unknown, source supports that boundary, and missing observations are explicitly listed."
+      }
+    }
+  ],
+  "metrics": {
+    "answerable_cases": 2,
+    "hit_at_5": 1.0,
+    "macro_evidence_recall_at_5": 1.0,
+    "recorded_cases": 3,
+    "manual_grounding": "reviewed; see each case; structural validity does not imply coverage"
+  },
+  "scope_note": "Targeted development follow-up only: q06, q08, q10. Does not replace the 15-case baseline or establish a new full-suite success rate."
+}

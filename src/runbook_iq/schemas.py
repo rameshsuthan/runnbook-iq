@@ -39,11 +39,11 @@ class Usage(Record):
 
 
 class GeneratedAnswer(Record):
-    status: Literal['answered', 'insufficient_evidence']
-    documented_evidence: str
-    recommended_checks: str
-    missing_information: list[str]
-    citations: list[str]
+    status: Literal['answered', 'insufficient_evidence'] = Field(description='Use insufficient_evidence if the requested fact or live cause cannot be established from these passages.')
+    documented_evidence: str = Field(description='Address the requested facts directly. Every factual sentence must include inline [chunk_id] references using exact evidence IDs.')
+    recommended_checks: str = Field(description='Documented checks with inline [chunk_id] references in this text. Nonempty for answered responses.')
+    missing_information: list[str] = Field(description='Specific unavailable facts or observations; required when status is insufficient_evidence.')
+    citations: list[str] = Field(description='Unique exact chunk IDs used inline in documented_evidence, recommended_checks or missing_information. This array does not replace inline references.')
 
 
 class ProviderResponse(Record):
@@ -63,5 +63,6 @@ class RunResult(Record):
     usage: Usage = Field(default_factory=Usage)
     timings: dict[str, float] = Field(default_factory=dict)
     errors: list[str] = Field(default_factory=list)
+    validation_error: Literal['incomplete_response','invalid_schema','duplicate_citations','unknown_citation','missing_inline_citations','citation_mismatch','missing_answer_sections','missing_information'] | None = None
     cache_hit: bool = False
     corpus_version: str = ''

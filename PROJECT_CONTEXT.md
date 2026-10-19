@@ -40,3 +40,17 @@ Read this file, `PROGRESS.md`, the handoff and current implementation before con
 
 - Final review fixed fenced Markdown preservation (splitter sections-v2), destination-bound ingestion and single-search answer evaluation. Existing live corpus/results retain their original version; rebuilding changes the version and requires explicit ingestion.
 - Current baseline quality is limited: 7/15 validation failures, one incomplete answer and one incorrect abstention status. Preserve these observations; the next quality work is targeted diagnosis, not Phase 2 implementation.
+
+## Phase 1 quality follow-up — 2026-10-18
+
+- User approved retaining the baseline history and proceeding. Existing commits
+  `82de23b` and `40150f4` remain intact; no remote push was requested.
+- A live q06 diagnostic demonstrated missing inline citations despite a populated
+  source-ID array. Validation remains strict and now emits safe error categories.
+- `ask --save-invalid-response` explicitly opts into private local failed-response
+  diagnostics. Default results exclude raw rejected text. No retry/repair loop.
+- Prompt `incident-evidence-v2` plus schema descriptions reinforce citation,
+  completeness and abstention instructions; cache versions change with them.
+- Three-case development follow-up: q06 citation/cause answer and q10 abstention
+  improved; q08 remains incomplete despite relevant selected evidence. This is
+  not a replacement full baseline. Next quality issue: use of retrieved fields.

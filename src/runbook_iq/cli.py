@@ -26,10 +26,28 @@ def compose(settings):
     return retriever,graph
 
 
-def invoke_question(graph,question,filters):
+def invoke_question(graph,question,filters,*,diagnostics_dir=None):
     from langsmith import tracing_context
     with tracing_context(enabled=False):
-        return graph.invoke({'question':question,'filters':filters},config={'recursion_limit':12})['result']
+        state=graph.invoke({'question':question,'filters':filters},config={'recursion_limit':12})
+    result=state['result']
+    if diagnostics_dir is not None and result.status=='invalid_output' and 'response' in state:
+        import sys
+        import uuid
+        record={'question':question,'provider':result.provider,'model':result.model,
+                'corpus_version':result.corpus_version,'validation_error':result.validation_error,
+                'response':state['response'].model_dump(mode='json'),
+                'selected_evidence':[c.model_dump(mode='json') for c in state.get('selected_evidence',[])]}
+        try:
+            directory=Path(diagnostics_dir)
+            directory.mkdir(parents=True,exist_ok=True,mode=0o700)
+            path=directory/f'{uuid.uuid4().hex}.json'
+            with open(path,'x',opener=lambda name,flags:os.open(name,flags,0o600)) as stream:
+                json.dump(record,stream,indent=2)
+            print(f'Invalid response saved locally: {path}',file=sys.stderr)
+        except OSError:
+            print('Could not save local diagnostic; original result is unchanged.',file=sys.stderr)
+    return result
 
 
 def output(value,path=None):
@@ -50,6 +68,7 @@ def main(argv=None):
     ingest=sub.add_parser('ingest');ingest.add_argument('--dry-run',action='store_true')
     for cmd in ('retrieve','ask'):
         p=sub.add_parser(cmd);p.add_argument('--question',required=True);p.add_argument('--service');p.add_argument('--environment');p.add_argument('--output',type=Path)
+        if cmd=='ask':p.add_argument('--save-invalid-response',action='store_true',help='Opt in to private local raw-response/evidence files for validation failures')
     evaluation=sub.add_parser('evaluate');evaluation.add_argument('--mode',choices=['retrieval','answers'],required=True);evaluation.add_argument('--split',choices=['dev','heldout','all'],default='all');evaluation.add_argument('--output',type=Path,required=True);evaluation.add_argument('--pause-seconds',type=float,default=15)
     args=parser.parse_args(argv)
     try:
@@ -103,7 +122,7 @@ def main(argv=None):
         retriever,graph=compose(settings)
         if args.command=='retrieve':
             output([c.model_dump(mode='json') for c in retriever.search(args.question,filters)],args.output);return 0
-        result=invoke_question(graph,args.question,filters);output(result,args.output)
+        result=invoke_question(graph,args.question,filters,diagnostics_dir=settings.runtime_dir/'diagnostics' if args.save_invalid_response else None);output(result,args.output)
         return 0 if result.status in ('answered','insufficient_evidence') else 1
     except Exception as error:
         # Do not expose provider exceptions (URLs/headers may contain credentials).

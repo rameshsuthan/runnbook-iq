@@ -172,3 +172,23 @@ advanced retrieval or semantic verifier is implemented now.
 Generated results intentionally retained under `eval/results/` contain synthetic
 content and sanitized configuration. Review reports before sharing them. `.env` and
 runtime state are ignored. GitHub remote configuration alone does not publish files.
+
+## Diagnosing a rejected answer
+
+An `invalid_output` result now includes a safe `validation_error` category.
+For the synthetic corpus, opt in to retaining the rejected response locally:
+
+```sh
+uv run runbook-iq ask --question 'What caused the September 4 pool incident and what corrected it?' --save-invalid-response
+```
+
+Only a validation failure writes a diagnostic under `.runbook_iq/diagnostics/`.
+Files are private (mode 0600), ignored by Git, and contain the question, rejected
+text and selected evidence. They do not include clients, request headers or
+credential variables. Ordinary calls do not save rejected text. Treat these files
+as private if you later supply private questions/documents; inspect before sharing.
+The flag does not retry or repair an answer.
+
+The v2 prompt passed citation/status checks on a three-case development follow-up;
+the telemetry answer remained incomplete. See the addendum in
+`eval/results/phase1-review.md`. The original 15-case baseline is unchanged.

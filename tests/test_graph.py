@@ -61,3 +61,18 @@ def test_failure_paths(tmp_path,failure,expected):
 def test_empty_question_no_calls(tmp_path):
     p=Provider();_,state=run(tmp_path,p,Retriever(evidence()),question='  ')
     assert state['result'].status=='invalid_request' and p.calls==0
+
+
+def test_missing_inline_citations_are_reported_without_response_body(tmp_path):
+    class MissingInline(Provider):
+        def generate(self,q,evidence):
+            self.calls+=1
+            return ProviderResponse(text=json.dumps({'status':'answered',
+                'documented_evidence':'private-sentinel','recommended_checks':'Check metrics',
+                'missing_information':[], 'citations':['c-v1']}),usage=Usage(calls=1))
+    provider=MissingInline();_,state=run(tmp_path,provider,Retriever(evidence()))
+    result=state['result']
+    assert result.status=='invalid_output' and provider.calls==1
+    assert getattr(result,'validation_error',None)=='missing_inline_citations'
+    assert 'private-sentinel' not in result.model_dump_json()
+    assert state['path'][-1]=='validate'

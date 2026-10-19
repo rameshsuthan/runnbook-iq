@@ -4,7 +4,7 @@ from typing import TypedDict
 from langgraph.graph import StateGraph, START, END
 from .budget import BudgetExceeded
 from .cache import answer_cache_key
-from .generation import validate_answer
+from .generation import AnswerValidationError, validate_answer
 from .schemas import Candidate, GeneratedAnswer, ProviderResponse, RunResult, Usage
 
 class GraphState(TypedDict,total=False):
@@ -90,6 +90,10 @@ def build_graph(retriever,provider,cache,settings,corpus_version):
             result.sources=[sources[i] for i in answer.citations]
             cache.put(state['cache_key'],result)
             return {'result':result,'citations':answer.citations}
+        except AnswerValidationError as error:
+            result=terminal('invalid_output',f'Answer validation failed: {error.code}. No repair attempted.',response.usage)
+            result.validation_error=error.code
+            return {'result':result}
         except Exception:return {'result':terminal('invalid_output','Answer schema/citation validation failed; no repair attempted',response.usage)}
     graph=StateGraph(GraphState)
     nodes={'prepare_request':prepare,'prepare_queries':queries,'retrieve':retrieve,'select_evidence':select,'fallback':fallback,'generate':generate,'validate':validate}
