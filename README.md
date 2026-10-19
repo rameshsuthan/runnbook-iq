@@ -9,6 +9,9 @@ establish a current root cause, or execute remediation.
 
 ## Architecture and demo materials
 
+- [Submission report in Word](docs/submission/RunbookIQ-Project-Submission.docx):
+  architecture, flows, design decisions, prompts, real application screenshots,
+  all fifteen evaluation cases and reproduction steps.
 - [Complete architecture guide](docs/architecture.md): system, ingestion, LangGraph
   control flow, hybrid retrieval, cache sequence, data contracts and usage boundaries.
 - [Recording visuals](docs/diagrams/index.html): five local SVG/PNG diagrams; editable

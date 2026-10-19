@@ -1,0 +1,37 @@
+{
+  "capture_date": "2026-10-19",
+  "source": "Actual unmodified local Streamlit app in a user-authorized temporary browser",
+  "question_submissions": 2,
+  "walkthrough_only": true,
+  "chat_calls": 1,
+  "input_tokens": 1129,
+  "output_tokens": 541,
+  "estimated_chat_usd": "0",
+  "pinecone_units": {
+    "embed_total_tokens": 35,
+    "read_units": 2,
+    "rerank_units": 1
+  },
+  "screenshots": [
+    {
+      "path": "screenshots/01-question.png",
+      "sha256": "6dd031f04ced8ea29ad2155038ee8b73c92f7c46b73aa13ab31b740559293052"
+    },
+    {
+      "path": "screenshots/02-answer.png",
+      "sha256": "4d8f2fc45faf04618fb57611541b47ec57c305e509be0567e9b5302e6d4a653f"
+    },
+    {
+      "path": "screenshots/03-source.png",
+      "sha256": "b5a72687849ea476259687c6c2347d8ce3ef551fd8c7dad45060a4e3abc3bf06"
+    },
+    {
+      "path": "screenshots/04-inspection.png",
+      "sha256": "f305cafd892e7265bcd02ecef8b08cc79e59d1cc8fa44dff3ffde715a416f97c"
+    },
+    {
+      "path": "screenshots/05-abstention.png",
+      "sha256": "a06d36a8003b4e39c49f5b9f36330e758e73ba4b6164754eb615d753369eb1e7"
+    }
+  ]
+}

@@ -1,8 +1,28 @@
 # RunbookIQ progress
 
-## Current status — 2026-10-18
+## Main integration checkpoint — 2026-10-19
 
-M1 and the Phase 1 baseline are complete and published on `origin/phase-1` through `e15502e`. Phase 2 design is approved; its nine-task implementation plan is approved and Native execution is underway on `phase-2`. Gemini remains active; Nebius live verification is deferred. Latest application checkpoint remains prompt/schema v3, 63 passing tests at the prior verification, a full 15-case live report and a separate offline validation audit. Earlier sections are chronological history, not current blockers.
+User authorized consolidation and push to `main`. Fetched origin and verified
+that only `phase-1` and `phase-2` existed remotely, and that Phase 1 is an ancestor
+of Phase 2. Created `main` from Phase 2, preserving both milestone branches and
+their history. Added the submission report, builder, screenshots, provenance and
+documentation updates. Unrelated user-owned reference files and
+`eval/results/my-answer.json` remain local and untracked.
+
+Actual verification before integration: `.venv/bin/pytest -q` — 135 passed in
+1.49 seconds; `git diff --check` passed. No live provider requests or paid usage.
+Next action: verify the final main tree, commit and push `main`, then confirm the
+remote commit matches. Demo recording and external assignment submission remain
+pending; known evaluation limitations are unchanged.
+
+## Current status — 2026-10-19
+
+Phase1 and revised Phase2 implementation, evaluation and review are complete and
+published. Gemini remains active; Nebius is optional Phase3. Last engineering gate:
+135 tests passed. The requested18-page Word submission report and limited browser
+walkthrough are complete locally, with5 diagrams and5 real screenshots. Frozen
+evaluation failures remain disclosed. Video recording and external submission are
+pending. Earlier entries below are chronological history, not current blockers.
 
 ## Initial planning checkpoint — 2026-10-18
 
@@ -592,3 +612,51 @@ Next action: user rehearses and records the timed live walkthrough, checks audio
 legibility and <=5-minute duration, then publishes the video/Google Doc and submits.
 No video, Google Doc or submission has been created by the agent. Native app visual
 walkthrough and existing answer-quality issues remain outstanding.
+
+## Word submission report and browser walkthrough — 2026-10-19
+
+Created `docs/submission/RunbookIQ-Project-Submission.docx`:18 pages,5 architecture
+and flow diagrams,5 actual app screenshots, node contracts/conditional decisions,
+prompt/schema instructions, profile choices, usage/cache interpretation, all15
+frozen questions with observed outcomes, iterations, known failures and reproduction
+links. Read the supplied DOCX completely through OOXML text/tables and rendered it
+for visual reference; did not copy its branding assets, implementation or claims.
+Retained a reproducible document builder, source screenshots and their hash manifest.
+README links the report; no product code, config, dependency or frozen report changed.
+
+Native computer access was unavailable. User explicitly authorized a temporary
+browser, which captured the real local app. Two submissions only:
+
+- q03 in the existing dense session: `answered`, one new Gemini generation,
+  1129 input/541 output tokens, estimated chat USD0, one Pinecone read and19
+  embedding tokens, no repair. Expanded and visually checked the source passage.
+- q10 in a separate full Phase2 session: `insufficient_evidence`, expansion/answer
+  cache hits, zero new Gemini calls; one dense search (16 embedding tokens/one
+  read), one rerank unit, one effective query, no repair. Verified true feature
+  flags, actual answer and missing-information display. No ledger/cache reset,
+  ingestion or full evaluation rerun. Existing USD3/shared quota guards remained.
+
+Temporary browser and port8502 server were stopped; the original port8501 app
+was preserved. These limited browser observations supersede the prior entirely
+unperformed visual-walkthrough note, without claiming full browser regression QA.
+No credentials were printed or captured; application clients loaded keys normally.
+
+Actual document verification:
+- Built with bundled Python3.12/python-docx and rendered using packaged
+  `render_docx.py` and bundled LibreOffice. Final18 pages rendered successfully.
+- Visually inspected every page. Removed inherited title border, a blank page,
+  excess screenshot margins and a missing-font fallback. Re-rendered corrections;
+  page-image hashes confirmed unaffected pages were identical to inspected pages.
+-10 embedded images,11 tables; all15 exact questions present. No tracked changes,
+  comments or paragraph borders. Eight hyperlinks checked against repository
+  destinations. Credential-pattern scan of DOCX XML clear; screenshots inspected.
+- Packaged accessibility audit:0 high,0 medium,0 low findings.
+- Final DOCX SHA256:
+  `27d3d6cc32d78cffdca677214acdbdc6de1bdfa5faab5d69dd26813bc6f2d992`.
+- No full application tests rerun for this documentation-only change; last
+  engineering result remains135 passing tests. Frozen metrics are unchanged.
+
+No remaining document blocker. Next action: user reviews the Word report and
+records the prepared4:35 demo, then checks access and submits the chosen files/links.
+Video, Google Doc publication and assignment submission have not been performed.
+Known q08/q02 answer-quality issues and q04/q11 status disagreements remain visible.

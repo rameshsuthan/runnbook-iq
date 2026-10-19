@@ -1,8 +1,15 @@
 # RunbookIQ project context
 
-Updated: 2026-10-18 (America/Chicago).
+Updated: 2026-10-19 (America/Chicago).
 
 ## Current continuation
+
+The user authorized consolidating and pushing all completed project work to `main`.
+Remote inspection on 2026-10-19 confirmed no existing `main`; it was created from
+`phase-2`, which includes the complete `phase-1` history. Milestone branches are
+retained. Submission materials are included; unrelated local reference documents
+and `eval/results/my-answer.json` remain untracked. Fresh integration verification:
+135 tests passed. Publishing `main` is the next action for this checkpoint.
 
 The user explicitly authorized pushing history and starting next steps. Phase 1
 through `e15502e` is published on `origin/phase-1`; remote SHA was verified.
@@ -22,9 +29,36 @@ Under the revised scope, Phase 2 implementation, evaluation, independent review
 and publication are complete. The last verified suite has 135 passing tests.
 Known answer-quality limitations remain: q08 falsely denies documented fields,
 q02 omits a caveat, and q04/q11 have conservative status disagreements. These are
-recorded follow-up issues, not hidden passing results. Native visual UI inspection
-and recording/submitting the <=5-minute assignment demo remain undone; the demo
-outline and project documentation are ready. Deployment is outside current scope.
+recorded follow-up issues, not hidden passing results. A limited real-browser UI
+walkthrough is now complete for the submission screenshots; this is not a full UI
+regression test. Recording/submitting the <=5-minute assignment demo remains undone.
+Deployment is outside current scope.
+
+## Word submission documentation
+
+The user requested a DOCX using the supplied Enterprise Policy document as a sample,
+without matching its format. `docs/submission/RunbookIQ-Project-Submission.docx`
+is an18-page report with5 architecture/flow diagrams,5 real application screenshots,
+node decisions, prompts,15 evaluation cases, known limitations and reproduction
+steps. Its builder and screenshot provenance are retained in `docs/submission/`.
+It documents our implementation; it does not borrow the sample's grading/checker
+loops or claim semantic validation. The frozen evaluations remain unchanged.
+
+Native computer permission was unavailable. The user explicitly authorized a
+temporary automated browser. Exactly two live UI submissions were made: q03 with
+the existing dense profile, and q10 with a separate full Phase2 session. q03 used
+one fresh Gemini call; q10 reused expansion and answer caches. Total observed
+walkthrough usage:1129 input/541 output chat tokens, estimated chat USD0;35 Pinecone
+embedding tokens,2 reads,1 rerank. The shared ledgers/caches were preserved. Both
+results are labeled separately from frozen evaluation totals. Temporary browser
+and server were stopped; the original user server was left running.
+
+The Word file was rendered and all18 pages visually inspected; layout corrections
+were re-rendered and unchanged pages verified by image hashes. No product code or
+dependencies changed. No new full test-suite or evaluation run is claimed; the
+last engineering suite remains135 passing tests. Next delivery step: review the
+Word report, record the prepared4:35 demo, then publish/submit the intended links.
+No video, remote Google Doc, or external submission was created by this task.
 
 ## Architecture and demo preparation
 
