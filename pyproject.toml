@@ -18,7 +18,10 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["pytest>=8,<10"]
+dev = [
+    "pytest>=8,<10",
+    "watchdog>=6.0.0",
+]
 
 [project.scripts]
 runbook-iq = "runbook_iq.cli:main"
