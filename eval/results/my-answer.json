@@ -1,0 +1,279 @@
+{
+  "status": "answered",
+  "answer": {
+    "status": "answered",
+    "documented_evidence": "A current root cause requires current traces, metrics, deployment/configuration changes, and dependency-side observations, which are not present in the corpus [c-67cbe5e6fdbf861dc79e9e44]. The current cause is unknown [c-67cbe5e6fdbf861dc79e9e44]. Runbooks document checks, not the state of a current incident [c-67a49c1588c143ac9862ccc4].",
+    "recommended_checks": "Gather current traces, metrics, deployment and configuration changes, dependency-side observations, affected process IDs, interval, pool metrics, transaction durations, and correlate errors by request_id and time window before comparing independent signals [c-67cbe5e6fdbf861dc79e9e44, c-67a49c1588c143ac9862ccc4, c-47d727617dcf9528ccbce2ea].",
+    "missing_information": [],
+    "citations": [
+      "c-67cbe5e6fdbf861dc79e9e44",
+      "c-67a49c1588c143ac9862ccc4",
+      "c-47d727617dcf9528ccbce2ea"
+    ]
+  },
+  "sources": [
+    {
+      "chunk_id": "c-67cbe5e6fdbf861dc79e9e44",
+      "document_id": "guide-triage",
+      "title": "Ambiguous symptom triage guide (synthetic)",
+      "section": "Evidence needed for a live cause",
+      "text": "Ambiguous symptom triage guide (synthetic) | Evidence needed for a live cause\nA current root cause requires current traces, metrics, deployment/configuration changes and dependency-side observations. This synthetic corpus supplies none of those live observations. State that the current cause is unknown and provide only documented investigative checks; do not state that a past incident is happening again.",
+      "service": "order-api",
+      "document_type": "guide",
+      "revision": "2026-10-18",
+      "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+      "content_hash": "af18915560559f540dd1c8ed4aa814d84e6de6fffdb790253932e76a8eae04d8",
+      "environment": null
+    },
+    {
+      "chunk_id": "c-67a49c1588c143ac9862ccc4",
+      "document_id": "svc-order-api",
+      "title": "Order API architecture (synthetic)",
+      "section": "Evidence boundaries",
+      "text": "Order API architecture (synthetic) | Evidence boundaries\nRunbooks document checks, not the state of a current incident. The corpus contains no live metrics, deployment history for today's event, customer records, passwords, host addresses, or real production credentials. Correlate errors by request_id and time window before comparing independent signals.",
+      "service": "order-api",
+      "document_type": "architecture",
+      "revision": "2026-10-18",
+      "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+      "content_hash": "e7fc78b8bb98dfa3b7e5abb4f40d46a13ab4cf0df12b6a19aae435e803f194c0",
+      "environment": null
+    },
+    {
+      "chunk_id": "c-47d727617dcf9528ccbce2ea",
+      "document_id": "rb-db-pool",
+      "title": "Database connection-pool exhaustion runbook (synthetic)",
+      "section": "Safe interpretation",
+      "text": "Database connection-pool exhaustion runbook (synthetic) | Safe interpretation\nDo not increase the pool size or restart services solely from the error code. Gather the affected process IDs, interval, pool metrics, transaction durations and recent code/configuration changes. A historical incident is an example, not proof of the current cause. This assistant cannot inspect these signals or perform remediation.",
+      "service": "order-api",
+      "document_type": "runbook",
+      "revision": "2026-10-18",
+      "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+      "content_hash": "ba0b3913c3a12c29e75d446e6abf46b427f5dcf73f1cad59e34c03edfc471b90",
+      "environment": null
+    }
+  ],
+  "retrieved_candidates": [
+    {
+      "chunk": {
+        "chunk_id": "c-67cbe5e6fdbf861dc79e9e44",
+        "document_id": "guide-triage",
+        "title": "Ambiguous symptom triage guide (synthetic)",
+        "section": "Evidence needed for a live cause",
+        "text": "Ambiguous symptom triage guide (synthetic) | Evidence needed for a live cause\nA current root cause requires current traces, metrics, deployment/configuration changes and dependency-side observations. This synthetic corpus supplies none of those live observations. State that the current cause is unknown and provide only documented investigative checks; do not state that a past incident is happening again.",
+        "service": "order-api",
+        "document_type": "guide",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "af18915560559f540dd1c8ed4aa814d84e6de6fffdb790253932e76a8eae04d8",
+        "environment": null
+      },
+      "method": "dense",
+      "rank": 1,
+      "scores": {
+        "dense": 0.3908458948135376
+      }
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-67a49c1588c143ac9862ccc4",
+        "document_id": "svc-order-api",
+        "title": "Order API architecture (synthetic)",
+        "section": "Evidence boundaries",
+        "text": "Order API architecture (synthetic) | Evidence boundaries\nRunbooks document checks, not the state of a current incident. The corpus contains no live metrics, deployment history for today's event, customer records, passwords, host addresses, or real production credentials. Correlate errors by request_id and time window before comparing independent signals.",
+        "service": "order-api",
+        "document_type": "architecture",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "e7fc78b8bb98dfa3b7e5abb4f40d46a13ab4cf0df12b6a19aae435e803f194c0",
+        "environment": null
+      },
+      "method": "dense",
+      "rank": 2,
+      "scores": {
+        "dense": 0.1606351137161255
+      }
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-13ef8e89d25d1e39e1b0a0ce",
+        "document_id": "incident-dependency-timeouts",
+        "title": "Inventory path latency incident (synthetic)",
+        "section": "Findings and scope",
+        "text": "Inventory path latency incident (synthetic) | Findings and scope\nFor this historical event, the investigation attributed the delays to the changed network route. The client deadline was 1500 ms. Operators correlated caller spans with the routing change before reverting it. No evidence in this report establishes the cause of today's timeout, and a timeout alone cannot identify network routing as the cause. No automatic stock-reservation retry was introduced.",
+        "service": "order-api",
+        "document_type": "incident",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "f833a0e1f3cbaaa1cb35c6c3bd4f80389ee136bab4364882191adc9c7f50b5b9",
+        "environment": null
+      },
+      "method": "dense",
+      "rank": 3,
+      "scores": {
+        "dense": 0.14332330226898193
+      }
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-baae5073193928aab9317093",
+        "document_id": "ref-config",
+        "title": "Current configuration reference (synthetic)",
+        "section": "Historical comparison",
+        "text": "Current configuration reference (synthetic) | Historical comparison\nThe 2026-09-04 pool incident involved a historical per-process pool limit of 12. The current limit of 20 came from a separate capacity review. The incident correction was acquiring a connection after the inventory request, not a blanket recommendation to enlarge pools. Always compare the revision and process scope before treating historical configuration as current.",
+        "service": "order-api",
+        "document_type": "reference",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "86313cb4cb7561b72131198f0ad0cd1079f2f5a90cbb362e8d77e0ba08beb2c9",
+        "environment": null
+      },
+      "method": "dense",
+      "rank": 4,
+      "scores": {
+        "dense": 0.10646898299455643
+      }
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-47d727617dcf9528ccbce2ea",
+        "document_id": "rb-db-pool",
+        "title": "Database connection-pool exhaustion runbook (synthetic)",
+        "section": "Safe interpretation",
+        "text": "Database connection-pool exhaustion runbook (synthetic) | Safe interpretation\nDo not increase the pool size or restart services solely from the error code. Gather the affected process IDs, interval, pool metrics, transaction durations and recent code/configuration changes. A historical incident is an example, not proof of the current cause. This assistant cannot inspect these signals or perform remediation.",
+        "service": "order-api",
+        "document_type": "runbook",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "ba0b3913c3a12c29e75d446e6abf46b427f5dcf73f1cad59e34c03edfc471b90",
+        "environment": null
+      },
+      "method": "dense",
+      "rank": 5,
+      "scores": {
+        "dense": 0.10454323887825012
+      }
+    }
+  ],
+  "selected_evidence": [
+    {
+      "chunk": {
+        "chunk_id": "c-67cbe5e6fdbf861dc79e9e44",
+        "document_id": "guide-triage",
+        "title": "Ambiguous symptom triage guide (synthetic)",
+        "section": "Evidence needed for a live cause",
+        "text": "Ambiguous symptom triage guide (synthetic) | Evidence needed for a live cause\nA current root cause requires current traces, metrics, deployment/configuration changes and dependency-side observations. This synthetic corpus supplies none of those live observations. State that the current cause is unknown and provide only documented investigative checks; do not state that a past incident is happening again.",
+        "service": "order-api",
+        "document_type": "guide",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "af18915560559f540dd1c8ed4aa814d84e6de6fffdb790253932e76a8eae04d8",
+        "environment": null
+      },
+      "method": "dense",
+      "rank": 1,
+      "scores": {
+        "dense": 0.3908458948135376
+      }
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-67a49c1588c143ac9862ccc4",
+        "document_id": "svc-order-api",
+        "title": "Order API architecture (synthetic)",
+        "section": "Evidence boundaries",
+        "text": "Order API architecture (synthetic) | Evidence boundaries\nRunbooks document checks, not the state of a current incident. The corpus contains no live metrics, deployment history for today's event, customer records, passwords, host addresses, or real production credentials. Correlate errors by request_id and time window before comparing independent signals.",
+        "service": "order-api",
+        "document_type": "architecture",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "e7fc78b8bb98dfa3b7e5abb4f40d46a13ab4cf0df12b6a19aae435e803f194c0",
+        "environment": null
+      },
+      "method": "dense",
+      "rank": 2,
+      "scores": {
+        "dense": 0.1606351137161255
+      }
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-13ef8e89d25d1e39e1b0a0ce",
+        "document_id": "incident-dependency-timeouts",
+        "title": "Inventory path latency incident (synthetic)",
+        "section": "Findings and scope",
+        "text": "Inventory path latency incident (synthetic) | Findings and scope\nFor this historical event, the investigation attributed the delays to the changed network route. The client deadline was 1500 ms. Operators correlated caller spans with the routing change before reverting it. No evidence in this report establishes the cause of today's timeout, and a timeout alone cannot identify network routing as the cause. No automatic stock-reservation retry was introduced.",
+        "service": "order-api",
+        "document_type": "incident",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "f833a0e1f3cbaaa1cb35c6c3bd4f80389ee136bab4364882191adc9c7f50b5b9",
+        "environment": null
+      },
+      "method": "dense",
+      "rank": 3,
+      "scores": {
+        "dense": 0.14332330226898193
+      }
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-baae5073193928aab9317093",
+        "document_id": "ref-config",
+        "title": "Current configuration reference (synthetic)",
+        "section": "Historical comparison",
+        "text": "Current configuration reference (synthetic) | Historical comparison\nThe 2026-09-04 pool incident involved a historical per-process pool limit of 12. The current limit of 20 came from a separate capacity review. The incident correction was acquiring a connection after the inventory request, not a blanket recommendation to enlarge pools. Always compare the revision and process scope before treating historical configuration as current.",
+        "service": "order-api",
+        "document_type": "reference",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "86313cb4cb7561b72131198f0ad0cd1079f2f5a90cbb362e8d77e0ba08beb2c9",
+        "environment": null
+      },
+      "method": "dense",
+      "rank": 4,
+      "scores": {
+        "dense": 0.10646898299455643
+      }
+    },
+    {
+      "chunk": {
+        "chunk_id": "c-47d727617dcf9528ccbce2ea",
+        "document_id": "rb-db-pool",
+        "title": "Database connection-pool exhaustion runbook (synthetic)",
+        "section": "Safe interpretation",
+        "text": "Database connection-pool exhaustion runbook (synthetic) | Safe interpretation\nDo not increase the pool size or restart services solely from the error code. Gather the affected process IDs, interval, pool metrics, transaction durations and recent code/configuration changes. A historical incident is an example, not proof of the current cause. This assistant cannot inspect these signals or perform remediation.",
+        "service": "order-api",
+        "document_type": "runbook",
+        "revision": "2026-10-18",
+        "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0",
+        "content_hash": "ba0b3913c3a12c29e75d446e6abf46b427f5dcf73f1cad59e34c03edfc471b90",
+        "environment": null
+      },
+      "method": "dense",
+      "rank": 5,
+      "scores": {
+        "dense": 0.10454323887825012
+      }
+    }
+  ],
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "usage": {
+    "input_tokens": 837,
+    "output_tokens": 360,
+    "reasoning_tokens": null,
+    "estimated_usd": "0",
+    "calls": 1
+  },
+  "timings": {
+    "prepare_request": 3.583001671358943e-6,
+    "prepare_queries": 7.080088835209608e-7,
+    "retrieve": 0.552324917021906,
+    "select_evidence": 0.000010832998668774962,
+    "generate": 1.4205769999825861,
+    "validate": 0.0009139579779002815
+  },
+  "errors": [],
+  "cache_hit": false,
+  "corpus_version": "a5e854f2e00a6ed0d773d4899a0d4b25c8b3274b0e581e16a2d2b48db23da3e0"
+}
